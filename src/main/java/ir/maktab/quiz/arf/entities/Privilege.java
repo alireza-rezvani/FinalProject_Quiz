@@ -1,4 +1,4 @@
-package ir.maktab.projects.quiz.arf.entities;
+package ir.maktab.quiz.arf.entities;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

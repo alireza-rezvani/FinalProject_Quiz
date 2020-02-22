@@ -1,4 +1,4 @@
-package ir.maktab.projects.quiz.arf.entities;
+package ir.maktab.quiz.arf.entities;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -19,4 +19,5 @@ public class Role {
 
     @ManyToMany
     private List<Privilege> privileges;
+
 }

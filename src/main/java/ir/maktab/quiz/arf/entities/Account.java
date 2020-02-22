@@ -1,4 +1,4 @@
-package ir.maktab.projects.quiz.arf.entities;
+package ir.maktab.quiz.arf.entities;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -21,6 +21,6 @@ public class Account {
     @ManyToMany
     private List<Role> roles;
 
-    @OneToOne
+    @OneToOne(cascade = CascadeType.ALL)
     private PersonalInfo personalInfo;
 }
