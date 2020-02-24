@@ -1,0 +1,28 @@
+<!DOCTYPE HTML>
+<html xmlns:th="https://www.thymeleaf.org">
+<head>
+    <title>ورود</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <link th:href="@{/css/bootstrap.min.css}" rel="stylesheet" type="text/css" >
+</head>
+<body class="text-center row p-5 justify-content-center align-content-center bg-info" style="font-family: 'B Mitra'">
+<div>
+    <h1>ورود</h1>
+    <form  action="#" th:action="@{/account/signIn}" method="post">
+
+
+        <p ><input class="text-center" type="text" th:field="*{account.username}" placeholder="نام کاربری"/></p>
+        <p ><input class="text-center" type="text" th:field="*{account.password}" placeholder="رمز عبور"/></p>
+
+
+        <p>
+            <input class="btn btn-dark" type="submit" value="تایید" th:name="ok"/>
+            <input class="btn btn-dark" type="submit" value="لغو" th:name="cancel"/>
+        </p>
+    </form>
+
+
+    <form th:action="@{/}"><input class="btn btn-dark" type="submit" value="بازگشت به صفحه اصلی"></form>
+</div>
+</body>
+</html>
