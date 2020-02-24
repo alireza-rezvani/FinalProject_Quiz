@@ -4,6 +4,7 @@ import ir.maktab.quiz.arf.entities.Account;
 import ir.maktab.quiz.arf.entities.Role;
 import ir.maktab.quiz.arf.services.AccountService;
 import ir.maktab.quiz.arf.services.RoleService;
+import ir.maktab.quiz.arf.services.StatusService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -26,31 +27,48 @@ public class AccountController {
     @Autowired
     private RoleService roleService;
 
-    @RequestMapping(value = "/define", method = RequestMethod.GET)
-    public String defineAccount(Model model){
+    @Autowired
+    private StatusService statusService;
+
+    @RequestMapping(value = "/signUp", method = RequestMethod.GET)
+    public String signUp(Model model){
         model.addAttribute("account", new Account());
         model.addAttribute("accountPrimaryRole", new Role());
         model.addAttribute("allRoles", roleService.findAll());
-        return "define-account-page";
+        return "sign-up-page";
     }
 
 
-    @RequestMapping(value = "/define", params = "ok", method = RequestMethod.POST)
-    public String submitDefineAccount(@ModelAttribute Account account, @ModelAttribute Role accountPrimaryRole){
+    @RequestMapping(value = "/signUp", params = "ok", method = RequestMethod.POST)
+    public String submitSignUp(@ModelAttribute Account account, @ModelAttribute Role accountPrimaryRole){
         Account inputAccount = account;
-        Role inputRole = accountPrimaryRole;
-        Role choiceRole = roleService.findByTitle(accountPrimaryRole.getTitle());
-        inputAccount.setRoles(Arrays.asList(choiceRole));
-        System.out.println("jjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjj");
-        System.out.println(account);
-        System.out.println(accountPrimaryRole);
 
+        inputAccount.setRoles(Arrays.asList(roleService.findByTitle(accountPrimaryRole.getTitle())));
+        inputAccount.setStatus(statusService.findByTitle("در انتظار تایید"));
         accountService.save(inputAccount);
-        return "account-successful-saved-page";
+        return "sign-up-successful-page";
     }
 
-    @RequestMapping(value = "define", params = "cancel", method = RequestMethod.POST)
-    public String cancelDefineAccount(){
+    @RequestMapping(value = "/signUp", params = "cancel", method = RequestMethod.POST)
+    public String cancelSignUp(){
         return "main-page";
     }
+
+    @RequestMapping(value = "/signIn", method = RequestMethod.GET)
+    public String signIn(Model model){
+        model.addAttribute("account", new Account());
+        return "sign-in-page";
+    }
+
+    @RequestMapping(value = "signIn", params = "ok", method = RequestMethod.POST)
+    public String submitSignIn(@ModelAttribute Account account){
+        String inputUsername = account.getUsername();
+        String inputPassword = account.getPassword();
+        if (accountService.signIn(inputUsername, inputPassword))
+            return "sign-in-successful-page";
+        else return "sign-in-failed-page";
+    }
+
+    @RequestMapping(value = "signIn", params = "cancel", method = RequestMethod.POST)
+    public String cancelSignIn(){return "main-page";}
 }
