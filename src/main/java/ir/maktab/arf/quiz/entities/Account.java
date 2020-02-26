@@ -22,15 +22,13 @@ public class Account {
     @Column(nullable = false)
     private String password;
 
-    @OneToOne(cascade = CascadeType.ALL)
-    @Column(nullable = false)
+    @OneToOne
     private PersonalInfo personalInfo;
 
     @ManyToMany
-    @Column(nullable = false)
     private List<Role> roles;
 
     @ManyToOne
-    @Column(nullable = false)
+
     private Status status;
 }
