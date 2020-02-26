@@ -1,13 +1,10 @@
-package ir.maktab.quiz.arf.entities;
+package ir.maktab.arf.quiz.entities;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 
 @Data
 @AllArgsConstructor
@@ -18,9 +15,18 @@ public class PersonalInfo {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(nullable = false)
     private String firstName;
+
+    @Column(nullable = false)
     private String lastName;
+
+    @Column(unique = true, nullable = false)
     private String nationalCode;
+
+    @Column(nullable = false)
     private String mobileNumber;
+
+    @Column(nullable = false)
     private String email;
 }

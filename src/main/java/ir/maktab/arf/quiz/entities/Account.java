@@ -1,4 +1,4 @@
-package ir.maktab.quiz.arf.entities;
+package ir.maktab.arf.quiz.entities;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -15,12 +15,22 @@ public class Account {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    @Column(unique = true, nullable = false)
     private String username;
+
+    @Column(nullable = false)
     private String password;
 
+    @OneToOne(cascade = CascadeType.ALL)
+    @Column(nullable = false)
+    private PersonalInfo personalInfo;
+
     @ManyToMany
+    @Column(nullable = false)
     private List<Role> roles;
 
-    @OneToOne(cascade = CascadeType.ALL)
-    private PersonalInfo personalInfo;
+    @ManyToOne
+    @Column(nullable = false)
+    private Status status;
 }

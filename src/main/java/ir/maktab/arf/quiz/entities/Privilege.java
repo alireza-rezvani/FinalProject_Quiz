@@ -1,22 +1,21 @@
-package ir.maktab.quiz.arf.entities;
+package ir.maktab.arf.quiz.entities;
 
+import ir.maktab.arf.quiz.utilities.PrivilegeTitle;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-public class Status {
+public class Privilege {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String title;
+    @Column(unique = true, nullable = false)
+    private PrivilegeTitle title;
 }
