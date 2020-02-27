@@ -33,7 +33,7 @@ public class MyUserDetail implements UserDetails {
         List<GrantedAuthority> grantedAuthorities = new ArrayList<>();
         for (Role roleItem : roles){
             for (Privilege privilegeItem : roleItem.getPrivileges())
-                grantedAuthorities.add(new SimpleGrantedAuthority(privilegeItem.getTitle().name()));
+                grantedAuthorities.add(new SimpleGrantedAuthority("ROLE_" + privilegeItem.getTitle().name()));
         }
         return grantedAuthorities;
     }
@@ -65,6 +65,7 @@ public class MyUserDetail implements UserDetails {
 
     @Override
     public boolean isEnabled() {
-        return (status.getTitle().equals(StatusTitle.ACTIVE)?true:false);
+//        return (status.getTitle().equals(StatusTitle.ACTIVE)?true:false);
+        return true;
     }
 }

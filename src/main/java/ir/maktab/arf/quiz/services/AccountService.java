@@ -19,4 +19,11 @@ public class AccountService {
         return accountRepository.save(account);
     }
 
+    public boolean isUsernameExisting(String username){
+        if (accountRepository.findByUsername(username) == null)
+            return false;
+        else
+            return true;
+
+    }
 }

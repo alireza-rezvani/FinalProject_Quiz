@@ -1,0 +1,13 @@
+<!DOCTYPE html>
+<html xmlns:th="https://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <link th:href="@{/css/bootstrap.min.css}"  rel="stylesheet" type="text/css" >
+    <title>سامانه آزمون آنلاین</title>
+</head>
+<body  class="text-center p-5 justify-content-center align-content-center bg-info" style="font-family: 'B Mitra'">
+<p><form th:action="@{/signIn}"><input class="btn btn-dark" type="submit" value="ورود"></form></p>
+<form th:action="@{/signUp}"><input class="btn btn-dark" type="submit" value="ثبت نام"></form>
+
+</body>
+</html>

@@ -12,5 +12,6 @@ public class Config {
     @Bean
     PasswordEncoder getPasswordEncoder(){
         return PasswordEncoderFactories.createDelegatingPasswordEncoder();
+//        return NoOpPasswordEncoder.getInstance();
     }
 }
