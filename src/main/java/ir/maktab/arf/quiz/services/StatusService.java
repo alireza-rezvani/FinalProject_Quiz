@@ -6,6 +6,8 @@ import ir.maktab.arf.quiz.utilities.StatusTitle;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class StatusService {
 
@@ -14,5 +16,9 @@ public class StatusService {
 
     public Status findByTitle(StatusTitle title){
         return statusRepository.findByTitle(title);
+    }
+
+    public List<Status> findAll(){
+        return statusRepository.findAll();
     }
 }

@@ -39,7 +39,7 @@
         <p>نقش</p>
         <p>
             <select th:field="*{signUpInfoDto.roleTitleName}">
-                <option th:each="role:${allRoles}" th:value="${role.title.name()}" th:text="${role.title.getPersian()}" th:if="${role.title.name()} != 'ADMIN'"></option>
+                <option th:each="role:${allRoles}" th:value="${role.title.name()}" th:text="${role.title.getPersian()}"></option>
             </select>
         </p>
         <p>

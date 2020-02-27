@@ -6,6 +6,8 @@ import ir.maktab.arf.quiz.repositories.StatusRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class AccountService {
 
@@ -24,6 +26,17 @@ public class AccountService {
             return false;
         else
             return true;
+    }
 
+    public List<Account> findAll(){
+        return accountRepository.findAll();
+    }
+
+    public Account findById(Long id){
+        return accountRepository.findById(id).get();
+    }
+
+    public Account findByUsername(String username){
+        return accountRepository.findByUsername(username);
     }
 }

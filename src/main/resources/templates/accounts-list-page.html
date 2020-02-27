@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html xmlns:th="https://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html">
+<head>
+    <meta charset="UTF-8">
+    <title>لیست حساب های کاربری</title>
+    <link th:href="@{/css/bootstrap.min.css}"  rel="stylesheet" type="text/css" >
+
+</head>
+<body  class="text-center  p-5 justify-content-center align-content-center bg-info" style="font-family: 'B Mitra'">
+
+
+<form th:action="@{/admin/accountsList}" method="post">
+
+    <input class="text-center" type="text" th:field="*{searchAccountDto.username}" placeholder="نام کاربری"/>
+
+    <input class="text-center" type="text" th:field="*{searchAccountDto.nationalCode}" placeholder="کد ملی"/>
+
+    <input class="text-center" type="text" th:field="*{searchAccountDto.firstName}" placeholder="نام"/>
+
+    <input class="text-center" type="text" th:field="*{searchAccountDto.lastName}" placeholder="نام خانوادگی"/>
+
+
+
+    <select th:field="*{searchAccountDto.roleTitleName}">
+        <option value="All" th:text="همه"></option>
+        <option th:each="role:${allRoles}" th:value="${role.title.name()}" th:text="${role.title.getPersian()}"></option>
+    </select>
+
+    <select th:field="*{searchAccountDto.statusTitleName}">
+        <option value="All" th:text="همه"></option>
+        <option th:each="status:${allStatuses}" th:value="${status.title.name()}" th:text="${status.title.getPersian()}"></option>
+    </select>
+
+    <input class="btn btn-dark" type="submit" value="جستجو"/>
+</form>
+
+<table class="table table-dark ">
+    <thead>
+    <tr>
+        <th colspan="1">عملیات</th>
+        <th>نام خانوادگی</th>
+        <th>نام</th>
+        <th>کد ملی</th>
+        <th>نام کاربری</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each = "accountItem : ${accounts}">
+<!--        <td><form action="#" th:action="@{/admin/editAccount/__${accountItem.getId()}__}"><input class="btn btn-danger" hidden th:id="${patientItem.getId()}" type="submit" value="تایید حذف"></form></td>-->
+<!--        <td><button class="btn btn-light"  th:onclick="|delConfirm(${patientItem.getId()})|">حذف</button></td>-->
+        <td><form action="#" th:action="@{/admin/editAccount/__${accountItem.getId()}__}"><input class="btn btn-light" type="submit" value="ویرایش"></form></td>
+<!--        <td><form action="#" th:action="@{/admin/viewPatient/__${patientItem.getId()}__}"><input class="btn btn-light" type="submit" value="مشاهده"></form></td>-->
+<!--        <td th:text = "${patientItem.gender}"/>-->
+<!--        <td th:text = "${patientItem.family}"/>-->
+        <td th:text = "${accountItem.personalInfo.lastName}"/>
+        <td th:text = "${accountItem.personalInfo.firstName}"/>
+        <td th:text = "${accountItem.personalInfo.nationalCode}"/>
+        <td th:text = "${accountItem.username}"/>
+    </tr>
+    </tbody>
+</table>
+
+<form th:action="@{/}"><input class="btn btn-dark" type="submit" value="بازگشت به صفحه اصلی"></form><br>
+<form th:action="@{/signOut}"><input class="btn btn-dark" type="submit" value="خروج از حساب کاربری"></form>
+
+
+
+<!--<script>-->
+
+<!--    function delConfirm(id) {-->
+
+<!--        document.getElementById(id).hidden = false;-->
+<!--    }-->
+
+<!--</script>-->
+
+
+</body>
+</html>

@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 
 @Controller
@@ -77,7 +78,7 @@ public class HomeController {
             account.setUsername(signUpInfoDto.getUsername());
             account.setPassword(passwordEncoder.encode(signUpInfoDto.getPassword()));
             account.setPersonalInfo(savedPersonalInfo);
-            account.setRoles(Arrays.asList(roleService.findByTitle(RoleTitle.valueOf(signUpInfoDto.getRoleTitleName()))));
+            account.setRoles(new ArrayList<>(Arrays.asList(roleService.findByTitle(RoleTitle.valueOf(signUpInfoDto.getRoleTitleName())))));
             account.setStatus(statusService.findByTitle(StatusTitle.WAITING_FOR_VERIFY));
             accountService.save(account);
 
@@ -115,4 +116,9 @@ public class HomeController {
 //        model.addAttribute("waitingAccountsList", accountService.findAllByWaitingStatus());
 //        return "waiting-accounts-page";
 //    }
+
+    @RequestMapping(value = "/signOut")
+    public String signOut(){
+        return "index";
+    }
 }

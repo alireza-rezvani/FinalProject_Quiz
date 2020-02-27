@@ -1,0 +1,66 @@
+<!DOCTYPE HTML>
+<html xmlns:th="https://www.thymeleaf.org">
+<head>
+    <title>ویرایش حساب کاربری</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <link th:href="@{/css/bootstrap.min.css}" rel="stylesheet" type="text/css" >
+</head>
+<body class="text-center row p-5 justify-content-center align-content-center bg-info" style="font-family: 'B Mitra'">
+<div>
+    <h1>ویرایش حساب کاربری</h1>
+    <form  action="#" th:action="@{/admin/editAccount/__${editAccountDto.getId()}__}" method="post">
+
+        <p>اطلاعات شخصی</p>
+        <p >
+            <input class="text-center" type="text" th:field="*{editAccountDto.nationalCode}" placeholder="کد ملی" th:value="${editAccountDto.nationalCode}"/>
+            کد ملی:
+        </p>
+        <p th:if="${param.nationalCodeError}" class="text-danger">کد ملی وارد شده نامعتبر است یا قبلا ثبت شده است</p>
+
+        <p ><input class="text-center" type="text" th:field="*{editAccountDto.firstName}" placeholder="نام"/></p>
+        <p th:if="${param.firstNameError}" class="text-danger">نام خود را وارد کنید</p>
+
+        <p ><input class="text-center" type="text" th:field="*{editAccountDto.lastName}" placeholder="نام خانوادگی"/></p>
+        <p th:if="${param.lastNameError}" class="text-danger">نام خانوادگی خود را وارد کنید</p>
+
+        <p ><input class="text-center" type="text" th:field="*{editAccountDto.mobileNumber}" placeholder="تلفن همراه"/></p>
+        <p th:if="${param.mobileError}" class="text-danger">شماره تلفن وارد شده نامعتبر است</p>
+
+        <p ><input class="text-center" type="text" th:field="*{editAccountDto.email}" placeholder="پست الکترونیک"/></p>
+        <p th:if="${param.emailError}" class="text-danger">پست الکترونیک وارد شده نامعتبر است یا قبلا ثبت شده است</p>
+
+        <p>اطلاعات حساب کاربری</p>
+        <p ><input class="text-center" type="text" th:field="*{editAccountDto.username}" placeholder="نام کاربری"/></p>
+        <p th:if="${param.usernameError}" class="text-danger">نام کاربری وارد شده نامعتبر است یا قبلا انتخاب شده است</p>
+
+<!--        <p ><input class="text-center" type="text" th:field="*{editAccountDto.password}" placeholder="رمز عبور"/></p>-->
+<!--        <p th:if="${param.passwordError}" class="text-danger">رمز عبور انتخاب شده ضعیف است</p>-->
+
+<!--        <p ><input class="text-center" type="text" th:field="*{editAccountDto.passwordConfirm}" placeholder="رمز عبور"/></p>-->
+<!--        <p th:if="${param.passwordConfirmError}" class="text-danger">عدم مطابقت با رمز عبور</p>-->
+
+        <p>نقش</p>
+        <p>
+            <select th:field="*{editAccountDto.roleTitleName}">
+                <option th:each="role:${allRoles}" th:value="${role.title.name()}" th:text="${role.title.getPersian()}" th:if="${role.title.name()} != 'ADMIN'"></option>
+            </select>
+        </p>
+
+        <p>وضعیت</p>
+        <p>
+            <select th:field="*{editAccountDto.statusTitleName}">
+                <option th:each="status:${allStatuses}" th:value="${status.title.name()}" th:text="${status.title.getPersian()}"></option>
+            </select>
+        </p>
+
+        <p>
+            <input class="btn btn-dark" type="submit" value="تایید"/>
+            <!--            <input class="btn btn-dark" type="submit" value="لغو" th:name="cancel"/>-->
+        </p>
+    </form>
+
+
+    <form th:action="@{/}"><input class="btn btn-dark" type="submit" value="بازگشت به صفحه اصلی"></form>
+</div>
+</body>
+</html>
