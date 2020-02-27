@@ -8,12 +8,22 @@
 <body class="text-center row p-5 justify-content-center align-content-center bg-info" style="font-family: 'B Mitra'">
 <div>
     <h1>ورود</h1>
-    <form  action="#" th:action="@{/account/signIn}" method="post">
+    <form  action="#" th:action="@{/signIn}" method="post">
 
 
-        <p ><input class="text-center" type="text" th:field="*{account.username}" placeholder="نام کاربری"/></p>
-        <p ><input class="text-center" type="text" th:field="*{account.password}" placeholder="رمز عبور"/></p>
+        <p ><input class="text-center" type="text" name="username" placeholder="نام کاربری"/></p>
+        <p ><input class="text-center" type="password" name="password" placeholder="رمز عبور"/></p>
 
+        <div th:if="${param.error}">
+            <div class="alert alert-danger">
+                اطلاعات کاربری نامعتبر است
+            </div>
+        </div>
+        <div th:if="${param.logout}">
+            <div class="alert alert-info">
+                شما از سامانه خارج شده اید
+            </div>
+        </div>
 
         <p>
             <input class="btn btn-dark" type="submit" value="تایید" th:name="ok"/>

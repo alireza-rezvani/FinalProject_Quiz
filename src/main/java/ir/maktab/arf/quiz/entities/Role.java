@@ -20,7 +20,7 @@ public class Role {
     @Column(unique = true, nullable = false)
     private RoleTitle title;
 
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.EAGER)
     private List<Privilege> privileges;
 
 }

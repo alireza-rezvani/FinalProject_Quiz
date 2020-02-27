@@ -25,10 +25,9 @@ public class Account {
     @OneToOne
     private PersonalInfo personalInfo;
 
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.EAGER)
     private List<Role> roles;
 
     @ManyToOne
-
     private Status status;
 }
