@@ -24,4 +24,8 @@ public class CourseService {
     public void removeById(Long id){
         courseRepository.deleteById(id);
     }
+
+    public Course findById(Long id){
+        return courseRepository.findById(id).get();
+    }
 }

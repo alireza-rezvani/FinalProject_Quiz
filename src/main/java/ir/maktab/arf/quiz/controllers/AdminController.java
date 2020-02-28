@@ -9,6 +9,7 @@ import ir.maktab.arf.quiz.entities.PersonalInfo;
 import ir.maktab.arf.quiz.services.*;
 import ir.maktab.arf.quiz.utilities.RoleTitle;
 import ir.maktab.arf.quiz.utilities.StatusTitle;
+import org.dom4j.rule.Mode;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -167,6 +168,14 @@ public class AdminController {
         courseService.removeById(id);
         model.addAttribute("allCourses", courseService.findAll());
         model.addAttribute("course", new Course());
+        return "add-course-page";
+    }
+
+
+    @RequestMapping(value = "/editCourse/{id}")
+    public String editCourse(Model model, @PathVariable Long id){
+        model.addAttribute("allCourses", courseService.findAll());
+        model.addAttribute("course", courseService.findById(id));
         return "add-course-page";
     }
 }
