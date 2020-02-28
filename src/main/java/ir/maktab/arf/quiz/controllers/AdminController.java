@@ -4,11 +4,9 @@ import ir.maktab.arf.quiz.dto.EditAccountDto;
 import ir.maktab.arf.quiz.dto.SearchAccountDto;
 import ir.maktab.arf.quiz.dto.SignUpInfoDto;
 import ir.maktab.arf.quiz.entities.Account;
+import ir.maktab.arf.quiz.entities.Course;
 import ir.maktab.arf.quiz.entities.PersonalInfo;
-import ir.maktab.arf.quiz.services.AccountService;
-import ir.maktab.arf.quiz.services.PersonalInfoService;
-import ir.maktab.arf.quiz.services.RoleService;
-import ir.maktab.arf.quiz.services.StatusService;
+import ir.maktab.arf.quiz.services.*;
 import ir.maktab.arf.quiz.utilities.RoleTitle;
 import ir.maktab.arf.quiz.utilities.StatusTitle;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +17,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -39,6 +38,9 @@ public class AdminController {
 
     @Autowired
     StatusService statusService;
+
+    @Autowired
+    CourseService courseService;
 
     @RequestMapping(value = "")
     public String getAdminPage(){
@@ -138,5 +140,33 @@ public class AdminController {
 
             return "redirect:/admin/accountsList";
         }
+    }
+
+
+    @RequestMapping(value = "/addCourse")
+    public String addCourse(Model model){
+        model.addAttribute("allCourses", courseService.findAll());
+        model.addAttribute("course", new Course());
+        return "add-course-page";
+    }
+
+    @RequestMapping(value = "/addCourse", method = RequestMethod.POST)
+    public String submitCourseAddition(Model model, @ModelAttribute Course course){
+
+        if (course.getStartDate() != null && course.getFinishDate() != null && !course.getTitle().isEmpty())
+            courseService.save(course);
+
+        model.addAttribute("allCourses", courseService.findAll());
+        model.addAttribute("course", new Course());
+        return "add-course-page";
+    }
+
+
+    @RequestMapping(value = "/deleteCourse/{id}")
+    public String deleteCourse(Model model, @PathVariable Long id){
+        courseService.removeById(id);
+        model.addAttribute("allCourses", courseService.findAll());
+        model.addAttribute("course", new Course());
+        return "add-course-page";
     }
 }
