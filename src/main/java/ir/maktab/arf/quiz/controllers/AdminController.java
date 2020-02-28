@@ -13,10 +13,7 @@ import org.dom4j.rule.Mode;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.*;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -42,6 +39,7 @@ public class AdminController {
 
     @Autowired
     CourseService courseService;
+
 
     @RequestMapping(value = "")
     public String getAdminPage(){
@@ -177,5 +175,60 @@ public class AdminController {
         model.addAttribute("allCourses", courseService.findAll());
         model.addAttribute("course", courseService.findById(id));
         return "add-course-page";
+    }
+
+
+    @RequestMapping(value = "/courseMembers/{courseId}")
+    public String getCourseMembers(Model model, @PathVariable Long courseId){
+        model.addAttribute("allRoles", roleService.findAll());
+        model.addAttribute("course", courseService.findById(courseId));
+        return "course-members-page";
+    }
+
+    @RequestMapping(value = "/addMemberToCourse/{courseId}")
+    public String addMemberToCourse(Model model, @PathVariable Long courseId, @RequestParam(name = "roleTitleName") String roleTitleName){
+        Course requestedCourse = courseService.findById(courseId);
+        List<Account> accountsWithRequestedRole = accountService.findAll().stream()
+                .filter(account -> account.getRoles().contains(roleService.findByTitle(RoleTitle.valueOf(roleTitleName))))
+                .collect(Collectors.toList());
+        model.addAttribute("roleTitleName", roleTitleName);
+        model.addAttribute("roleTitleNamePersianHeader", "لیست" + RoleTitle.valueOf(roleTitleName).getPersian() + "ها");
+        model.addAttribute("course", requestedCourse);
+        model.addAttribute("accountsToAdd", accountsWithRequestedRole);
+        return "choose-account-to-add-to-course-page";
+    }
+    
+    @RequestMapping(value = "/addMemberToCourse/{courseId}", method = RequestMethod.POST)
+    public String submitAddMemberToCourse(@PathVariable Long courseId,
+                                          @RequestParam(name = "accountId") Long accountId,
+                                          @RequestParam(name = "roleTitleName") String roleTitleName){
+        Course requestedCourse = courseService.findById(courseId);
+        Account requestedAccount = accountService.findById(accountId);
+        if (roleTitleName.equals("TEACHER"))
+            requestedCourse.setTeacher(requestedAccount);
+        else if (roleTitleName.equals("STUDENT"))
+            requestedCourse.getStudents().add(requestedAccount);
+        else {
+            // TODO: 2/28/2020 if members with other role added to course
+        }
+        courseService.save(requestedCourse);
+        return "redirect:/admin/addMemberToCourse/" + courseId + "?roleTitleName=" + roleTitleName;
+    }
+
+    @RequestMapping(value = "/deleteCourseMember/{courseId}")
+    public String deleteCourseMember(@PathVariable Long courseId,
+                                     @RequestParam(name = "memberId") Long memberId,
+                                     @RequestParam(name = "roleTitleName") String roleTitleName){
+        Course requestedCourse = courseService.findById(courseId);
+        Account requestedMember = accountService.findById(memberId);
+        if (roleTitleName.equals("TEACHER") && requestedCourse.getTeacher().equals(requestedMember))
+            requestedCourse.setTeacher(null);
+        else if (roleTitleName.equals("STUDENT"))
+            requestedCourse.getStudents().remove(requestedMember);
+        else {
+            // TODO: 2/28/2020  if members with other role added to course
+        }
+        courseService.save(requestedCourse);
+        return "redirect:/admin/courseMembers/" + courseId;
     }
 }

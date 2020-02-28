@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html xmlns:th="https://www.thymeleaf.org">
+<head>
+    <title>اعضای دوره</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <link th:href="@{/css/bootstrap.min.css}"  rel="stylesheet" type="text/css" >
+</head>
+<body  class="text-center row p-5 justify-content-center align-content-center bg-info" style="font-family: 'B Mitra'">
+
+<div>
+    <h1>اعضای دوره</h1>
+
+
+    <form class="m-3" action="#" th:action="@{/admin/addMemberToCourse/__${course.id}__}">
+        <select th:name="roleTitleName" >
+            <option th:each="role:${allRoles}" th:value="${role.title.name()}" th:text="${role.title.getPersian()}" th:if="${role.title.name()!='ADMIN'}"></option>
+        </select>
+        <input class="btn btn-dark" type="submit" value="افزودن عضو" />
+    </form>
+
+
+
+
+    <div class="m-3 border border-light" th:hidden="${(course.students==null || course.students.size()==0) && course.teacher==null}">
+        <table class="table table-dark" th:hidden="${(course.students==null || course.students.size()==0) && course.teacher==null}">
+            <thead>
+            <th colspan="2">عملیات</th>
+            <th>نام خانوادگی</th>
+            <th>نام</th>
+            <th>نام کاربری</th>
+            <th>سمت</th>
+            </thead>
+            <tbody>
+            <tr th:if="${course.teacher!=null}">
+                <td>
+                    <form th:action="@{/admin/deleteCourseMember/__${course.id}__}">
+                        <input type="text" hidden th:name="memberId" th:value="${course.teacher.id}">
+                        <input type="text" hidden name="roleTitleName" value="TEACHER">
+                        <input hidden class="btn btn-danger" th:id="${course.teacher.id}" type="submit" value="تایید حذف" >
+                    </form>
+                </td>
+                <td><button class="btn btn-light"  th:onclick="|delConfirm(${course.teacher.id})|">حذف</button></td>
+                <td th:text="${course.teacher.personalInfo.lastName}"/>
+                <td th:text="${course.teacher.personalInfo.firstName}"/>
+                <td th:text="${course.teacher.username}"/>
+                <td th:text="استاد"/>
+            </tr>
+            <tr th:each="studentItem:${course.students}">
+                <td>
+                    <form th:action="@{/admin/deleteCourseMember/__${course.id}__}">
+                        <input type="text" hidden th:name="memberId" th:value="${studentItem.id}">
+                        <input type="text" hidden name="roleTitleName" value="STUDENT">
+                        <input hidden class="btn btn-danger" th:id="${studentItem.id}" type="submit" value="تایید حذف" >
+                    </form>
+                </td>
+                <td><button class="btn btn-light"  th:onclick="|delConfirm(${studentItem.id})|">حذف</button></td>
+                <td th:text="${studentItem.personalInfo.lastName}"/>
+                <td th:text="${studentItem.personalInfo.firstName}"/>
+                <td th:text="${studentItem.username}"/>
+                <td th:text="دانشجو"/>
+
+            </tr>
+            </tbody>
+        </table>
+
+    </div>
+
+
+
+    <form th:action="@{/}"><input class="btn btn-dark" type="submit" value="بازگشت به صفحه اصلی"></form>
+</div>
+
+
+
+<script>
+
+    function delConfirm(id) {
+        document.getElementById(id).hidden = false;
+    }
+</script>
+</body>
+</html>

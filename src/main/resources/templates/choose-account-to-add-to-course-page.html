@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html xmlns:th="https://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html">
+<head>
+    <meta charset="UTF-8">
+    <title th:text="${roleTitleNamePersianHeader}"></title>
+    <link th:href="@{/css/bootstrap.min.css}"  rel="stylesheet" type="text/css" >
+
+</head>
+<body  class="text-center  p-5 justify-content-center align-content-center bg-info" style="font-family: 'B Mitra'">
+
+
+<!--<form th:action="@{/admin/accountsList}" method="post">-->
+
+<!--    <input class="text-center" type="text" th:field="*{searchAccountDto.username}" placeholder="نام کاربری"/>-->
+
+<!--    <input class="text-center" type="text" th:field="*{searchAccountDto.nationalCode}" placeholder="کد ملی"/>-->
+
+<!--    <input class="text-center" type="text" th:field="*{searchAccountDto.firstName}" placeholder="نام"/>-->
+
+<!--    <input class="text-center" type="text" th:field="*{searchAccountDto.lastName}" placeholder="نام خانوادگی"/>-->
+
+
+
+<!--    <select th:field="*{searchAccountDto.roleTitleName}">-->
+<!--        <option value="All" th:text="همه"></option>-->
+<!--        <option th:each="role:${allRoles}" th:value="${role.title.name()}" th:text="${role.title.getPersian()}"></option>-->
+<!--    </select>-->
+
+<!--    <select th:field="*{searchAccountDto.statusTitleName}">-->
+<!--        <option value="All" th:text="همه"></option>-->
+<!--        <option th:each="status:${allStatuses}" th:value="${status.title.name()}" th:text="${status.title.getPersian()}"></option>-->
+<!--    </select>-->
+
+<!--    <input class="btn btn-dark" type="submit" value="جستجو"/>-->
+<!--</form>-->
+
+<table class="table table-dark ">
+    <thead>
+    <tr>
+        <th colspan="1">عملیات</th>
+        <th>نام خانوادگی</th>
+        <th>نام</th>
+        <th>کد ملی</th>
+        <th>نام کاربری</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each = "accountItem : ${accountsToAdd}">
+        <td><form action="#" th:action="@{/admin/addMemberToCourse/__${course.getId()}__}" method="post">
+            <input type="hidden" th:name="accountId" th:value="${accountItem.id}">
+            <input type="hidden" th:name="roleTitleName" th:value="${roleTitleName}">
+            <input class="btn btn-light" type="submit" text="افزودن به دوره" >
+            </form>
+        </td>
+        <td th:text = "${accountItem.personalInfo.lastName}"/>
+        <td th:text = "${accountItem.personalInfo.firstName}"/>
+        <td th:text = "${accountItem.personalInfo.nationalCode}"/>
+        <td th:text = "${accountItem.username}"/>
+    </tr>
+    </tbody>
+</table>
+
+<form th:action="@{/}"><input class="btn btn-dark" type="submit" value="بازگشت به صفحه اصلی"></form><br>
+<form th:action="@{/signOut}"><input class="btn btn-dark" type="submit" value="خروج از حساب کاربری"></form>
+
+
+</body>
+</html>
