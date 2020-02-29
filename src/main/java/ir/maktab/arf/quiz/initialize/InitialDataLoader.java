@@ -12,6 +12,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -54,30 +55,34 @@ public class InitialDataLoader implements ApplicationListener<ContextRefreshedEv
             // TODO: 2/26/2020 add more status if needed
 
 
-            if (privilegeRepository.findByTitle(PrivilegeTitle.ACCOUNT_VERIFICATION) == null)
-                privilegeRepository.save(new Privilege(null, PrivilegeTitle.ACCOUNT_VERIFICATION));
+            if (privilegeRepository.findByTitle(PrivilegeTitle.ADMIN_GENERAL_PRIVILEGE) == null)
+                privilegeRepository.save(new Privilege(null, PrivilegeTitle.ADMIN_GENERAL_PRIVILEGE));
+            if (privilegeRepository.findByTitle(PrivilegeTitle.TEACHER_GENERAL_PRIVILEGE) == null)
+                privilegeRepository.save(new Privilege(null, PrivilegeTitle.TEACHER_GENERAL_PRIVILEGE));
+            if (privilegeRepository.findByTitle(PrivilegeTitle.STUDENT_GENERAL_PRIVILEGE) == null)
+                privilegeRepository.save(new Privilege(null, PrivilegeTitle.STUDENT_GENERAL_PRIVILEGE));
+
             // TODO: 2/26/2020 add other privileges when needed
 
 
             if (roleRepository.findByTitle(RoleTitle.ADMIN) == null) {
-                List<Privilege> adminPrivileges = Arrays.asList(
-                        privilegeRepository.findByTitle(PrivilegeTitle.ACCOUNT_VERIFICATION)
-                );
+                List<Privilege> adminPrivileges = new ArrayList<>(
+                        Arrays.asList(privilegeRepository.findByTitle(PrivilegeTitle.ADMIN_GENERAL_PRIVILEGE)));
                 // TODO: 2/26/2020 add all privileges of admin
                 roleRepository.save(new Role(null, RoleTitle.ADMIN, adminPrivileges));
             }
 
             if (roleRepository.findByTitle(RoleTitle.TEACHER) == null) {
-                List<Privilege> teacherPrivileges = Arrays.asList(
-                        // TODO: 2/26/2020 add teacher privileges here
-                );
+                List<Privilege> teacherPrivileges = new ArrayList<>(
+                        Arrays.asList(privilegeRepository.findByTitle(PrivilegeTitle.TEACHER_GENERAL_PRIVILEGE)));
+                // TODO: 2/26/2020 add all privileges of teacher
                 roleRepository.save(new Role(null, RoleTitle.TEACHER, teacherPrivileges));
             }
 
             if (roleRepository.findByTitle(RoleTitle.STUDENT) == null) {
-                List<Privilege> studentPrivileges = Arrays.asList(
-                        // TODO: 2/26/2020 add student privileges here
-                );
+                List<Privilege> studentPrivileges = new ArrayList<>(
+                        Arrays.asList(privilegeRepository.findByTitle(PrivilegeTitle.STUDENT_GENERAL_PRIVILEGE)));
+                // TODO: 2/26/2020 add all privileges of student
                 roleRepository.save(new Role(null, RoleTitle.STUDENT, studentPrivileges));
             }
 

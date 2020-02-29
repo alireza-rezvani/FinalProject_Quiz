@@ -10,20 +10,21 @@
     <h1>ورود</h1>
     <form  action="#" th:action="@{/signIn}" method="post">
 
-
         <p ><input class="text-center rounded" type="text" name="username" placeholder="نام کاربری"/></p>
         <p ><input class="text-center rounded" type="password" name="password" placeholder="رمز عبور"/></p>
 
-        <p th:if="${param.error}" class="text-danger">اطلاعات کاربری نامعتبر است</p>
+        <p th:if="${param.error}" class="text-danger">اطلاعات کاربری نامعتبر است (در غیر اینصورت حساب کاربری شما در حال بررسی است)</p>
 
         <p>
             <input class="btn btn-dark" type="submit" value="تایید"/>
         </p>
     </form>
 
-    <p><form th:action="@{/signUp}"><input class="btn btn-dark" type="submit" value="ثبت نام"></form></p>
+    <div class="row text-center justify-content-center">
+        <form class="m-2" th:action="@{/signUp}"><input class="btn btn-dark" type="submit" value="ثبت نام"></form>
+        <form class="m-2" th:action="@{/}"><input class="btn btn-dark" type="submit" value="بازگشت به صفحه اصلی"></form>
+    </div>
 
-    <form th:action="@{/}"><input class="btn btn-dark" type="submit" value="بازگشت به صفحه اصلی"></form>
 </div>
 </body>
 </html>

@@ -5,6 +5,8 @@ public enum StatusTitle {
     INACTIVE("غیرفعال"),
     WAITING_FOR_VERIFY("در انتظار تایید");
 
+    //adding statuses must be added in initializer too
+
     private String persian;
     StatusTitle(String fa){
         persian = fa;

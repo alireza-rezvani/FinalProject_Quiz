@@ -5,4 +5,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface PersonalInfoRepository extends JpaRepository<PersonalInfo, Long> {
     public PersonalInfo findByNationalCode(String nationalCode);
+    public PersonalInfo findByEmail(String email);
 }

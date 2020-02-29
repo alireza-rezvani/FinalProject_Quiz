@@ -65,7 +65,7 @@ public class MyUserDetail implements UserDetails {
 
     @Override
     public boolean isEnabled() {
-//        return (status.getTitle().equals(StatusTitle.ACTIVE)?true:false);
-        return true;
+        return (status.getTitle().equals(StatusTitle.ACTIVE)?true:false);
+//        return true;
     }
 }

@@ -9,6 +9,7 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
 @EnableWebSecurity
@@ -22,6 +23,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Autowired
     UserDetailsService userDetailsService;
 
+
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
         auth.userDetailsService(userDetailsService);
@@ -34,10 +36,13 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/").permitAll()
                 .antMatchers("/signIn").permitAll()
                 .antMatchers("/signUp").permitAll()
-                .antMatchers("/admin/**").hasRole("ACCOUNT_VERIFICATION")
+                .antMatchers("/admin/**").hasRole("ADMIN_GENERAL_PRIVILEGE")
                 .and()
                 .formLogin()
                 .loginPage("/signIn")
-                .and().logout().logoutRequestMatcher(new AntPathRequestMatcher("/signOut"));
+                .defaultSuccessUrl("/menu")
+                .and()
+                .logout()
+                .logoutRequestMatcher(new AntPathRequestMatcher("/signOut"));
     }
 }

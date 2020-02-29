@@ -2,20 +2,17 @@ package ir.maktab.arf.quiz.controllers;
 
 import ir.maktab.arf.quiz.dto.EditAccountDto;
 import ir.maktab.arf.quiz.dto.SearchAccountDto;
-import ir.maktab.arf.quiz.dto.SignUpInfoDto;
 import ir.maktab.arf.quiz.entities.Account;
 import ir.maktab.arf.quiz.entities.Course;
 import ir.maktab.arf.quiz.entities.PersonalInfo;
 import ir.maktab.arf.quiz.services.*;
 import ir.maktab.arf.quiz.utilities.RoleTitle;
 import ir.maktab.arf.quiz.utilities.StatusTitle;
-import org.dom4j.rule.Mode;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -43,7 +40,7 @@ public class AdminController {
 
     @RequestMapping(value = "")
     public String getAdminPage(){
-        return "admin-page";
+        return "redirect:/menu";
     }
 
     @RequestMapping(value = "/accountsList")
@@ -59,14 +56,12 @@ public class AdminController {
     public String getFilteredAccountsList(Model model, @ModelAttribute SearchAccountDto searchAccountDto){
         List<Account> filteredAccounts = accountService.findAll();
 
-
         filteredAccounts = filteredAccounts.stream()
                 .filter(account -> account.getUsername().contains(searchAccountDto.getUsername()))
                 .filter(account -> account.getPersonalInfo().getNationalCode().contains(searchAccountDto.getNationalCode()))
                 .filter(account -> account.getPersonalInfo().getFirstName().contains(searchAccountDto.getFirstName()))
                 .filter(account -> account.getPersonalInfo().getLastName().contains(searchAccountDto.getLastName()))
                 .collect(Collectors.toList());
-
 
         if (!searchAccountDto.getRoleTitleName().equals("All"))
             filteredAccounts = filteredAccounts.stream()
@@ -77,7 +72,6 @@ public class AdminController {
             filteredAccounts = filteredAccounts.stream()
                 .filter(account -> account.getStatus().getTitle().name().equals(searchAccountDto.getStatusTitleName()))
                     .collect(Collectors.toList());
-
 
         model.addAttribute("allRoles", roleService.findAll());
         model.addAttribute("allStatuses", statusService.findAll());
@@ -118,7 +112,6 @@ public class AdminController {
             isInputInvalid = true;
         }
         // TODO: 2/27/2020 add validation for other inputs and edit redirectUrl if needed
-
 
         if (isInputInvalid) {
             return redirectUrl;
@@ -191,10 +184,30 @@ public class AdminController {
         List<Account> accountsWithRequestedRole = accountService.findAll().stream()
                 .filter(account -> account.getRoles().contains(roleService.findByTitle(RoleTitle.valueOf(roleTitleName))))
                 .collect(Collectors.toList());
+
+        List<Account> accountsToLoad = new ArrayList<>();
+        if (roleTitleName.equals("TEACHER")) {
+            if (requestedCourse.getTeacher() != null) {
+                accountsToLoad = accountsWithRequestedRole.stream()
+                        .filter(account -> !requestedCourse.getTeacher().equals(account))
+                        .collect(Collectors.toList());
+            }
+            else
+                accountsToLoad = accountsWithRequestedRole;
+        }
+        else if (roleTitleName.equals("STUDENT")) {
+            accountsToLoad = accountsWithRequestedRole.stream()
+                    .filter(account -> !requestedCourse.getStudents().contains(account))
+                    .collect(Collectors.toList());
+        }
+        else {
+            // TODO: 2/28/2020 if members with other role added to course
+        }
+
         model.addAttribute("roleTitleName", roleTitleName);
-        model.addAttribute("roleTitleNamePersianHeader", "لیست" + RoleTitle.valueOf(roleTitleName).getPersian() + "ها");
+        model.addAttribute("roleTitleNamePersianHeader", "لیست " + RoleTitle.valueOf(roleTitleName).getPersian() + "ها");
         model.addAttribute("course", requestedCourse);
-        model.addAttribute("accountsToAdd", accountsWithRequestedRole);
+        model.addAttribute("accountsToAdd", accountsToLoad);
         return "choose-account-to-add-to-course-page";
     }
     

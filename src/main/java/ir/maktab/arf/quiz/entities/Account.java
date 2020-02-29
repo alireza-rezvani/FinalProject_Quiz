@@ -27,7 +27,10 @@ public class Account {
 
     @ManyToMany(fetch = FetchType.EAGER)
     private List<Role> roles;
+    // TODO: 2/29/2020 use set
 
     @ManyToOne
     private Status status;
+
+    // TODO: 2/29/2020 add related attributes in both side (if needed) and refactor project
 }

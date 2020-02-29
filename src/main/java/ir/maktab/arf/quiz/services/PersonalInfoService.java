@@ -14,4 +14,18 @@ public class PersonalInfoService {
     public PersonalInfo save(PersonalInfo personalInfo){
         return personalInfoRepository.save(personalInfo);
     }
+
+    public boolean isNationalCodeExisting(String nationalCode){
+        if (personalInfoRepository.findByNationalCode(nationalCode) != null)
+            return true;
+        else
+            return false;
+    }
+
+    public boolean isEmailExisting(String email){
+        if (personalInfoRepository.findByEmail(email) != null)
+            return true;
+        else
+            return false;
+    }
 }
