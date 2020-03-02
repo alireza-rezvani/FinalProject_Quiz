@@ -32,4 +32,7 @@ public class Course {
 
     @ManyToMany
     private List<Account> students;
+
+    @OneToMany(mappedBy = "course", cascade = CascadeType.ALL)
+    private List<Quiz> quizzes;
 }

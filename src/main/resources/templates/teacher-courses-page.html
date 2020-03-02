@@ -24,7 +24,7 @@
             <tr th:each="courseItem:${teacherCourses}">
 
                 <td>
-                    <form th:action="@{/teacher/courseQuizzes/__${courseItem.id}__}">
+                    <form th:action="@{/course/__${courseItem.id}__/quizzes}">
                         <input class="btn btn-light" type="submit" th:value="آزمونها" >
                     </form>
                 </td>
@@ -46,15 +46,6 @@
     </div>
 
 </div>
-
-<script>
-    function delConfirm(id) {
-        if (document.getElementById(id).hidden == false)
-            document.getElementById(id).hidden = true;
-        else
-            document.getElementById(id).hidden = false;
-    }
-</script>
 
 </body>
 </html>

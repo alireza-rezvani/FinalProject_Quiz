@@ -23,4 +23,7 @@ public class Quiz {
 
     @Column(nullable = false)
     private Integer time;
+
+    @ManyToOne
+    private Course course;
 }
