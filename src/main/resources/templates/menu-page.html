@@ -26,8 +26,8 @@
                     <form th:if="${authoritiesNames.contains('ROLE_ADMIN_GENERAL_PRIVILEGE')}" class="m-2" th:action="@{/admin/addCourse}">
                         <input class="btn btn-dark" type="submit" value="دوره ها">
                     </form>
-                    <form th:if="${authoritiesNames.contains('ROLE_TEACHER_GENERAL_PRIVILEGE')}" class="m-2" th:action="@{/teacher}">
-                        <input class="btn btn-dark" type="submit" value="امکانات استاد" disabled>
+                    <form th:if="${authoritiesNames.contains('ROLE_TEACHER_GENERAL_PRIVILEGE')}" class="m-2" th:action="@{/teacher/courses}">
+                        <input class="btn btn-dark" type="submit" value="دوره های تدریسی شما">
                     </form>
                     <form th:if="${authoritiesNames.contains('ROLE_STUDENT_GENERAL_PRIVILEGE')}" class="m-2" th:action="@{/student}">
                         <input class="btn btn-dark" type="submit" value="امکانات دانشجو" disabled>

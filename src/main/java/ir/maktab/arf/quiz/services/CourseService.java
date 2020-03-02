@@ -28,4 +28,8 @@ public class CourseService {
     public Course findById(Long id){
         return courseRepository.findById(id).get();
     }
+
+    public List<Course> findByTeacherUsername(String teacherUsername){
+        return courseRepository.findByTeacherUsername(teacherUsername);
+    }
 }
