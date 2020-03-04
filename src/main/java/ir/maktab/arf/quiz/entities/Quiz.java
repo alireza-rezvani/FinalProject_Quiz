@@ -1,10 +1,12 @@
 package ir.maktab.arf.quiz.entities;
 
+import ir.maktab.arf.quiz.abstraction.Question;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.util.List;
 
 @Data
 @AllArgsConstructor
@@ -26,4 +28,9 @@ public class Quiz {
 
     @ManyToOne
     private Course course;
+
+    @ManyToMany
+    private List<Question> questions;
+
+    private String defaultScoresList;
 }

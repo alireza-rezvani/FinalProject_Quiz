@@ -131,4 +131,6 @@ public class CourseController {
             return "redirect:/menu";
         }
     }
+
+
 }

@@ -14,4 +14,9 @@ public class QuestionService {
     public Question save(Question question){
         return questionRepository.save(question);
     }
+
+    public Question findById(Long id){
+        return questionRepository.findById(id).get();
+    }
+
 }

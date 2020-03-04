@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html xmlns:th="https://www.thymeleaf.org">
+<head>
+    <title>افزودن سوال تشریحی</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <link th:href="@{/css/bootstrap.min.css}"  rel="stylesheet" type="text/css" >
+</head>
+<body  class="text-center row p-5 justify-content-center align-content-center bg-info" style="font-family: 'B Mitra'">
+
+    <h1 >افزودن سوال تشریحی</h1>
+    <form class="m-3" action="#" th:action="@{/quiz/__${quizId}__/addQuestion/DetailedQuestion}" method="post">
+        <p hidden="hidden"><input type="text" th:field="*{question.id}"/></p>
+        <div class="border border-light p-1 m-1 mb-3 row  w-auto justify-content-center  rounded" style="direction: rtl">
+            <input class="text-center rounded m-2" type="text" th:field="*{question.title}" placeholder="عنوان سوال"/>
+            <input class="text-center rounded m-2" type="text" th:field="*{question.definition}" placeholder="صورت سوال"/>
+            <input class="btn btn-dark m-2" type="submit" value="ثبت" />
+        </div>
+    </form>
+
+
+</body>
+</html>

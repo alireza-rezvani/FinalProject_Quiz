@@ -19,6 +19,6 @@ public class Choice {
     @Column(nullable = false)
     private String title;
 
-    @Column(nullable = false)
+    @Column
     private Boolean isTrueChoice;
 }
