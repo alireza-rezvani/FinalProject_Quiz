@@ -9,7 +9,7 @@ import org.springframework.stereotype.Service;
 public class QuizService {
 
     @Autowired
-    QuizRepository quizRepository;
+    private QuizRepository quizRepository;
 
     public Quiz save(Quiz quiz){
         return quizRepository.save(quiz);

@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html xmlns:th="https://www.thymeleaf.org">
+<head>
+    <title>مشاهده سوال</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <link th:href="@{/css/bootstrap.min.css}"  rel="stylesheet" type="text/css" >
+</head>
+<body class="text-center row p-5 justify-content-center align-content-center bg-info" style="font-family: 'B Mitra'">
+
+<div>
+    <h1>مشاهده سوال</h1>
+
+    <div class="text-center justify-content-center" style="direction: rtl" th:if="${T(ir.maktab.arf.quiz.utilities.QuestionTools).getQuestionType(question).name().equals('DetailedQuestion')}">
+        <label>عنوان سوال: </label>
+        <label th:text="${question.title}"></label>
+        <br>
+        <label>صورت سوال: </label>
+        <label th:text="${question.definition}"></label>
+        <br>
+        <input type="text" placeholder="پاسخ">
+    </div>
+
+    <div class="text-center justify-content-center" style="direction: rtl" th:if="${T(ir.maktab.arf.quiz.utilities.QuestionTools).getQuestionType(question).name().equals('MultiChoiceQuestion')}">
+        <label>عنوان سوال: </label>
+        <label th:text="${question.title}"></label>
+        <br>
+        <label>صورت سوال: </label>
+        <label th:text="${question.definition}"></label>
+        <br>
+        <div class="justify-content-between">
+        <input type="checkbox" th:each="choiceItem:${question.choiceList}" th:text="${choiceItem.title}" th:checked="${choiceItem.isTrueChoice==true}">
+        </div>
+    </div>
+</div>
+</body>
+</html>

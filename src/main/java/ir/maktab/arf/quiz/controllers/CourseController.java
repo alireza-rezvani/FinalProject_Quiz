@@ -6,6 +6,7 @@ import ir.maktab.arf.quiz.entities.Quiz;
 import ir.maktab.arf.quiz.services.AccountService;
 import ir.maktab.arf.quiz.services.CourseService;
 import ir.maktab.arf.quiz.services.QuizService;
+import ir.maktab.arf.quiz.utilities.SignedInAccountTools;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -33,21 +34,14 @@ public class CourseController {
     @Autowired
     QuizService quizService;
 
-    private Account getSignInAccount(){
-        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        String username = "";
-        if (principal instanceof UserDetails)
-            username = ((UserDetails)principal).getUsername();
-        else
-            username = principal.toString();
+    @Autowired
+    SignedInAccountTools signedInAccountTools;
 
-        return accountService.findByUsername(username);
-    }
 
     @RequestMapping("/{courseId}/quizzes")
     public String getCourseQuizzes(Model model, @PathVariable Long courseId){
 
-        if (getSignInAccount().equals(courseService.findById(courseId).getTeacher())){
+        if (signedInAccountTools.getAccount().equals(courseService.findById(courseId).getTeacher())){
             List<Quiz> requestedCourseQuizzes = courseService.findById(courseId).getQuizzes();
             model.addAttribute("courseQuizzes", requestedCourseQuizzes);
             model.addAttribute("quiz",new Quiz());
@@ -64,7 +58,7 @@ public class CourseController {
     @RequestMapping("/{courseId}/addQuiz")
     public String addQuiz(Model model, @ModelAttribute Quiz quiz, @PathVariable Long courseId){
 
-        if (getSignInAccount().equals(courseService.findById(courseId).getTeacher())) {
+        if (signedInAccountTools.getAccount().equals(courseService.findById(courseId).getTeacher())) {
 
             Quiz enteredQuiz = quiz;
             if (!enteredQuiz.getTitle().isEmpty() && enteredQuiz.getTime() != null && enteredQuiz.getTime() != 0){
@@ -86,7 +80,7 @@ public class CourseController {
 
     @RequestMapping("/{courseId}/deleteQuiz/{quizId}")
     public String deleteQuiz(Model model, @PathVariable Long courseId, @PathVariable Long quizId){
-        if (getSignInAccount().equals(courseService.findById(courseId).getTeacher())) {
+        if (signedInAccountTools.getAccount().equals(courseService.findById(courseId).getTeacher())) {
             Course updatingCourse = courseService.findById(courseId);
             updatingCourse.getQuizzes().remove(quizService.findById(quizId));
             quizService.removeById(quizId);
@@ -104,7 +98,7 @@ public class CourseController {
 
     @RequestMapping("/{courseId}/editQuiz/{quizId}")
     public String editQuiz(Model model, @PathVariable Long courseId, @PathVariable Long quizId){
-        if (getSignInAccount().equals(courseService.findById(courseId).getTeacher())) {
+        if (signedInAccountTools.getAccount().equals(courseService.findById(courseId).getTeacher())) {
 
             List<Quiz> requestedCourseQuizzes = courseService.findById(courseId).getQuizzes();
             model.addAttribute("courseQuizzes", requestedCourseQuizzes);
@@ -118,7 +112,7 @@ public class CourseController {
 
     @RequestMapping(value = "/{courseId}/editQuiz/{quizId}", method = RequestMethod.POST)
     public String SubmiteditQuiz(Model model, @ModelAttribute Quiz quiz, @PathVariable Long courseId, @PathVariable Long quizId){
-        if (getSignInAccount().equals(courseService.findById(courseId).getTeacher())) {
+        if (signedInAccountTools.getAccount().equals(courseService.findById(courseId).getTeacher())) {
             if (!quiz.getTitle().isEmpty() && quiz.getTime() != null && quiz.getTime() != 0){
                 quizService.save(quiz);
             }

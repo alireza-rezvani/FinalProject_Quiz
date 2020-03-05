@@ -59,7 +59,7 @@
 
             <td>
                 <form th:action="@{/quiz/__${quizId}__/question/__${question.id}__/setTrueChoice/__${choiceItem.id}__}">
-                    <input class="btn btn-light" type="submit" th:value="${choiceItem.isTrueChoice?'لغو گزینه صحیح':'ثبت گزینه صحیح'}" th:disabled="__${T(ir.maktab.arf.quiz.utilities.MultiChoiceQuestionTools).trueChoiceExist(question) && !choiceItem.isTrueChoice}__">
+                    <input class="btn btn-light" type="submit" th:value="${choiceItem.isTrueChoice?'لغو گزینه صحیح':'ثبت گزینه صحیح'}" th:disabled="__${T(ir.maktab.arf.quiz.utilities.QuestionTools).MultiChoiceQuestionContainsATrueChoice(question) && !choiceItem.isTrueChoice}__">
                 </form>
             </td>
 

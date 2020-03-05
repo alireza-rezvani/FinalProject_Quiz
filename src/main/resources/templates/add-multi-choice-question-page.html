@@ -11,6 +11,8 @@
 
     <form class="m-3" action="#" th:action="@{/quiz/__${quizId}__/addQuestion/MultiChoiceQuestion}" method="post">
         <p hidden="hidden"><input type="text" th:field="*{question.id}"/></p>
+        <input type="hidden" th:field="*{question.creatorTeacherId}">
+        <input type="hidden" th:field="*{question.relatedCourseId}">
         <div class="border border-light p-1 m-1 mb-3 row  w-auto justify-content-center  rounded" style="direction: rtl">
             <input class="text-center rounded m-2" type="text" th:field="*{question.title}" placeholder="عنوان سوال"/>
             <input class="text-center rounded m-2" type="text" th:field="*{question.definition}" placeholder="صورت سوال"/>

@@ -8,8 +8,9 @@ import ir.maktab.arf.quiz.entities.Quiz;
 import ir.maktab.arf.quiz.services.ChoiceService;
 import ir.maktab.arf.quiz.services.QuestionService;
 import ir.maktab.arf.quiz.services.QuizService;
-import ir.maktab.arf.quiz.utilities.MultiChoiceQuestionTools;
+import ir.maktab.arf.quiz.utilities.QuestionTools;
 import ir.maktab.arf.quiz.utilities.QuestionType;
+import ir.maktab.arf.quiz.utilities.SignedInAccountTools;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.context.annotation.ClassPathScanningCandidateComponentProvider;
@@ -22,6 +23,8 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
+import java.util.Arrays;
+import java.util.List;
 import java.util.Set;
 
 @Controller
@@ -29,7 +32,7 @@ import java.util.Set;
 @Secured("ROLE_TEACHER_GENERAL_PRIVILEGE")
 public class QuizController {
 
-    // TODO: 3/3/2020 control teacher validation
+    // TODO: 3/3/2020 control teacher item validation
     // TODO: 3/4/2020 check null Booleans if needed
     @Autowired
     private QuizService quizService;
@@ -40,12 +43,40 @@ public class QuizController {
     @Autowired
     private ChoiceService choiceService;
 
+    @Autowired
+    private SignedInAccountTools signedInAccountTools;
+
     @RequestMapping("/{quizId}/questions")
     public String getQuizQuestions(Model model, @PathVariable Long quizId){
 
         model.addAttribute("questions", quizService.findById(quizId).getQuestions());
         model.addAttribute("questionTypes", QuestionType.values());
         return "quiz-questions-page";
+    }
+
+    @RequestMapping("/{quizId}/addQuestion/fromBank")
+    public String addQuestionFromBank(Model model, @PathVariable Long quizId){
+        Long currentTeacherId = signedInAccountTools.getAccount().getId();
+        Long currentCourseId = quizService.findById(quizId).getCourse().getId();
+        List<Question> bankQuestions = questionService.findBankQuestions(currentTeacherId, currentCourseId);
+        List<Question> quizQuestions = quizService.findById(quizId).getQuestions();
+        model.addAttribute("bankQuestions", bankQuestions);
+        model.addAttribute("quizQuestions", quizQuestions);
+        return "question-bank-page";
+    }
+
+    // TODO: 3/5/2020 ids validation in url
+    @RequestMapping("/{quizId}/addQuestion/fromBank/{questionId}")
+    public String addQuestionItemFromBankToQuiz(@PathVariable Long quizId, @PathVariable Long questionId){
+        Quiz requestedQuiz = quizService.findById(quizId);
+        Question requestedQuestion = questionService.findById(questionId);
+        if (requestedQuiz.getQuestions().contains(requestedQuestion))
+            requestedQuiz.getQuestions().remove(requestedQuestion);
+        else
+            requestedQuiz.getQuestions().add(requestedQuestion);
+
+        quizService.save(requestedQuiz);
+        return "redirect:/quiz/" + quizId + "/addQuestion/fromBank";
     }
 
     @RequestMapping("/{quizId}/addQuestion/DetailedQuestion")
@@ -57,12 +88,19 @@ public class QuizController {
     @RequestMapping(value = "/{quizId}/addQuestion/DetailedQuestion", method = RequestMethod.POST)
     public String submitAddDetailedQuestion(@ModelAttribute DetailedQuestion detailedQuestion, @PathVariable Long quizId){
 
+        Long questionIdBeforeSave = detailedQuestion.getId();
         Question savingQuestion;
         if (!detailedQuestion.getTitle().isEmpty() && !detailedQuestion.getDefinition().isEmpty()) {
+//            if (questionIdBeforeSave == null) {
+                detailedQuestion.setRelatedCourseId(quizService.findById(quizId).getCourse().getId());
+                detailedQuestion.setCreatorTeacherId(signedInAccountTools.getAccount().getId());
+//            }
             savingQuestion = questionService.save(detailedQuestion);
-            Quiz updatingQuiz = quizService.findById(quizId);
-            updatingQuiz.getQuestions().add(savingQuestion);
-            quizService.save(updatingQuiz);
+            if (questionIdBeforeSave == null) {
+                Quiz updatingQuiz = quizService.findById(quizId);
+                updatingQuiz.getQuestions().add(savingQuestion);
+                quizService.save(updatingQuiz);
+            }
         }
         return "redirect:/quiz/" + quizId + "/questions";
     }
@@ -78,14 +116,21 @@ public class QuizController {
     @RequestMapping(value = "/{quizId}/addQuestion/MultiChoiceQuestion", method = RequestMethod.POST)
     public String submitAddMultiChoiceQuestion(Model model, @ModelAttribute MultiChoiceQuestion multiChoiceQuestion, @PathVariable Long quizId){
 
+        Long questionIdBeforeSave = multiChoiceQuestion.getId();
         Question savingQuestion;
         if (!multiChoiceQuestion.getTitle().isEmpty() && !multiChoiceQuestion.getDefinition().isEmpty()) {
+
+//            if (questionIdBeforeSave == null) {
+                multiChoiceQuestion.setRelatedCourseId(quizService.findById(quizId).getCourse().getId());
+                multiChoiceQuestion.setCreatorTeacherId(signedInAccountTools.getAccount().getId());
+//            }
             savingQuestion = questionService.save(multiChoiceQuestion);
 
             Quiz updatingQuiz = quizService.findById(quizId);
-            updatingQuiz.getQuestions().add(savingQuestion);
-            quizService.save(updatingQuiz);
-
+            if (questionIdBeforeSave == null) {
+                updatingQuiz.getQuestions().add(savingQuestion);
+                quizService.save(updatingQuiz);
+            }
             model.addAttribute("question",(MultiChoiceQuestion) savingQuestion);
             return "add-multi-choice-question-page";
         }
@@ -105,8 +150,8 @@ public class QuizController {
 
         if (!choice.getTitle().isEmpty()){
             if (choice.getIsTrueChoice() != null && choice.getIsTrueChoice()
-                    && MultiChoiceQuestionTools.trueChoiceExist((MultiChoiceQuestion) questionService.findById(questionId))
-                    && MultiChoiceQuestionTools.getTrueChoice((MultiChoiceQuestion) questionService.findById(questionId)).getId() != choice.getId()){
+                    && QuestionTools.MultiChoiceQuestionContainsATrueChoice((MultiChoiceQuestion) questionService.findById(questionId))
+                    && QuestionTools.getTrueChoiceOfMultiChoiceQuestion((MultiChoiceQuestion) questionService.findById(questionId)).getId() != choice.getId()){
                 //dont save
             }
             else {
@@ -130,7 +175,7 @@ public class QuizController {
 
     @RequestMapping("/{quizId}/question/{questionId}/setTrueChoice/{trueChoiceId}")
     public String addTrueChoice(Model model, @PathVariable Long quizId, @PathVariable Long questionId, @PathVariable Long trueChoiceId){
-        if (!MultiChoiceQuestionTools.trueChoiceExist((MultiChoiceQuestion) questionService.findById(questionId))){
+        if (!QuestionTools.MultiChoiceQuestionContainsATrueChoice((MultiChoiceQuestion) questionService.findById(questionId))){
             Choice requestedChoice = choiceService.findById(trueChoiceId);
             requestedChoice.setIsTrueChoice(true);
             choiceService.save(requestedChoice);
@@ -168,14 +213,66 @@ public class QuizController {
     }
 
 
+    @RequestMapping("/{quizId}/question/{questionId}/view")
+    public String viewQuestion(Model model, @PathVariable Long quizId, @PathVariable Long questionId){
+        if (questionService.findById(questionId) instanceof DetailedQuestion)
+            model.addAttribute("question",(DetailedQuestion) questionService.findById(questionId));
+        else if (questionService.findById(questionId) instanceof MultiChoiceQuestion)
+            model.addAttribute("question",(MultiChoiceQuestion) questionService.findById(questionId));
+        // TODO: 3/4/2020 add other type of questions here 
+        
+        return "view-question-page";
+    }
+
+
+    @RequestMapping("/{quizId}/question/{questionId}/edit")
+    public String editQuestion(Model model, @PathVariable Long quizId, @PathVariable Long questionId){
+        if (questionService.findById(questionId) instanceof DetailedQuestion) {
+            model.addAttribute("question", (DetailedQuestion) questionService.findById(questionId));
+            return "add-detailed-question-page";
+        }
+        else if (questionService.findById(questionId) instanceof MultiChoiceQuestion) {
+            model.addAttribute("question", (MultiChoiceQuestion) questionService.findById(questionId));
+            return "add-multi-choice-question-page";
+        }
+        // TODO: 3/4/2020 add other type of questions here
+
+        return "not-reachable actually";
+    }
+
+
+    @RequestMapping("/{quizId}/question/{questionId}/delete")
+    public String deleteQuestion(@PathVariable Long quizId, @PathVariable Long questionId){
+            Quiz requestedQuiz = quizService.findById(quizId);
+            requestedQuiz.getQuestions().remove(questionService.findById(questionId));
+            quizService.save(requestedQuiz);
+
+        return "redirect:/quiz/" + quizId + "/questions";
+    }
+
+//***************************************************************8test
+
+
     @RequestMapping("/testi")
     public void test(){
+
+        System.out.println(signedInAccountTools.getAccount());
+
+
+        Question question = new MultiChoiceQuestion("hi", Arrays.asList(new Choice(null,"ch",true)));
+        Question question1 = question;
+        System.out.println(question1.getClass().getName());
         ClassPathScanningCandidateComponentProvider provider = new ClassPathScanningCandidateComponentProvider(true);
         provider.addIncludeFilter(new AssignableTypeFilter(Question.class));
 
         Set<BeanDefinition> components = provider.findCandidateComponents("ir/maktab/arf/quiz/entities");
         for (BeanDefinition component : components)
         {
+            System.out.println(component);
+            System.out.println(component.getBeanClassName());
+            System.out.println(component.getBeanClassName().lastIndexOf("."));
+            System.out.println(component.getBeanClassName().substring(component.getBeanClassName().lastIndexOf(".")+1));
+
 
             try {
                 System.out.println(component.getBeanClassName().contains("DetailedQuestion"));

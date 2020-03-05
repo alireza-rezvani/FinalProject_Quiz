@@ -15,6 +15,10 @@
     <div class="border border-light p-1 rounded">
         <h2 class="text-white">افزودن سوال</h2>
         <div class="row  w-auto justify-content-center  rounded" style="direction: rtl">
+            <form th:action="@{/quiz/__${quizId}__/addQuestion/fromBank}">
+                <input class="btn btn-dark m-2" type="submit" value="انتخاب از بانک سوال">
+            </form>
+
             <form class="m-1" action="#" th:each="questionTypeItem:${questionTypes}" th:action="@{/quiz/__${quizId}__/addQuestion/__${questionTypeItem.name()}__}" >
                 <input class="btn btn-dark m-2" type="submit" th:value="${questionTypeItem.getPersian()}" />
             </form>
@@ -22,64 +26,64 @@
         </div>
     </div>
 
-<!--    <div class="m-3 rounded" th:hidden="${allCourses.size()==0}">-->
-<!--        <table class="table table-dark" th:hidden="${allCourses.size()==0}">-->
-<!--            <thead>-->
-<!--            <th colspan="4">عملیات</th>-->
-<!--            <th>تاریخ اتمام</th>-->
-<!--            <th>تاریخ شروع</th>-->
-<!--            <th>عنوان دوره</th>-->
-<!--            <th>شناسه یکتای دوره</th>-->
-<!--            </thead>-->
-<!--            <tbody>-->
-<!--            <tr th:each="courseItem:${allCourses}">-->
 
-<!--                <td>-->
-<!--                    <form th:action="@{/admin/deleteCourse/__${courseItem.id}__}">-->
-<!--                        <input hidden class="btn btn-danger" th:id="${courseItem.id}" type="submit" value="تایید حذف" >-->
-<!--                    </form>-->
-<!--                </td>-->
+    <div class="m-3 rounded" th:hidden="${questions.size()==0}">
+        <table class="table table-dark" th:hidden="${questions.size()==0}">
+            <thead>
+            <th colspan="4">عملیات</th>
+            <th>عنوان سوال</th>
+            <th>نوع سوال</th>
+            <th>شماره سوال</th>
+            </thead>
+            <tbody>
+            <tr th:each="questionItem:${questions}">
 
-<!--                <td><button class="btn btn-light"  th:onclick="|delConfirm(${courseItem.id})|">حذف</button></td>-->
+                <td>
+                    <form th:action="@{/quiz/__${quizId}__/question/__${questionItem.id}__/delete}">
+                        <input hidden class="btn btn-danger" th:id="${questionItem.id}" type="submit" value="تایید حذف" >
+                    </form>
+                </td>
 
-<!--                <td>-->
-<!--                    <form th:action="@{/admin/editCourse/__${courseItem.id}__}">-->
-<!--                        <input class="btn btn-light" type="submit" th:value="ویرایش" >-->
-<!--                    </form>-->
-<!--                </td>-->
+                <td><button class="btn btn-light"  th:onclick="|delConfirm(${questionItem.id})|">حذف</button></td>
 
-<!--                <td>-->
-<!--                    <form th:action="@{/admin/courseMembers/__${courseItem.id}__}">-->
-<!--                        <input class="btn btn-light" type="submit" th:value="اعضا" >-->
-<!--                    </form>-->
-<!--                </td>-->
+                <td>
+                    <form th:action="@{/quiz/__${quizId}__/question/__${questionItem.id}__/edit}">
+                        <input class="btn btn-light" type="submit" th:value="ویرایش" >
+                    </form>
+                </td>
 
-<!--                <td th:text="${courseItem.finishDate.toString().substring(0,10)}"></td>-->
-<!--                <td th:text="${courseItem.startDate.toString().substring(0,10)}"></td>-->
-<!--                <td th:text="${courseItem.title}"></td>-->
-<!--                <td th:text="${courseItem.id}"></td>-->
+                <td>
+                    <form th:action="@{/quiz/__${quizId}__/question/__${questionItem.id}__/view}">
+                        <input class="btn btn-light" type="submit" th:value="مشاهده" >
+                    </form>
+                </td>
 
-<!--            </tr>-->
-<!--            </tbody>-->
-<!--        </table>-->
 
-<!--    </div>-->
+                <td th:text="${questionItem.title}"></td>
+                <td th:text="${T(ir.maktab.arf.quiz.utilities.QuestionTools).getQuestionType(questionItem).getPersian()}"></td>
+                <td th:text="${questionItemStat.index + 1}"></td>
 
-<!--    <div class="row text-center justify-content-center">-->
-<!--        <form class="m-2" th:action="@{/menu}"><input class="btn btn-dark" type="submit" value="بازگشت به منوی اصلی"></form>-->
-<!--        <form class="m-2" th:action="@{/signOut}"><input class="btn btn-dark" type="submit" value="خروج از حساب کاربری"></form>-->
-<!--    </div>-->
+            </tr>
+            </tbody>
+        </table>
 
-<!--</div>-->
+    </div>
 
-<!--<script>-->
-<!--    function delConfirm(id) {-->
-<!--        if (document.getElementById(id).hidden == false)-->
-<!--            document.getElementById(id).hidden = true;-->
-<!--        else-->
-<!--            document.getElementById(id).hidden = false;-->
-<!--    }-->
-<!--</script>-->
+    <div class="row text-center justify-content-center">
+        <form class="m-2" th:action="@{/menu}"><input class="btn btn-dark" type="submit" value="بازگشت به منوی اصلی"></form>
+        <form class="m-2" th:action="@{/signOut}"><input class="btn btn-dark" type="submit" value="خروج از حساب کاربری"></form>
+    </div>
+
+</div>
+
+<script>
+    function delConfirm(id) {
+        if (document.getElementById(id).hidden == false)
+            document.getElementById(id).hidden = true;
+        else
+            document.getElementById(id).hidden = false;
+    }
+</script>
 
 </body>
 </html>
