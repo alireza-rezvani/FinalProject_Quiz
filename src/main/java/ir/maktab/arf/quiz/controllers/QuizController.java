@@ -1,6 +1,8 @@
 package ir.maktab.arf.quiz.controllers;
 
 import ir.maktab.arf.quiz.abstraction.Question;
+import ir.maktab.arf.quiz.dto.Score;
+import ir.maktab.arf.quiz.dto.ScoresOfQuizDto;
 import ir.maktab.arf.quiz.entities.Choice;
 import ir.maktab.arf.quiz.entities.DetailedQuestion;
 import ir.maktab.arf.quiz.entities.MultiChoiceQuestion;
@@ -26,6 +28,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @Controller
 @RequestMapping("/quiz")
@@ -49,8 +52,23 @@ public class QuizController {
     @RequestMapping("/{quizId}/questions")
     public String getQuizQuestions(Model model, @PathVariable Long quizId){
 
+
+
+        ScoresOfQuizDto scores = new ScoresOfQuizDto();
+        for (int i=0; i<quizService.findById(quizId).getQuestions().size(); i++) {
+            if (quizService.findById(quizId).getDefaultScoresList() == null || quizService.findById(quizId).getDefaultScoresList().isEmpty())
+                scores.add(new Score());
+            else{
+                String[] stringScores = quizService.findById(quizId).getDefaultScoresList().split("-");
+                scores.add(new Score(Double.parseDouble(stringScores[i])));
+            }
+
+        }
+
+
         model.addAttribute("questions", quizService.findById(quizId).getQuestions());
         model.addAttribute("questionTypes", QuestionType.values());
+        model.addAttribute("scoresDto", scores);
         return "quiz-questions-page";
     }
 
@@ -250,11 +268,30 @@ public class QuizController {
         return "redirect:/quiz/" + quizId + "/questions";
     }
 
+    @RequestMapping("/{quizId}/saveQuizDefaultScores")
+    public String saveQuizDefaultScores(@ModelAttribute ScoresOfQuizDto scoresOfQuizDto, @PathVariable Long quizId){
+        // TODO: 3/6/2020 print error message for null score --- check being number
+        if (!scoresOfQuizDto.getScores().stream().map(score -> score.getValue()).collect(Collectors.toList()).contains(null)){
+            String defaultScoresOfQuiz = "";
+            for (Double i : scoresOfQuizDto.getScores().stream().map(score -> score.getValue()).collect(Collectors.toList()))
+                defaultScoresOfQuiz += i + "-";
+            Quiz requestedQuiz = quizService.findById(quizId);
+            requestedQuiz.setDefaultScoresList(defaultScoresOfQuiz);
+            quizService.save(requestedQuiz);
+        }
+
+        return "redirect:/quiz/" + quizId + "/questions";
+
+    }
+
 //***************************************************************8test
 
 
     @RequestMapping("/testi")
-    public void test(){
+    public void test(@ModelAttribute ScoresOfQuizDto scores){
+
+        System.out.println(scores);
+
 
         System.out.println(signedInAccountTools.getAccount());
 
