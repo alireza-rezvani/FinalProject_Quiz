@@ -13,10 +13,10 @@
 
 
     <div class="border border-light p-1 rounded">
-        <h2 class="text-white">افزودن سوال</h2>
+        <h4 class="text-white">افزودن سوال</h4>
         <div class="row  w-auto justify-content-center  rounded" style="direction: rtl">
-            <form th:action="@{/quiz/__${quizId}__/addQuestion/fromBank}">
-                <input class="btn btn-dark m-2" type="submit" value="انتخاب از بانک سوال">
+            <form class="m-1" th:action="@{/quiz/__${quizId}__/addQuestion/fromBank}">
+                <input class="btn btn-outline-dark m-2" type="submit" value="انتخاب از بانک سوال">
             </form>
 
             <form class="m-1" action="#" th:each="questionTypeItem:${questionTypes}" th:action="@{/quiz/__${quizId}__/addQuestion/__${questionTypeItem.name()}__}" >
@@ -28,12 +28,13 @@
 
 
 
-    <form th:action="@{/quiz/__${quizId}__/saveQuizDefaultScores}">
+    <form  th:action="@{/quiz/__${quizId}__/saveQuizDefaultScores}">
 
-    <div class="m-3 rounded" th:hidden="${questions.size()==0}">
+    <div class="mt-3 rounded" th:hidden="${questions.size()==0}">
         <table class="table table-dark" th:hidden="${questions.size()==0}">
             <thead>
-            <th colspan="5">عملیات</th>
+            <th colspan="4">عملیات</th>
+            <th>بارم</th>
             <th>عنوان سوال</th>
             <th>نوع سوال</th>
             <th>شماره سوال</th>
@@ -43,41 +44,24 @@
 
 
                 <td>
-                    <input class="text-center rounded m-2" type="text" th:field="*{scoresDto.scores[__${questionItemStat.index}__].value}" placeholder="بارم"/>
-                </td>
-
-<!--                <td>-->
-<!--                    <form th:action="@{/quiz/__${quizId}__/question/__${questionItem.id}__/delete}">-->
-<!--                        <input hidden class="btn btn-danger" th:id="${questionItem.id}" type="submit" value="تایید حذف" >-->
-<!--                    </form>-->
-<!--                </td>-->
-                <td>
                     <a hidden th:href="@{/quiz/__${quizId}__/question/__${questionItem.id}__/delete}" th:id="${questionItem.id}" class="btn btn-danger">تایید حذف</a>
                 </td>
 
 
-                <td><button class="btn btn-light"  th:onclick="|delConfirm(${questionItem.id})|">حذف</button></td>
+                <td><a class="btn btn-light text-dark"  th:onclick="|delConfirm(${questionItem.id})|">حذف</a></td>
 
-<!--                <td>-->
-<!--                    <form th:action="@{/quiz/__${quizId}__/question/__${questionItem.id}__/edit}">-->
-<!--                        <input class="btn btn-light" type="submit" th:value="ویرایش" >-->
-<!--                    </form>-->
-<!--                </td>-->
                 <td>
-                    <a hidden th:href="@{/quiz/__${quizId}__/question/__${questionItem.id}__/edit}" class="btn btn-light">ویرایش</a>
+                    <a th:href="@{/quiz/__${quizId}__/question/__${questionItem.id}__/edit}" class="btn btn-light">ویرایش</a>
+                </td>
+
+                <td>
+                    <a th:href="@{/quiz/__${quizId}__/question/__${questionItem.id}__/view}" class="btn btn-light">مشاهده</a>
                 </td>
 
 
-<!--                <td>-->
-<!--                    <form th:action="@{/quiz/__${quizId}__/question/__${questionItem.id}__/view}">-->
-<!--                        <input class="btn btn-light" type="submit" th:value="مشاهده" >-->
-<!--                    </form>-->
-<!--                </td>-->
                 <td>
-                    <a hidden th:href="@{/quiz/__${quizId}__/question/__${questionItem.id}__/view}" class="btn btn-light">مشاهده</a>
+                    <input class="text-center rounded m-1" style="width: 50px" type="text" th:field="*{scoresDto.scores[__${questionItemStat.index}__].value}" placeholder="بارم"/>
                 </td>
-
-
                 <td th:text="${questionItem.title}"></td>
                 <td th:text="${T(ir.maktab.arf.quiz.utilities.QuestionTools).getQuestionType(questionItem).getPersian()}"></td>
                 <td th:text="${questionItemStat.index + 1}"></td>
@@ -88,10 +72,19 @@
 
     </div>
 
-        <input type="submit" value="ذخیره بارم ها">
+        <div style="direction: rtl" th:if="${questions.size()!=0}" class="row justify-content-end">
+
+            <label class="mt-3 font-weight-bolder ml-2 mr-2"> سقف کل نمره:  </label>
+            <label th:text="${maxScore}" class="mt-3 font-weight-bolder"></label>
+
+            <input class="btn btn-dark mr-3 ml-3" type="submit" value="ذخیره بارم ها" th:if="${questions.size()!=0}" >
+
+
+        </div>
     </form>
 
-    <div class="row text-center justify-content-center">
+    <div class="row text-center justify-content-center m-5">
+        <form class="m-2" th:action="@{/course/__${courseId}__/quizzes}"><input class="btn btn-dark" type="submit" value="بازگشت به لیست آزمون های دوره"></form>
         <form class="m-2" th:action="@{/menu}"><input class="btn btn-dark" type="submit" value="بازگشت به منوی اصلی"></form>
         <form class="m-2" th:action="@{/signOut}"><input class="btn btn-dark" type="submit" value="خروج از حساب کاربری"></form>
     </div>
@@ -100,7 +93,7 @@
 
 <script>
     function delConfirm(id) {
-        if (document.getElementById(id).hidden == false)
+        if (document.getElementById(id).hidden === false)
             document.getElementById(id).hidden = true;
         else
             document.getElementById(id).hidden = false;

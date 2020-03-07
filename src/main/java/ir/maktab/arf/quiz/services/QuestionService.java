@@ -1,6 +1,6 @@
 package ir.maktab.arf.quiz.services;
 
-import ir.maktab.arf.quiz.abstraction.Question;
+import ir.maktab.arf.quiz.entities.Question;
 import ir.maktab.arf.quiz.repositories.QuestionRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -23,5 +23,9 @@ public class QuestionService {
 
     public List<Question> findBankQuestions(Long creatorTeacherId, Long relatedCourseId){
         return questionRepository.findByCreatorTeacherIdAndRelatedCourseId(creatorTeacherId, relatedCourseId);
+    }
+
+    public void deleteById(Long id){
+        questionRepository.deleteById(id);
     }
 }

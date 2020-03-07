@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html xmlns:th="https://www.thymeleaf.org">
 <head>
-    <title>بانک سوالات</title>
+    <title>بانک سوالات دوره</title>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <link th:href="@{/css/bootstrap.min.css}"  rel="stylesheet" type="text/css" >
 </head>
@@ -9,12 +9,24 @@
 
 <div>
 
-    <h1 >بانک سوالات</h1>
+    <h1 >بانک سوالات دوره</h1>
+
+
+    <form th:action="@{/quiz/__${quizId}__/addQuestion/fromBank}" method="post">
+
+        <div class="p-1 m-1 mb-3 row  w-auto justify-content-center  rounded" style="direction: rtl">
+
+            <input class="text-center rounded m-2" type="text" th:field="*{searchQuestionDto.title}" placeholder="عنوان سوال"/>
+
+            <input class="btn btn-dark m-2" type="submit" value="جستجو"/>
+
+        </div>
+    </form>
 
     <div class="m-3 rounded" th:hidden="${bankQuestions.size()==0}">
         <table class="table table-dark" th:hidden="${bankQuestions.size()==0}">
             <thead>
-            <th colspan="3">عملیات</th>
+            <th colspan="5">عملیات</th>
             <th>عنوان سوال</th>
             <th>نوع سوال</th>
             </thead>
@@ -22,13 +34,15 @@
 
             <tr th:each="questionItem:${bankQuestions}" th:bgcolor="${quizQuestions.contains(questionItem)?'28a745':'343a40'}">
 
-<!--                <td>-->
-<!--                    <form th:action="@{/quiz/__${quizId}__/question/__${questionId}__/deleteChoiceItem/__${choiceItem.id}__}">-->
-<!--                        <input hidden class="btn btn-danger" th:id="${choiceItem.id}" type="submit" value="تایید حذف" >-->
-<!--                    </form>-->
-<!--                </td>-->
+                <td>
+                    <form th:action="@{/quiz/__${quizId}__/question/__${questionItem.id}__/deleteFromBank}">
+                        <input hidden class="btn btn-danger" th:id="${questionItem.id}" type="submit" value="تایید حذف" >
+                    </form>
+                </td>
 
-<!--                <td><button class="btn btn-light"  th:onclick="|delConfirm(${choiceItem.id})|">حذف</button></td>-->
+<!--                no need for now-->
+<!--                th:disabled="${T(ir.maktab.arf.quiz.utilities.SignedInAccountTools).getAccount().id != questionItem.creatorTeacherId}"-->
+                <td><button class="btn btn-light"  th:onclick="|delConfirm(${questionItem.id})|" >حذف</button></td>
 
                 <td>
                     <form th:action="@{/quiz/__${quizId}__/question/__${questionItem.id}__/view}">
@@ -58,6 +72,7 @@
     </div>
 
     <div class="row text-center justify-content-center">
+        <form class="m-2" th:action="@{/quiz/__${quizId}__/questions}"><input class="btn btn-dark" type="submit" value="بازگشت به سوالات آزمون"></form>
         <form class="m-2" th:action="@{/menu}"><input class="btn btn-dark" type="submit" value="بازگشت به منوی اصلی"></form>
         <form class="m-2" th:action="@{/signOut}"><input class="btn btn-dark" type="submit" value="خروج از حساب کاربری"></form>
     </div>
@@ -73,50 +88,6 @@
     }
 </script>
 
-
-
-
-<!--<div class="m-3 rounded" th:hidden="${questions.size()==0}">-->
-<!--    <table class="table table-dark" th:hidden="${questions.size()==0}">-->
-<!--        <thead>-->
-<!--        <th colspan="4">عملیات</th>-->
-<!--        <th>عنوان سوال</th>-->
-<!--        <th>نوع سوال</th>-->
-<!--        <th>شماره سوال</th>-->
-<!--        </thead>-->
-<!--        <tbody>-->
-<!--        <tr th:each="questionItem:${questions}">-->
-
-<!--            <td>-->
-<!--                <form th:action="@{/quiz/__${quizId}__/question/__${questionItem.id}__/delete}">-->
-<!--                    <input hidden class="btn btn-danger" th:id="${questionItem.id}" type="submit" value="تایید حذف" >-->
-<!--                </form>-->
-<!--            </td>-->
-
-<!--            <td><button class="btn btn-light"  th:onclick="|delConfirm(${questionItem.id})|">حذف</button></td>-->
-
-<!--            <td>-->
-<!--                <form th:action="@{/quiz/__${quizId}__/question/__${questionItem.id}__/edit}">-->
-<!--                    <input class="btn btn-light" type="submit" th:value="ویرایش" >-->
-<!--                </form>-->
-<!--            </td>-->
-
-<!--            <td>-->
-<!--                <form th:action="@{/quiz/__${quizId}__/question/__${questionItem.id}__/view}">-->
-<!--                    <input class="btn btn-light" type="submit" th:value="مشاهده" >-->
-<!--                </form>-->
-<!--            </td>-->
-
-
-<!--            <td th:text="${questionItem.title}"></td>-->
-<!--            <td th:text="${T(ir.maktab.arf.quiz.utilities.QuestionTools).getQuestionType(questionItem).getPersian()}"></td>-->
-<!--            <td th:text="${questionItemStat.index + 1}"></td>-->
-
-<!--        </tr>-->
-<!--        </tbody>-->
-<!--    </table>-->
-
-<!--</div>-->
 
 </body>
 </html>

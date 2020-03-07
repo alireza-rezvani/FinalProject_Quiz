@@ -1,6 +1,6 @@
 package ir.maktab.arf.quiz.utilities;
 
-import ir.maktab.arf.quiz.abstraction.Question;
+import ir.maktab.arf.quiz.entities.Question;
 import ir.maktab.arf.quiz.entities.Choice;
 import ir.maktab.arf.quiz.entities.MultiChoiceQuestion;
 import org.springframework.beans.factory.config.BeanDefinition;

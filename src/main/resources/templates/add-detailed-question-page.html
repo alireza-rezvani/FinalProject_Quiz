@@ -1,13 +1,14 @@
 <!DOCTYPE html>
 <html xmlns:th="https://www.thymeleaf.org">
 <head>
-    <title>افزودن سوال تشریحی</title>
+    <title>سوال تشریحی</title>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <link th:href="@{/css/bootstrap.min.css}"  rel="stylesheet" type="text/css" >
 </head>
 <body  class="text-center row p-5 justify-content-center align-content-center bg-info" style="font-family: 'B Mitra'">
 
-    <h1 >افزودن سوال تشریحی</h1>
+<div>
+    <h1 >سوال تشریحی</h1>
     <form class="m-3" action="#" th:action="@{/quiz/__${quizId}__/addQuestion/DetailedQuestion}" method="post">
         <p hidden="hidden"><input type="text" th:field="*{question.id}"/></p>
         <input type="hidden" th:field="*{question.creatorTeacherId}">
@@ -20,5 +21,12 @@
     </form>
 
 
+    <div class="row text-center justify-content-center m-5">
+        <form class="m-2" th:action="@{/quiz/__${quizId}__/questions}"><input class="btn btn-dark" type="submit" value="بازگشت به لیست سوالات آزمون"></form>
+        <form class="m-2" th:action="@{/quiz/__${quizId}__/addQuestion/fromBank}"><input class="btn btn-dark" type="submit" value="بازگشت به بانک سوالات دوره"></form>
+        <form class="m-2" th:action="@{/menu}"><input class="btn btn-dark" type="submit" value="بازگشت به منوی اصلی"></form>
+        <form class="m-2" th:action="@{/signOut}"><input class="btn btn-dark" type="submit" value="خروج از حساب کاربری"></form>
+    </div>
+</div>
 </body>
 </html>

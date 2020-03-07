@@ -3,6 +3,7 @@ package ir.maktab.arf.quiz.services;
 import ir.maktab.arf.quiz.entities.Account;
 import ir.maktab.arf.quiz.repositories.AccountRepository;
 import ir.maktab.arf.quiz.repositories.StatusRepository;
+import ir.maktab.arf.quiz.utilities.StatusTitle;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -38,5 +39,17 @@ public class AccountService {
 
     public Account findByUsername(String username){
         return accountRepository.findByUsername(username);
+    }
+
+    public void activateAccount(Long accountId){
+        Account requestedAccount = findById(accountId);
+        requestedAccount.setStatus(statusRepository.findByTitle(StatusTitle.ACTIVE));
+        save(requestedAccount);
+    }
+
+    public void inActivateAccount(Long accountId){
+        Account requestedAccount = findById(accountId);
+        requestedAccount.setStatus(statusRepository.findByTitle(StatusTitle.INACTIVE));
+        save(requestedAccount);
     }
 }

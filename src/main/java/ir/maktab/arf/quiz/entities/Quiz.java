@@ -1,6 +1,5 @@
 package ir.maktab.arf.quiz.entities;
 
-import ir.maktab.arf.quiz.abstraction.Question;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -32,5 +31,8 @@ public class Quiz {
     @ManyToMany
     private List<Question> questions;
 
+    // TODO: 3/7/2020 try another solution for default scores
     private String defaultScoresList;
+
+    // TODO: 3/7/2020 creatorId attribute and disable quiz edit and delete button by other teachers
 }

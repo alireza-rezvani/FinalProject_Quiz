@@ -1,13 +1,14 @@
 <!DOCTYPE html>
 <html xmlns:th="https://www.thymeleaf.org">
 <head>
-    <title>افزودن سوال تستی</title>
+    <title>سوال تستی</title>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <link th:href="@{/css/bootstrap.min.css}"  rel="stylesheet" type="text/css" >
 </head>
 <body  class="text-center row p-5 justify-content-center align-content-center bg-info" style="font-family: 'B Mitra'">
 
-    <h1 >افزودن سوال تستی</h1>
+<div>
+    <h1 >سوال تستی</h1>
 
     <form class="m-3" action="#" th:action="@{/quiz/__${quizId}__/addQuestion/MultiChoiceQuestion}" method="post">
         <p hidden="hidden"><input type="text" th:field="*{question.id}"/></p>
@@ -20,18 +21,26 @@
         </div>
     </form>
 
+    <div class="row text-center justify-content-center font-weight-bolder" style="direction: rtl">
+        <label class="ml-2 mr-2">عنوان سوال:</label>
+        <label th:text="${question.title}"></label>
+    </div>
+    <div class="row text-center justify-content-center font-weight-bolder" style="direction: rtl">
+        <label class="mr-2 ml-2">صورت سوال:</label>
+        <label th:text="${question.definition}"></label>
+    </div>
 
     <form class="m-3" action="#" th:action="@{/quiz/__${quizId}__/question/__${question.id}__/addChoiceItem}">
-<!--        <p hidden="hidden"><input type="text" th:field="*{choice.id}"/></p>-->
-<!--        <input type="hidden" th:field="*{question.id}">-->
-<!--        <input type="hidden" th:field="*{question.title}">-->
-<!--        <input type="hidden" th:field="*{question.definition}">-->
-
-<!--        <div class="border border-light p-1 m-1 mb-3 row  w-auto justify-content-center  rounded" style="direction: rtl">-->
-<!--            <input class="text-center rounded m-2" type="text" th:field="*{choice.choiceTitle}" placeholder="عنوان گزینه'"/>-->
             <input class="btn btn-dark m-2" type="submit" value="افزودن گزینه" th:disabled="${question.id == null}"/>
-<!--        </div>-->
     </form>
 
+
+    <div class="row text-center justify-content-center m-5">
+        <form class="m-2" th:action="@{/quiz/__${quizId}__/questions}"><input class="btn btn-dark" type="submit" value="بازگشت به لیست سوالات آزمون"></form>
+        <form class="m-2" th:action="@{/quiz/__${quizId}__/addQuestion/fromBank}"><input class="btn btn-dark" type="submit" value="بازگشت به بانک سوالات دوره"></form>
+        <form class="m-2" th:action="@{/menu}"><input class="btn btn-dark" type="submit" value="بازگشت به منوی اصلی"></form>
+        <form class="m-2" th:action="@{/signOut}"><input class="btn btn-dark" type="submit" value="خروج از حساب کاربری"></form>
+    </div>
+</div>
 </body>
 </html>

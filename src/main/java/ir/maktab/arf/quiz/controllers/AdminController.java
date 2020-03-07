@@ -135,6 +135,15 @@ public class AdminController {
     }
 
 
+    @RequestMapping("/accountActivation/{accountId}")
+    public String activateAccount(@PathVariable Long accountId){
+        if (accountService.findById(accountId).getStatus().getTitle() != StatusTitle.ACTIVE)
+            accountService.activateAccount(accountId);
+        else
+            accountService.inActivateAccount(accountId);
+        return "redirect:/admin/accountsList";
+    }
+
     @RequestMapping(value = "/addCourse")
     public String addCourse(Model model){
         model.addAttribute("allCourses", courseService.findAll());
@@ -145,7 +154,9 @@ public class AdminController {
     @RequestMapping(value = "/addCourse", method = RequestMethod.POST)
     public String submitCourseAddition(Model model, @ModelAttribute Course course){
 
-        if (course.getStartDate() != null && course.getFinishDate() != null && !course.getTitle().isEmpty())
+        // TODO: 3/7/2020 display message if didnt save 
+        if (course.getStartDate() != null && course.getFinishDate() != null && !course.getTitle().isEmpty()
+                && course.getStartDate().compareTo(course.getFinishDate()) < 0)
             courseService.save(course);
 
         model.addAttribute("allCourses", courseService.findAll());
@@ -244,4 +255,5 @@ public class AdminController {
         courseService.save(requestedCourse);
         return "redirect:/admin/courseMembers/" + courseId;
     }
+
 }

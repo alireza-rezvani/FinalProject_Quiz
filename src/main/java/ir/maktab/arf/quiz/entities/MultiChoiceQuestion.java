@@ -1,6 +1,5 @@
 package ir.maktab.arf.quiz.entities;
 
-import ir.maktab.arf.quiz.abstraction.Question;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;

@@ -42,7 +42,7 @@
 
                 <td>
                     <form th:action="@{/course/__${courseId}__/editQuiz/__${quizItem.id}__}">
-                        <input class="btn btn-light" type="submit" th:value="ویرایش" >
+                        <input class="btn btn-light" type="submit" th:value="ویرایش">
                     </form>
                 </td>
 
@@ -65,6 +65,7 @@
     </div>
 
     <div class="row text-center justify-content-center">
+        <form class="m-2" th:action="@{/teacher/courses}"><input class="btn btn-dark" type="submit" value="بازگشت به لیست دوره ها"></form>
         <form class="m-2" th:action="@{/menu}"><input class="btn btn-dark" type="submit" value="بازگشت به منوی اصلی"></form>
         <form class="m-2" th:action="@{/signOut}"><input class="btn btn-dark" type="submit" value="خروج از حساب کاربری"></form>
     </div>

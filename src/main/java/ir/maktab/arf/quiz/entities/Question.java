@@ -1,4 +1,4 @@
-package ir.maktab.arf.quiz.abstraction;
+package ir.maktab.arf.quiz.entities;
 
 import ir.maktab.arf.quiz.entities.Quiz;
 import lombok.AllArgsConstructor;

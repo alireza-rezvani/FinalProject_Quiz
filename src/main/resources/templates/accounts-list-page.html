@@ -33,7 +33,8 @@
 <table class="table table-dark ">
     <thead>
     <tr>
-        <th colspan="1">عملیات</th>
+        <th colspan="2">عملیات</th>
+        <th>وضعیت</th>
         <th>نام خانوادگی</th>
         <th>نام</th>
         <th>کد ملی</th>
@@ -42,12 +43,20 @@
     </thead>
     <tbody>
     <tr th:each = "accountItem : ${accounts}">
+
+        <td>
+            <form action="#" th:action="@{/admin/accountActivation/__${accountItem.getId()}__}">
+                <input class="btn btn-light" type="submit" th:disabled="${accountItem.id==1}" th:value="${accountItem.status.title.name()=='ACTIVE'?'غیرفعال کردن':'فعال کردن'}">
+            </form>
+        </td>
+
         <td>
             <form action="#" th:action="@{/admin/editAccount/__${accountItem.getId()}__}">
                 <input th:disabled="${accountItem.id==1}" class="btn btn-light" type="submit" value="ویرایش">
             </form>
         </td>
 
+        <td th:text = "${accountItem.status.title.getPersian()}"></td>
         <td th:text = "${accountItem.personalInfo.lastName}"></td>
         <td th:text = "${accountItem.personalInfo.firstName}"></td>
         <td th:text = "${accountItem.personalInfo.nationalCode}"></td>
