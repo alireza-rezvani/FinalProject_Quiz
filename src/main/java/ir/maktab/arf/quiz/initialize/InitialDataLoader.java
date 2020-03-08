@@ -21,24 +21,6 @@ public class InitialDataLoader implements ApplicationListener<ContextRefreshedEv
 
     private boolean alreadySetup = false;
 
-//    @Autowired
-//    private AccountRepository accountRepository;
-//
-//    @Autowired
-//    private PersonalInfoRepository personalInfoRepository;
-//
-//    @Autowired
-//    private RoleRepository roleRepository;
-//
-//    @Autowired
-//    private PrivilegeRepository privilegeRepository;
-//
-//    @Autowired
-//    private StatusRepository statusRepository;
-//
-//    @Autowired
-//    private PasswordEncoder passwordEncoder;
-
     private AccountRepository accountRepository;
     private PersonalInfoRepository personalInfoRepository;
     private RoleRepository roleRepository;

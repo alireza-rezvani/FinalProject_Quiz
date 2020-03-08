@@ -33,21 +33,6 @@ public class QuizController {
 
     // TODO: 3/4/2020 check null Booleans if needed
 
-//    @Autowired
-//    private QuizService quizService;
-//
-//    @Autowired
-//    private QuestionService questionService;
-//
-//    @Autowired
-//    private ChoiceService choiceService;
-//
-//    @Autowired
-//    private CourseService courseService;
-//
-//    @Autowired
-//    private SignedInAccountTools signedInAccountTools;
-
     private QuizService quizService;
     private QuestionService questionService;
     private ChoiceService choiceService;

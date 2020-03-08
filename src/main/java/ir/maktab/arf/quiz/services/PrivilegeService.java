@@ -7,9 +7,6 @@ import org.springframework.stereotype.Service;
 @Service
 public class PrivilegeService {
 
-//    @Autowired
-//    PrivilegeRepository privilegeRepository;
-
     private PrivilegeRepository privilegeRepository;
 
     @Autowired

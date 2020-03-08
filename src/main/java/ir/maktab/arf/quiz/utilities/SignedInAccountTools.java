@@ -10,9 +10,6 @@ import org.springframework.stereotype.Component;
 @Component
 public class SignedInAccountTools {
 
-//    @Autowired
-//    AccountService accountService;
-
     AccountService accountService;
 
     @Autowired

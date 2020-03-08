@@ -11,9 +11,6 @@ import java.util.List;
 @Service
 public class StatusService {
 
-//    @Autowired
-//    StatusRepository statusRepository;
-
     private StatusRepository statusRepository;
 
     @Autowired

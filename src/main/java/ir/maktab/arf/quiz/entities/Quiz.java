@@ -31,7 +31,7 @@ public class Quiz {
     @ManyToMany
     private List<Question> questions;
 
-    // TODO: 3/7/2020 try another solution for default scores
+    //  3/7/2020 try another solution for default scores if needed (however this works fine)
     private String defaultScoresList;
 
     private Long creatorTeacherId;

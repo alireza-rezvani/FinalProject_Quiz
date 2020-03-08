@@ -8,9 +8,6 @@ import org.springframework.stereotype.Service;
 @Service
 public class ChoiceService {
 
-//    @Autowired
-//    ChoiceRepository choiceRepository;
-
     private ChoiceRepository choiceRepository;
 
     @Autowired

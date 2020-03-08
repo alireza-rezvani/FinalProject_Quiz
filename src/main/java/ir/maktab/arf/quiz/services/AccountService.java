@@ -12,12 +12,6 @@ import java.util.List;
 @Service
 public class AccountService {
 
-//    @Autowired
-//    private AccountRepository accountRepository;
-//
-//    @Autowired
-//    private StatusRepository statusRepository;
-
     private AccountRepository accountRepository;
     private StatusRepository statusRepository;
 

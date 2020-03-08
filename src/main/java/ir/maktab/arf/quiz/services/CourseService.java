@@ -10,9 +10,6 @@ import java.util.List;
 @Service
 public class CourseService {
 
-//    @Autowired
-//    CourseRepository courseRepository;
-
     private CourseRepository courseRepository;
 
     @Autowired

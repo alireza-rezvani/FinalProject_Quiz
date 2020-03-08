@@ -8,9 +8,6 @@ import org.springframework.stereotype.Service;
 @Service
 public class QuizService {
 
-//    @Autowired
-//    private QuizRepository quizRepository;
-
     private QuizRepository quizRepository;
 
     @Autowired

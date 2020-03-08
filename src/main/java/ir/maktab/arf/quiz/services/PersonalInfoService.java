@@ -8,9 +8,6 @@ import org.springframework.stereotype.Service;
 @Service
 public class PersonalInfoService {
 
-//    @Autowired
-//    PersonalInfoRepository personalInfoRepository;
-
     private PersonalInfoRepository personalInfoRepository;
 
     @Autowired

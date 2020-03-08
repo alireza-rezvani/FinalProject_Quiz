@@ -10,9 +10,6 @@ import java.util.List;
 @Service
 public class QuestionService {
 
-//    @Autowired
-//    private QuestionRepository questionRepository;
-
     private QuestionRepository questionRepository;
 
     @Autowired

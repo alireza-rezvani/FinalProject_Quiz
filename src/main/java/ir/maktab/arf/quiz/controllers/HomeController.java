@@ -31,22 +31,6 @@ import java.util.stream.Collectors;
 @RequestMapping
 public class HomeController {
 
-//    @Autowired
-//    private AccountService accountService;
-//
-//    @Autowired
-//    private PersonalInfoService personalInfoService;
-//
-//    @Autowired
-//    private RoleService roleService;
-//
-//    @Autowired
-//    private StatusService statusService;
-//
-//    @Autowired
-//    PasswordEncoder passwordEncoder;
-
-
     private AccountService accountService;
     private PersonalInfoService personalInfoService;
     private RoleService roleService;

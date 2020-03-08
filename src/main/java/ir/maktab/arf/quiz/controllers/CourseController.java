@@ -1,6 +1,5 @@
 package ir.maktab.arf.quiz.controllers;
 
-import ir.maktab.arf.quiz.entities.Account;
 import ir.maktab.arf.quiz.entities.Course;
 import ir.maktab.arf.quiz.entities.Quiz;
 import ir.maktab.arf.quiz.services.AccountService;
@@ -9,8 +8,6 @@ import ir.maktab.arf.quiz.services.QuizService;
 import ir.maktab.arf.quiz.utilities.SignedInAccountTools;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.annotation.Secured;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -25,18 +22,6 @@ import java.util.stream.Collectors;
 @Secured("ROLE_TEACHER_GENERAL_PRIVILEGE")
 @RequestMapping("/course")
 public class CourseController {
-
-//    @Autowired
-//    CourseService courseService;
-//
-//    @Autowired
-//    AccountService accountService;
-//
-//    @Autowired
-//    QuizService quizService;
-//
-//    @Autowired
-//    SignedInAccountTools signedInAccountTools;
 
     private CourseService courseService;
     private AccountService accountService;

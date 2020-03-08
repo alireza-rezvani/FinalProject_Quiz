@@ -1,6 +1,5 @@
 package ir.maktab.arf.quiz.security;
 
-import ir.maktab.arf.quiz.repositories.AccountRepository;
 import ir.maktab.arf.quiz.services.AccountService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -10,9 +9,6 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class MyUserDetailService implements UserDetailsService {
-
-//    @Autowired
-//    AccountRepository accountRepository;
 
     private AccountService accountService;
 

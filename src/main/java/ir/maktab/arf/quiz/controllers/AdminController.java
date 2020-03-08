@@ -22,45 +22,6 @@ import java.util.stream.Collectors;
 @RequestMapping(value = "/admin")
 public class AdminController {
 
-    //*****************attribute injection
-//    @Autowired
-//    AccountService accountService;
-
-//    @Autowired
-//    RoleService roleService;
-//
-//    @Autowired
-//    PersonalInfoService personalInfoService;
-//
-//    @Autowired
-//    StatusService statusService;
-//
-//    @Autowired
-//    CourseService courseService;
-
-//********************************setter injection
-//    @Autowired
-//    public void setAccountService(AccountService accountService) {
-//        this.accountService = accountService;
-//    }
-//    @Autowired
-//    public void setRoleService(RoleService roleService) {
-//        this.roleService = roleService;
-//    }
-//    @Autowired
-//    public void setPersonalInfoService(PersonalInfoService personalInfoService) {
-//        this.personalInfoService = personalInfoService;
-//    }
-//    @Autowired
-//    public void setStatusService(StatusService statusService) {
-//        this.statusService = statusService;
-//    }
-//    @Autowired
-//    public void setCourseService(CourseService courseService) {
-//        this.courseService = courseService;
-//    }
-
-    //************************constructor injection
     private AccountService accountService;
     private RoleService roleService;
     private PersonalInfoService personalInfoService;
