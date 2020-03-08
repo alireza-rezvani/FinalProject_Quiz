@@ -8,8 +8,15 @@ import org.springframework.stereotype.Service;
 @Service
 public class QuizService {
 
-    @Autowired
+//    @Autowired
+//    private QuizRepository quizRepository;
+
     private QuizRepository quizRepository;
+
+    @Autowired
+    public QuizService(QuizRepository quizRepository) {
+        this.quizRepository = quizRepository;
+    }
 
     public Quiz save(Quiz quiz){
         return quizRepository.save(quiz);

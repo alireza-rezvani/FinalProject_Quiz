@@ -1,6 +1,7 @@
 package ir.maktab.arf.quiz.security;
 
 import ir.maktab.arf.quiz.repositories.AccountRepository;
+import ir.maktab.arf.quiz.services.AccountService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -10,11 +11,18 @@ import org.springframework.stereotype.Service;
 @Service
 public class MyUserDetailService implements UserDetailsService {
 
+//    @Autowired
+//    AccountRepository accountRepository;
+
+    private AccountService accountService;
+
     @Autowired
-    AccountRepository accountRepository;
+    public MyUserDetailService(AccountService accountService) {
+        this.accountService = accountService;
+    }
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        return new MyUserDetail(accountRepository.findByUsername(username));
+        return new MyUserDetail(accountService.findByUsername(username));
     }
 }

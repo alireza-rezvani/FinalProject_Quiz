@@ -11,8 +11,15 @@ import java.util.List;
 @Service
 public class StatusService {
 
+//    @Autowired
+//    StatusRepository statusRepository;
+
+    private StatusRepository statusRepository;
+
     @Autowired
-    StatusRepository statusRepository;
+    public StatusService(StatusRepository statusRepository) {
+        this.statusRepository = statusRepository;
+    }
 
     public Status findByTitle(StatusTitle title){
         return statusRepository.findByTitle(title);

@@ -19,24 +19,40 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Controller
 @Secured("ROLE_TEACHER_GENERAL_PRIVILEGE")
 @RequestMapping("/course")
 public class CourseController {
 
-    @Autowired
-    CourseService courseService;
+//    @Autowired
+//    CourseService courseService;
+//
+//    @Autowired
+//    AccountService accountService;
+//
+//    @Autowired
+//    QuizService quizService;
+//
+//    @Autowired
+//    SignedInAccountTools signedInAccountTools;
+
+    private CourseService courseService;
+    private AccountService accountService;
+    private QuizService quizService;
+    private SignedInAccountTools signedInAccountTools;
 
     @Autowired
-    AccountService accountService;
-
-    @Autowired
-    QuizService quizService;
-
-    @Autowired
-    SignedInAccountTools signedInAccountTools;
-
+    public CourseController(CourseService courseService,
+                            AccountService accountService,
+                            QuizService quizService,
+                            SignedInAccountTools signedInAccountTools) {
+        this.courseService = courseService;
+        this.accountService = accountService;
+        this.quizService = quizService;
+        this.signedInAccountTools = signedInAccountTools;
+    }
 
     @RequestMapping("/{courseId}/quizzes")
     public String getCourseQuizzes(Model model, @PathVariable Long courseId){
@@ -45,6 +61,26 @@ public class CourseController {
             List<Quiz> requestedCourseQuizzes = courseService.findById(courseId).getQuizzes();
             model.addAttribute("courseQuizzes", requestedCourseQuizzes);
             model.addAttribute("quiz",new Quiz());
+            model.addAttribute("currentTeacherAccount", signedInAccountTools.getAccount());
+            return "quizzes-of-course-page";
+        }
+        else {
+            return "redirect:/menu";
+        }
+
+    }
+
+
+    @RequestMapping("/{courseId}/myQuizzes")
+    public String getCourseMyQuizzes(Model model, @PathVariable Long courseId){
+
+        if (signedInAccountTools.getAccount().equals(courseService.findById(courseId).getTeacher())){
+            List<Quiz> requestedCourseQuizzes = courseService.findById(courseId).getQuizzes().stream()
+                    .filter(quiz -> quiz.getCreatorTeacherId().equals(signedInAccountTools.getAccount().getId()))
+                    .collect(Collectors.toList());
+            model.addAttribute("courseQuizzes", requestedCourseQuizzes);
+            model.addAttribute("quiz",new Quiz());
+            model.addAttribute("currentTeacherAccount", signedInAccountTools.getAccount());
             return "quizzes-of-course-page";
         }
         else {
@@ -64,12 +100,14 @@ public class CourseController {
             if (!enteredQuiz.getTitle().isEmpty() && enteredQuiz.getTime() != null && enteredQuiz.getTime() != 0){
                 Course updatingCourse = courseService.findById(courseId);
                 enteredQuiz.setCourse(updatingCourse);
+                enteredQuiz.setCreatorTeacherId(signedInAccountTools.getAccount().getId());
                 updatingCourse.getQuizzes().add(enteredQuiz);
                 courseService.save(updatingCourse);
             }
             List<Quiz> requestedCourseQuizzes = courseService.findById(courseId).getQuizzes();
             model.addAttribute("courseQuizzes", requestedCourseQuizzes);
             model.addAttribute("quiz", new Quiz());
+            model.addAttribute("currentTeacherAccount", signedInAccountTools.getAccount());
             return "quizzes-of-course-page";
         }
         else {
@@ -89,6 +127,7 @@ public class CourseController {
             List<Quiz> requestedCourseQuizzes = courseService.findById(courseId).getQuizzes();
             model.addAttribute("courseQuizzes", requestedCourseQuizzes);
             model.addAttribute("quiz", new Quiz());
+            model.addAttribute("currentTeacherAccount", signedInAccountTools.getAccount());
             return "quizzes-of-course-page";
         }
         else {
@@ -103,6 +142,7 @@ public class CourseController {
             List<Quiz> requestedCourseQuizzes = courseService.findById(courseId).getQuizzes();
             model.addAttribute("courseQuizzes", requestedCourseQuizzes);
             model.addAttribute("quiz", quizService.findById(quizId));
+            model.addAttribute("currentTeacherAccount", signedInAccountTools.getAccount());
             return "quizzes-of-course-page";
         }
         else {
@@ -119,6 +159,7 @@ public class CourseController {
             List<Quiz> requestedCourseQuizzes = courseService.findById(courseId).getQuizzes();
             model.addAttribute("courseQuizzes", requestedCourseQuizzes);
             model.addAttribute("quiz", new Quiz());
+            model.addAttribute("currentTeacherAccount", signedInAccountTools.getAccount());
             return "quizzes-of-course-page";
         }
         else {

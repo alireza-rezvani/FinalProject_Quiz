@@ -10,8 +10,15 @@ import java.util.List;
 @Service
 public class CourseService {
 
+//    @Autowired
+//    CourseRepository courseRepository;
+
+    private CourseRepository courseRepository;
+
     @Autowired
-    CourseRepository courseRepository;
+    public CourseService(CourseRepository courseRepository) {
+        this.courseRepository = courseRepository;
+    }
 
     public List<Course> findAll(){
         return courseRepository.findAll();

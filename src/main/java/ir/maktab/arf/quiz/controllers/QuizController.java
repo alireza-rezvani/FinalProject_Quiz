@@ -31,23 +31,41 @@ import java.util.stream.Collectors;
 @Secured("ROLE_TEACHER_GENERAL_PRIVILEGE")
 public class QuizController {
 
-    // TODO: 3/3/2020 control teacher item validation like what used in course/courseId/quizzes
     // TODO: 3/4/2020 check null Booleans if needed
-    // TODO: 3/6/2020 edit autowireds
-    @Autowired
+
+//    @Autowired
+//    private QuizService quizService;
+//
+//    @Autowired
+//    private QuestionService questionService;
+//
+//    @Autowired
+//    private ChoiceService choiceService;
+//
+//    @Autowired
+//    private CourseService courseService;
+//
+//    @Autowired
+//    private SignedInAccountTools signedInAccountTools;
+
     private QuizService quizService;
-
-    @Autowired
     private QuestionService questionService;
-
-    @Autowired
     private ChoiceService choiceService;
-
-    @Autowired
     private CourseService courseService;
+    private SignedInAccountTools signedInAccountTools;
 
     @Autowired
-    private SignedInAccountTools signedInAccountTools;
+    public QuizController(QuizService quizService,
+                          QuestionService questionService,
+                          ChoiceService choiceService,
+                          CourseService courseService,
+                          SignedInAccountTools signedInAccountTools) {
+        this.quizService = quizService;
+        this.questionService = questionService;
+        this.choiceService = choiceService;
+        this.courseService = courseService;
+        this.signedInAccountTools = signedInAccountTools;
+    }
 
     @RequestMapping("/{quizId}/questions")
     public String getQuizQuestions(Model model, @PathVariable Long quizId){
@@ -72,6 +90,7 @@ public class QuizController {
             model.addAttribute("questionTypes", QuestionType.values());
             model.addAttribute("scoresDto", scores);
             model.addAttribute("maxScore", maxScore);
+            model.addAttribute("currentTeacherAccount", signedInAccountTools.getAccount());
             return "quiz-questions-page";
 
         }

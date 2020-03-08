@@ -10,8 +10,15 @@ import org.springframework.stereotype.Component;
 @Component
 public class SignedInAccountTools {
 
-    @Autowired
+//    @Autowired
+//    AccountService accountService;
+
     AccountService accountService;
+
+    @Autowired
+    public SignedInAccountTools(AccountService accountService) {
+        this.accountService = accountService;
+    }
 
     public Account getAccount(){
         Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();

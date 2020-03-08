@@ -1,5 +1,6 @@
 package ir.maktab.arf.quiz.security;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
@@ -14,15 +15,28 @@ import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(securedEnabled = true)
+@RequiredArgsConstructor //for autowiring
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
-    @Autowired
-    PasswordEncoder passwordEncoder;
+//    @Autowired
+//    PasswordEncoder passwordEncoder;
+//
+//    @Qualifier("myUserDetailService")
+//    @Autowired
+//    UserDetailsService userDetailsService;
 
-    @Qualifier("myUserDetailService")
-    @Autowired
-    UserDetailsService userDetailsService;
+    private final PasswordEncoder passwordEncoder;
+    private final UserDetailsService userDetailsService;
 
+//    @Autowired
+//    public void setPasswordEncoder(PasswordEncoder passwordEncoder) {
+//        this.passwordEncoder = passwordEncoder;
+//    }
+//
+//    @Autowired
+//    public void setUserDetailsService(UserDetailsService userDetailsService) {
+//        this.userDetailsService = userDetailsService;
+//    }
 
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
@@ -41,7 +55,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .and()
                 .formLogin()
                 .loginPage("/signIn")
-                .defaultSuccessUrl("/menu")
+                .defaultSuccessUrl("/menu")//successful redirect  search
                 .and()
                 .logout()
                 .logoutRequestMatcher(new AntPathRequestMatcher("/signOut"));

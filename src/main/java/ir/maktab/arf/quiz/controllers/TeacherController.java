@@ -1,6 +1,7 @@
 package ir.maktab.arf.quiz.controllers;
 
 import ir.maktab.arf.quiz.services.CourseService;
+import ir.maktab.arf.quiz.utilities.ServiceTools;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -12,8 +13,15 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @RequestMapping("/teacher")
 public class TeacherController {
 
+//    @Autowired
+//    CourseService courseService;
+
+    private CourseService courseService;
+
     @Autowired
-    CourseService courseService;
+    public TeacherController(CourseService courseService) {
+        this.courseService = courseService;
+    }
 
     @RequestMapping("")
     public String getTeacherPage(){

@@ -22,20 +22,63 @@ import java.util.stream.Collectors;
 @RequestMapping(value = "/admin")
 public class AdminController {
 
-    @Autowired
-    AccountService accountService;
+    //*****************attribute injection
+//    @Autowired
+//    AccountService accountService;
+
+//    @Autowired
+//    RoleService roleService;
+//
+//    @Autowired
+//    PersonalInfoService personalInfoService;
+//
+//    @Autowired
+//    StatusService statusService;
+//
+//    @Autowired
+//    CourseService courseService;
+
+//********************************setter injection
+//    @Autowired
+//    public void setAccountService(AccountService accountService) {
+//        this.accountService = accountService;
+//    }
+//    @Autowired
+//    public void setRoleService(RoleService roleService) {
+//        this.roleService = roleService;
+//    }
+//    @Autowired
+//    public void setPersonalInfoService(PersonalInfoService personalInfoService) {
+//        this.personalInfoService = personalInfoService;
+//    }
+//    @Autowired
+//    public void setStatusService(StatusService statusService) {
+//        this.statusService = statusService;
+//    }
+//    @Autowired
+//    public void setCourseService(CourseService courseService) {
+//        this.courseService = courseService;
+//    }
+
+    //************************constructor injection
+    private AccountService accountService;
+    private RoleService roleService;
+    private PersonalInfoService personalInfoService;
+    private StatusService statusService;
+    private CourseService courseService;
 
     @Autowired
-    RoleService roleService;
-
-    @Autowired
-    PersonalInfoService personalInfoService;
-
-    @Autowired
-    StatusService statusService;
-
-    @Autowired
-    CourseService courseService;
+    public AdminController(AccountService accountService,
+                           RoleService roleService,
+                           PersonalInfoService personalInfoService,
+                           StatusService statusService,
+                           CourseService courseService) {
+        this.accountService = accountService;
+        this.roleService = roleService;
+        this.personalInfoService = personalInfoService;
+        this.statusService = statusService;
+        this.courseService = courseService;
+    }
 
 
     @RequestMapping(value = "")
@@ -167,6 +210,8 @@ public class AdminController {
 
     @RequestMapping(value = "/deleteCourse/{id}")
     public String deleteCourse(Model model, @PathVariable Long id){
+        //quizzes will be deleted
+        // we also can delete questions of this course here
         courseService.removeById(id);
         model.addAttribute("allCourses", courseService.findAll());
         model.addAttribute("course", new Course());

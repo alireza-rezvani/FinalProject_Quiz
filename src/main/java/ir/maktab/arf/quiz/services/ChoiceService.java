@@ -8,8 +8,15 @@ import org.springframework.stereotype.Service;
 @Service
 public class ChoiceService {
 
+//    @Autowired
+//    ChoiceRepository choiceRepository;
+
+    private ChoiceRepository choiceRepository;
+
     @Autowired
-    ChoiceRepository choiceRepository;
+    public ChoiceService(ChoiceRepository choiceRepository) {
+        this.choiceRepository = choiceRepository;
+    }
 
     public Choice save(Choice choice){
         return choiceRepository.save(choice);

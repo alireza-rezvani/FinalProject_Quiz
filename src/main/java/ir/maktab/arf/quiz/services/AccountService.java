@@ -12,11 +12,20 @@ import java.util.List;
 @Service
 public class AccountService {
 
-    @Autowired
+//    @Autowired
+//    private AccountRepository accountRepository;
+//
+//    @Autowired
+//    private StatusRepository statusRepository;
+
     private AccountRepository accountRepository;
+    private StatusRepository statusRepository;
 
     @Autowired
-    private StatusRepository statusRepository;
+    public AccountService(AccountRepository accountRepository, StatusRepository statusRepository) {
+        this.accountRepository = accountRepository;
+        this.statusRepository = statusRepository;
+    }
 
     public Account save(Account account){
         return accountRepository.save(account);

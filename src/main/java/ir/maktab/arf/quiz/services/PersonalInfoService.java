@@ -8,8 +8,15 @@ import org.springframework.stereotype.Service;
 @Service
 public class PersonalInfoService {
 
+//    @Autowired
+//    PersonalInfoRepository personalInfoRepository;
+
+    private PersonalInfoRepository personalInfoRepository;
+
     @Autowired
-    PersonalInfoRepository personalInfoRepository;
+    public PersonalInfoService(PersonalInfoRepository personalInfoRepository) {
+        this.personalInfoRepository = personalInfoRepository;
+    }
 
     public PersonalInfo save(PersonalInfo personalInfo){
         return personalInfoRepository.save(personalInfo);

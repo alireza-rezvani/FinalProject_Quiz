@@ -28,6 +28,8 @@
         <label th:text="${question.definition}"></label>
         <br>
         <div class="justify-content-around" style="direction: rtl">
+<!--        it works    -->
+<!--            we can use separated pages for each type of question-->
         <input type="checkbox" class="form-check form-check-inline" th:each="choiceItem:${question.choiceList}" th:text="${choiceItem.title}" th:checked="${choiceItem.isTrueChoice==true}">
         </div>
     </div>

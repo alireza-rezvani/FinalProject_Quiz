@@ -31,20 +31,40 @@ import java.util.stream.Collectors;
 @RequestMapping
 public class HomeController {
 
-    @Autowired
+//    @Autowired
+//    private AccountService accountService;
+//
+//    @Autowired
+//    private PersonalInfoService personalInfoService;
+//
+//    @Autowired
+//    private RoleService roleService;
+//
+//    @Autowired
+//    private StatusService statusService;
+//
+//    @Autowired
+//    PasswordEncoder passwordEncoder;
+
+
     private AccountService accountService;
-
-    @Autowired
     private PersonalInfoService personalInfoService;
-
-    @Autowired
     private RoleService roleService;
-
-    @Autowired
     private StatusService statusService;
+    private PasswordEncoder passwordEncoder;
 
     @Autowired
-    PasswordEncoder passwordEncoder;
+    public HomeController(AccountService accountService,
+                          PersonalInfoService personalInfoService,
+                          RoleService roleService,
+                          StatusService statusService,
+                          PasswordEncoder passwordEncoder) {
+        this.accountService = accountService;
+        this.personalInfoService = personalInfoService;
+        this.roleService = roleService;
+        this.statusService = statusService;
+        this.passwordEncoder = passwordEncoder;
+    }
 
     @Secured(value = {"ROLE_ADMIN_GENERAL_PRIVILEGE", "ROLE_TEACHER_GENERAL_PRIVILEGE", "ROLE_STUDENT_GENERAL_PRIVILEGE"})
     @RequestMapping(value = "/menu")

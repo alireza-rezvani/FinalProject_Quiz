@@ -19,25 +19,47 @@ import java.util.List;
 @Component
 public class InitialDataLoader implements ApplicationListener<ContextRefreshedEvent> {
 
-    boolean alreadySetup = false;
+    private boolean alreadySetup = false;
 
-    @Autowired
+//    @Autowired
+//    private AccountRepository accountRepository;
+//
+//    @Autowired
+//    private PersonalInfoRepository personalInfoRepository;
+//
+//    @Autowired
+//    private RoleRepository roleRepository;
+//
+//    @Autowired
+//    private PrivilegeRepository privilegeRepository;
+//
+//    @Autowired
+//    private StatusRepository statusRepository;
+//
+//    @Autowired
+//    private PasswordEncoder passwordEncoder;
+
     private AccountRepository accountRepository;
-
-    @Autowired
     private PersonalInfoRepository personalInfoRepository;
-
-    @Autowired
     private RoleRepository roleRepository;
-
-    @Autowired
     private PrivilegeRepository privilegeRepository;
-
-    @Autowired
     private StatusRepository statusRepository;
+    private PasswordEncoder passwordEncoder;
 
     @Autowired
-    private PasswordEncoder passwordEncoder;
+    public InitialDataLoader(AccountRepository accountRepository,
+                             PersonalInfoRepository personalInfoRepository,
+                             RoleRepository roleRepository,
+                             PrivilegeRepository privilegeRepository,
+                             StatusRepository statusRepository,
+                             PasswordEncoder passwordEncoder) {
+        this.accountRepository = accountRepository;
+        this.personalInfoRepository = personalInfoRepository;
+        this.roleRepository = roleRepository;
+        this.privilegeRepository = privilegeRepository;
+        this.statusRepository = statusRepository;
+        this.passwordEncoder = passwordEncoder;
+    }
 
     @Override
     @Transactional

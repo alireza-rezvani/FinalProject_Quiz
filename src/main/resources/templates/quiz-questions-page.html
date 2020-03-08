@@ -12,7 +12,7 @@
 
 
 
-    <div class="border border-light p-1 rounded">
+    <div class="border border-light p-1 rounded" th:if="${T(ir.maktab.arf.quiz.utilities.ServiceTools).getQuizService().findById(__${quizId}__).creatorTeacherId == currentTeacherAccount.id}">
         <h4 class="text-white">افزودن سوال</h4>
         <div class="row  w-auto justify-content-center  rounded" style="direction: rtl">
             <form class="m-1" th:action="@{/quiz/__${quizId}__/addQuestion/fromBank}">
@@ -48,10 +48,14 @@
                 </td>
 
 
-                <td><a class="btn btn-light text-dark"  th:onclick="|delConfirm(${questionItem.id})|">حذف</a></td>
+                <td>
+                    <a th:if="${currentTeacherAccount.getId() == questionItem.creatorTeacherId}" class="btn btn-light text-dark"  th:onclick="|delConfirm(${questionItem.id})|">حذف</a>
+                    <button th:if="${currentTeacherAccount.getId() != questionItem.creatorTeacherId}" disabled class="btn btn-light text-dark">حذف</button>
+                </td>
 
                 <td>
-                    <a th:href="@{/quiz/__${quizId}__/question/__${questionItem.id}__/edit}" class="btn btn-light">ویرایش</a>
+                    <a th:if="${currentTeacherAccount.getId() == questionItem.creatorTeacherId}" th:href="@{/quiz/__${quizId}__/question/__${questionItem.id}__/edit}" class="btn btn-light">ویرایش</a>
+                    <button th:if="${currentTeacherAccount.getId() != questionItem.creatorTeacherId}" disabled class="btn btn-light text-dark">ویرایش</button>
                 </td>
 
                 <td>
@@ -60,7 +64,7 @@
 
 
                 <td>
-                    <input class="text-center rounded m-1" style="width: 50px" type="text" th:field="*{scoresDto.scores[__${questionItemStat.index}__].value}" placeholder="بارم"/>
+                    <input th:disabled="${currentTeacherAccount.getId() != questionItem.creatorTeacherId}" class="text-center rounded m-1" style="width: 50px" type="text" th:field="*{scoresDto.scores[__${questionItemStat.index}__].value}" placeholder="بارم"/>
                 </td>
                 <td th:text="${questionItem.title}"></td>
                 <td th:text="${T(ir.maktab.arf.quiz.utilities.QuestionTools).getQuestionType(questionItem).getPersian()}"></td>
@@ -77,7 +81,7 @@
             <label class="mt-3 font-weight-bolder ml-2 mr-2"> سقف کل نمره:  </label>
             <label th:text="${maxScore}" class="mt-3 font-weight-bolder"></label>
 
-            <input class="btn btn-dark mr-3 ml-3" type="submit" value="ذخیره بارم ها" th:if="${questions.size()!=0}" >
+            <input class="btn btn-dark mr-3 ml-3" type="submit" value="ذخیره بارم ها" th:if="${questions.size()!=0}" th:disabled="${T(ir.maktab.arf.quiz.utilities.ServiceTools).getQuizService().findById(__${quizId}__).creatorTeacherId != currentTeacherAccount.id}">
 
 
         </div>

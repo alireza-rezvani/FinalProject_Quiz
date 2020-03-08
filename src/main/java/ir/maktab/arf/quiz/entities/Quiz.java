@@ -34,5 +34,5 @@ public class Quiz {
     // TODO: 3/7/2020 try another solution for default scores
     private String defaultScoresList;
 
-    // TODO: 3/7/2020 creatorId attribute and disable quiz edit and delete button by other teachers
+    private Long creatorTeacherId;
 }

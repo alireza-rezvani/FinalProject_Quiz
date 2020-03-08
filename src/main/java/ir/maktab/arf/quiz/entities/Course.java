@@ -27,6 +27,7 @@ public class Course {
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private Date finishDate;
 
+    // we can define a list of teachers if we need more than a teacher for a course
     @ManyToOne
     private Account teacher;
 
