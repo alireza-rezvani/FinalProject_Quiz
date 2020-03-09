@@ -1,5 +1,6 @@
 package ir.maktab.arf.quiz.services;
 
+import ir.maktab.arf.quiz.entities.Account;
 import ir.maktab.arf.quiz.entities.Course;
 import ir.maktab.arf.quiz.repositories.CourseRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,5 +36,9 @@ public class CourseService {
 
     public List<Course> findByTeacherUsername(String teacherUsername){
         return courseRepository.findByTeacherUsername(teacherUsername);
+    }
+
+    public List<Course> findByStudentAccount(Account studentAccount){
+        return courseRepository.findByStudentsContains(studentAccount);
     }
 }

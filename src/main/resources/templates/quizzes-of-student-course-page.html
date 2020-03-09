@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html xmlns:th="https://www.thymeleaf.org">
+<head>
+    <title>آزمونهای این دوره</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <link th:href="@{/css/bootstrap.min.css}"  rel="stylesheet" type="text/css" >
+</head>
+<body  class="text-center row p-5 justify-content-center align-content-center bg-info" style="font-family: 'B Mitra'">
+
+<div>
+    <h1>آزمونهای این دوره</h1>
+
+    <div class="m-3 rounded" th:hidden="${courseQuizzes.size()==0}">
+        <table class="table table-dark" th:hidden="${courseQuizzes.size()==0}">
+            <thead>
+            <th colspan="1">عملیات</th>
+            <th>زمان آزمون</th>
+            <th>توضیحات آزمون</th>
+            <th>عنوان آزمون</th>
+            <th>شناسه یکتای آزمون</th>
+            </thead>
+            <tbody>
+            <tr th:each="quizItem:${courseQuizzes}">
+
+
+                <td>
+                    <form th:action="@{/student/__${currentStudent.id}__/course/__${courseId}__/quiz/__${quizItem.id}__/questionOfQuiz/1}">
+                        <input class="btn btn-light" type="submit" value="ورود به آزمون">
+                    </form>
+                </td>
+
+
+                <td th:text="${quizItem.time}"></td>
+                <td th:text="${quizItem.description}"></td>
+                <td th:text="${quizItem.title}"></td>
+                <td th:text="${quizItem.id}"></td>
+
+            </tr>
+            </tbody>
+        </table>
+
+    </div>
+
+    <div class="row text-center justify-content-center">
+        <form class="m-2" th:action="@{/student/courses}"><input class="btn btn-dark" type="submit" value="بازگشت به لیست دوره ها"></form>
+        <form class="m-2" th:action="@{/menu}"><input class="btn btn-dark" type="submit" value="بازگشت به منوی اصلی"></form>
+        <form class="m-2" th:action="@{/signOut}"><input class="btn btn-dark" type="submit" value="خروج از حساب کاربری"></form>
+    </div>
+
+</div>
+
+<!--<script>-->
+<!--    function delConfirm(id) {-->
+<!--        if (document.getElementById(id).hidden == false)-->
+<!--            document.getElementById(id).hidden = true;-->
+<!--        else-->
+<!--            document.getElementById(id).hidden = false;-->
+<!--    }-->
+<!--</script>-->
+
+</body>
+</html>
