@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html xmlns:th="https://www.thymeleaf.org">
+<head>
+    <title>شرکت کنندگان آزمون</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <link th:href="@{/css/bootstrap.min.css}"  rel="stylesheet" type="text/css" >
+</head>
+<body  class="text-center row p-5 justify-content-center align-content-center bg-info" style="font-family: 'B Mitra'">
+
+<div>
+    <h1>شرکت کنندگان آزمون</h1>
+
+
+    <div class="m-3 rounded" th:hidden="${quizOperations.size()==0}">
+        <table class="table table-dark" th:hidden="${quizOperations.size()==0}">
+            <thead>
+            <th colspan="1">عملیات</th>
+            <th>نمره کسب شده</th>
+            <th>نام خانوادگی</th>
+            <th>نام</th>
+            <th>نام کابری دانشجو</th>
+            </thead>
+            <tbody>
+            <tr th:each="operationItem:${quizOperations}">
+
+                <td>
+                    <form th:action="@{/quiz/__${quizId}__/participant/__${operationItem.studentId}__/answers/1}">
+                        <input class="btn btn-light" type="submit" th:disabled="${operationItem.isFinished != true}"
+                        th:value="${operationItem.isFinished != true?'آزمون در حال اجرا':'مشاهده پاسخها و نمره دهی'}">
+                    </form>
+                </td>
+
+                <td th:text="${T(ir.maktab.arf.quiz.utilities.ScoresListTools).sum(operationItem.resultScores)}"></td>
+
+                <td th:text="${T(ir.maktab.arf.quiz.utilities.ServiceTools).accountService.findById(operationItem.studentId).personalInfo.lastName}"></td>
+
+                <td th:text="${T(ir.maktab.arf.quiz.utilities.ServiceTools).accountService.findById(operationItem.studentId).personalInfo.firstName}"></td>
+
+                <td th:text="${T(ir.maktab.arf.quiz.utilities.ServiceTools).accountService.findById(operationItem.studentId).username}"></td>
+
+            </tr>
+            </tbody>
+        </table>
+
+    </div>
+
+    <div class="row text-center justify-content-center">
+        <form class="m-2" th:action="@{/menu}"><input class="btn btn-dark" type="submit" value="بازگشت به منوی اصلی"></form>
+        <form class="m-2" th:action="@{/signOut}"><input class="btn btn-dark" type="submit" value="خروج از حساب کاربری"></form>
+    </div>
+
+</div>
+
+</body>
+</html>

@@ -38,4 +38,9 @@ public class QuizOperationService {
     public QuizOperation findById(Long id){
         return quizOperationRepository.findById(id).get();
     }
+
+    public List<QuizOperation> findAllByQuizId(Long quizId){
+        return quizOperationRepository.findAllByQuizId(quizId);
+    }
+
 }

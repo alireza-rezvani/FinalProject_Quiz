@@ -3,8 +3,9 @@ package ir.maktab.arf.quiz.utilities;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Stream;
 
-public class DefaultScoresTools {
+public class ScoresListTools {
 
     public static ArrayList<Double> stringToArrayList(String stringDefaultScores){
         ArrayList<Double> result = new ArrayList<>();
@@ -20,5 +21,9 @@ public class DefaultScoresTools {
                 result += i + "-";
         }
         return result;
+    }
+
+    public static Double sum(String scores){
+        return Stream.of(scores.split("-")).map(Double::parseDouble).mapToDouble(Double::doubleValue).sum();
     }
 }

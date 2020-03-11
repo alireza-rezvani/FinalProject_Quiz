@@ -29,7 +29,7 @@
     <div class="m-3 rounded" th:hidden="${courseQuizzes.size()==0}">
         <table class="table table-dark" th:hidden="${courseQuizzes.size()==0}">
             <thead>
-            <th colspan="4">عملیات</th>
+            <th colspan="6">عملیات</th>
             <th>زمان آزمون</th>
             <th>توضیحات آزمون</th>
             <th>عنوان آزمون</th>
@@ -37,6 +37,18 @@
             </thead>
             <tbody>
             <tr th:each="quizItem:${courseQuizzes}">
+
+                <td>
+                    <form th:action="@{/quiz/__${quizItem.id}__/participants}">
+                        <input class="btn btn-danger" th:id="${quizItem.id}" type="submit" value="شرکت کنندگان" >
+                    </form>
+                </td>
+
+                <td>
+                    <form th:action="@{/course/__${courseId}__/quiz/__${quizItem.id}__/activation}">
+                        <input class="btn btn-danger" th:id="${quizItem.id}" type="submit" value="فعالسازی" >
+                    </form>
+                </td>
 
                 <td>
                     <form th:action="@{/course/__${courseId}__/deleteQuiz/__${quizItem.id}__}">

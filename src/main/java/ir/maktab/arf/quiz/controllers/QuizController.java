@@ -1,15 +1,12 @@
 package ir.maktab.arf.quiz.controllers;
 
 import ir.maktab.arf.quiz.entities.Question;
-import ir.maktab.arf.quiz.dto.Score;
+import ir.maktab.arf.quiz.utilities.Score;
 import ir.maktab.arf.quiz.dto.ScoresOfQuizDto;
 import ir.maktab.arf.quiz.dto.SearchQuestionDto;
 import ir.maktab.arf.quiz.entities.*;
-import ir.maktab.arf.quiz.services.ChoiceService;
-import ir.maktab.arf.quiz.services.CourseService;
-import ir.maktab.arf.quiz.services.QuestionService;
-import ir.maktab.arf.quiz.services.QuizService;
-import ir.maktab.arf.quiz.utilities.DefaultScoresTools;
+import ir.maktab.arf.quiz.services.*;
+import ir.maktab.arf.quiz.utilities.ScoresListTools;
 import ir.maktab.arf.quiz.utilities.QuestionTools;
 import ir.maktab.arf.quiz.utilities.QuestionType;
 import ir.maktab.arf.quiz.utilities.SignedInAccountTools;
@@ -38,18 +35,24 @@ public class QuizController {
     private ChoiceService choiceService;
     private CourseService courseService;
     private SignedInAccountTools signedInAccountTools;
+    private QuizOperationService quizOperationService;
+    private AccountService accountService;
 
     @Autowired
     public QuizController(QuizService quizService,
                           QuestionService questionService,
                           ChoiceService choiceService,
                           CourseService courseService,
-                          SignedInAccountTools signedInAccountTools) {
+                          SignedInAccountTools signedInAccountTools,
+                          QuizOperationService quizOperationService,
+                          AccountService accountService) {
         this.quizService = quizService;
         this.questionService = questionService;
         this.choiceService = choiceService;
         this.courseService = courseService;
         this.signedInAccountTools = signedInAccountTools;
+        this.quizOperationService = quizOperationService;
+        this.accountService = accountService;
     }
 
     @RequestMapping("/{quizId}/questions")
@@ -132,9 +135,9 @@ public class QuizController {
 
                 int requestedQuestionIndex = requestedQuiz.getQuestions().indexOf(requestedQuestion);
                 String defaultScores = requestedQuiz.getDefaultScoresList();
-                ArrayList<Double> doubleScores = DefaultScoresTools.stringToArrayList(defaultScores);
+                ArrayList<Double> doubleScores = ScoresListTools.stringToArrayList(defaultScores);
                 doubleScores.remove(requestedQuestionIndex);
-                String newDefaultScores = DefaultScoresTools.arrayListToString(doubleScores);
+                String newDefaultScores = ScoresListTools.arrayListToString(doubleScores);
 
                 requestedQuiz.setDefaultScoresList(newDefaultScores);
                 requestedQuiz.getQuestions().remove(requestedQuestion);
@@ -386,9 +389,9 @@ public class QuizController {
             Quiz requestedQuiz = quizService.findById(quizId);
 
             int removingQuestionIndex = requestedQuiz.getQuestions().indexOf(questionService.findById(questionId));
-            ArrayList<Double> requestedQuizDefaultScores = DefaultScoresTools.stringToArrayList(requestedQuiz.getDefaultScoresList());
+            ArrayList<Double> requestedQuizDefaultScores = ScoresListTools.stringToArrayList(requestedQuiz.getDefaultScoresList());
             requestedQuizDefaultScores.remove(removingQuestionIndex);
-            String newRequestedQuizDefaultScores = DefaultScoresTools.arrayListToString(requestedQuizDefaultScores);
+            String newRequestedQuizDefaultScores = ScoresListTools.arrayListToString(requestedQuizDefaultScores);
             requestedQuiz.setDefaultScoresList(newRequestedQuizDefaultScores);
 
             requestedQuiz.getQuestions().remove(questionService.findById(questionId));
@@ -438,5 +441,35 @@ public class QuizController {
         else
             return "redirect:/menu";
     }
+
+
+    @RequestMapping("/{quizId}/participants")
+    public String getQuizParticipants(Model model, @PathVariable Long quizId){
+        if (signedInAccountTools.getAccount().equals(quizService.findById(quizId).getCourse().getTeacher())) {
+
+            List<QuizOperation> quizOperations = quizOperationService.findAllByQuizId(quizId);
+            model.addAttribute("quizOperations", quizOperations);
+
+            return "quiz-participants-page";
+        }
+        else
+            return "redirect:/menu";
+    }
+
+//    @RequestMapping("/{quizId}/participant/{studentId}/answers/{questionNumberInQuiz}")
+//    public String getParticipantAnswers(Model model, @PathVariable Long quizId, @PathVariable Long studentId, @PathVariable Integer questionNumberInQuiz){
+//
+//        Question questionItem = quizService.findById(quizId).getQuestions().get(questionNumberInQuiz - 1);
+//        if (questionItem instanceof DetailedQuestion)
+//            model.addAttribute("questionItem", (DetailedQuestion) questionItem);
+//        else if (questionItem instanceof MultiChoiceQuestion)
+//            model.addAttribute("questionItem", (MultiChoiceQuestion) questionItem);
+//        // other types of question...
+//
+//        QuizOperation quizOperation = quizOperationService.
+//        model.addAttribute("answerItem", )
+//
+//        return "quiz-answer-page";
+//    }
 
 }

@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html xmlns:th="https://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <link th:href="@{/css/bootstrap.min.css}"  rel="stylesheet" type="text/css" >
+    <title>پایان آزمون</title>
+</head>
+<body  class="row p-5 text-center p-5 justify-content-center align-content-center bg-info" style="font-family: 'B Mitra'">
+
+<div>
+    <label>آزمون شما به پایان رسید</label>
+
+    <div class="row text-center justify-content-center">
+        <form class="m-2" th:action="@{/student/__${studentId}__/course/__${courseId}__/quizzes}"><input class="btn btn-dark" type="submit" value="بازگشت به لیست آزمونها"></form>
+
+        <form class="m-2" th:action="@{/menu}"><input class="btn btn-dark" type="submit" value="بازگشت به منوی اصلی"></form>
+        <form class="m-2" th:action="@{/signOut}"><input class="btn btn-dark" type="submit" value="خروج از حساب کاربری"></form>
+    </div>
+</div>
+</body>
+</html>

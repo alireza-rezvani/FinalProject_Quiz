@@ -94,6 +94,7 @@ public class StudentController {
                 quizOperation = quizOperationService.findByStudentIdAndCourseIdAndQuizId(studentId, courseId, quizId);
             }
             else {
+                // TODO: 3/11/2020 work on cookies an sessions
 //                session.setAttribute("answersOfQuizDto", new AnswersOfQuizDto());
 
                 quizOperation = new QuizOperation();
@@ -113,6 +114,7 @@ public class StudentController {
                         true,
                         quizOperation.getStartTime(),
                         quizOperation.getFinishDate(),
+                        quizOperation.getResultScores(),
                         quizOperation.getAnswerList());
 
                 Executors.newScheduledThreadPool(1).schedule(
@@ -169,7 +171,7 @@ public class StudentController {
         if (signedInAccountTools.getAccount().equals(accountService.findById(studentId))) {
 
 //            ((AnswersOfQuizDto) session.getAttribute("answersOfQuizDto")).add(bindingAnswerDto);
-        
+
 
 
             QuizOperation quizOperation = quizOperationService.findByStudentIdAndCourseIdAndQuizId(studentId, courseId, quizId);

@@ -30,6 +30,8 @@ public class QuizOperation {
 
     private Date finishDate;
 
+    private String resultScores;
+
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "quizOperation")
     private List<Answer> answerList;
 }

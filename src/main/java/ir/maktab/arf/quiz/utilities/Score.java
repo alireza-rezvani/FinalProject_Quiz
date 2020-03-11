@@ -1,4 +1,4 @@
-package ir.maktab.arf.quiz.dto;
+package ir.maktab.arf.quiz.utilities;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
