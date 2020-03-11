@@ -6,9 +6,59 @@
     <link th:href="@{/css/bootstrap.min.css}"  rel="stylesheet" type="text/css" >
 
 </head>
-<body  class="row text-center  p-5 justify-content-center align-content-center bg-info" style="font-family: 'B Mitra'">
+<body  class="row text-center  p-5 justify-content-center align-content-center bg-info" style="font-family: 'B Mitra'" >
 
+<label>زمان باقیمانده: </label>
 <p id="demo"></p>
+
+<div th:if="${T(ir.maktab.arf.quiz.utilities.QuestionTools).getQuestionType(questionItem).name().equals('DetailedQuestion')}">
+<form th:action="@{/student/__${studentId}__/course/__${courseId}__/quiz/__${quizId}__/enterQuizOperation/question/__${questionNumber + 1}__}" method="post">
+<div class="border border-dark m-4 p-4 rounded font-weight-bolder text-center justify-content-center" style="direction: rtl">
+    <label >عنوان سوال: </label>
+    <label th:text="${questionItem.title}" ></label>
+    <br>
+    <label>صورت سوال: </label>
+    <label th:text="${questionItem.definition}"></label>
+    <br>
+
+    <input type="text" hidden th:field="*{answerDto.id}" >
+    <input type="text" hidden th:field="*{answerDto.questionId}" >
+    <input type="text" hidden th:field="*{answerDto.questionNumberInQuiz}" >
+    <textarea class="form-control" th:rows="5" th:field="*{answerDto.content}" placeholder="پاسخ"></textarea>
+    <input type="submit" th:text="${answerDto.questionNumberInQuiz < allQuestionsCount?'ثبت و سوال بعد':'پایان آزمون'}">
+</div>
+</form>
+
+    <form th:action="@{/student/__${studentId}__/course/__${courseId}__/quiz/__${quizId}__/enterQuizOperation/question/__${questionNumber - 1}__}" method="post">
+        <input type="submit" th:hidden="${questionNumber == 1}" value="سوال قبلی">
+    </form>
+</div>
+
+<div th:if="${T(ir.maktab.arf.quiz.utilities.QuestionTools).getQuestionType(questionItem).name().equals('MultiChoiceQuestion')}">
+    <form th:action="@{/student/__${studentId}__/course/__${courseId}__/quiz/__${quizId}__/enterQuizOperation/question/__${questionNumber + 1}__}" method="post">
+<div class="border border-dark rounded m-4 p-4 font-weight-bolder text-center justify-content-center" style="direction: rtl">
+    <label>عنوان سوال: </label>
+    <label th:text="${questionItem.title}"></label>
+    <br>
+    <label>صورت سوال: </label>
+    <label th:text="${questionItem.definition}"></label>
+    <br>
+    <input type="text" hidden th:field="*{answerDto.id}" >
+    <input type="text" hidden th:field="*{answerDto.questionId}" >
+    <input type="text" hidden th:field="*{answerDto.questionNumberInQuiz}" >
+    <div class="justify-content-around" style="direction: rtl">
+        <input type="checkbox" class="form-check form-check-inline radioCheck" onclick="check(this)" th:field="*{answerDto.content}" th:each="choiceItem:${questionItem.choiceList}" th:text="${choiceItem.title}" th:value="${choiceItem.title}" >
+    </div>
+    <input type="submit" th:text="${answerDto.questionNumberInQuiz < allQuestionsCount?'ثبت و سوال بعد':'پایان آزمون'}">
+
+</div>
+</form>
+    <form th:action="@{/student/__${studentId}__/course/__${courseId}__/quiz/__${quizId}__/enterQuizOperation/question/__${questionNumber - 1}__}" method="post">
+        <input type="submit" th:hidden="${questionNumber == 1}" value="سوال قبلی">
+    </form>
+</div>
+
+
 
 <script th:inline="javascript">
 
@@ -31,6 +81,23 @@
             document.getElementById("demo").innerHTML = "EXPIRED";
         }
     }, 1000);
+</script>
+
+<script>
+    function check(input)
+    {
+        var checkboxes = document.getElementsByClassName("radioCheck");
+
+
+        for(var i = 0; i < checkboxes.length; i++)
+            if(checkboxes[i].checked == true)
+                checkboxes[i].checked = false;
+
+        if(input.checked == true)
+            input.checked = false;
+        else
+            input.checked = true;
+    }
 </script>
 </body>
 </html>

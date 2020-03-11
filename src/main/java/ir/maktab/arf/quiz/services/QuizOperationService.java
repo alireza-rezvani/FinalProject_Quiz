@@ -34,4 +34,8 @@ public class QuizOperationService {
     public QuizOperation findByStudentIdAndCourseIdAndQuizId(Long studentId, Long courseId, Long quizId){
         return quizOperationRepository.findByStudentIdAndCourseIdAndQuizId(studentId, courseId, quizId);
     }
+
+    public QuizOperation findById(Long id){
+        return quizOperationRepository.findById(id).get();
+    }
 }

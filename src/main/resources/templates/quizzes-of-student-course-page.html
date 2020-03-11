@@ -27,7 +27,7 @@
 
 
                 <td>
-                    <form th:action="@{/student/__${currentStudent.id}__/course/__${courseId}__/quiz/__${quizItem.id}__/enterQuizOperation}">
+                    <form th:action="@{/student/__${currentStudent.id}__/course/__${courseId}__/quiz/__${quizItem.id}__/enterQuizOperation/question/1}">
                         <input class="btn btn-light" type="submit"
                                th:value="${idsOfFinishedQuizzes.contains(quizItem.id)?'پایان یافته':(idsOfInProgressQuizzes.contains(quizItem.id)?'ادامه آزمون':'شروع آزمون')}"
                                th:disabled="${idsOfFinishedQuizzes.contains(quizItem.id)}">
@@ -54,15 +54,6 @@
     </div>
 
 </div>
-
-<!--<script>-->
-<!--    function delConfirm(id) {-->
-<!--        if (document.getElementById(id).hidden == false)-->
-<!--            document.getElementById(id).hidden = true;-->
-<!--        else-->
-<!--            document.getElementById(id).hidden = false;-->
-<!--    }-->
-<!--</script>-->
 
 </body>
 </html>
