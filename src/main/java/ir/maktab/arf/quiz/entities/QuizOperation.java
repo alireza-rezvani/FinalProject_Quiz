@@ -34,4 +34,10 @@ public class QuizOperation {
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "quizOperation")
     private List<Answer> answerList;
+
+    private Boolean isAutoGraded;
+    private Boolean isCustomGraded;
+    //88888888888888888888888
+//    @OneToMany(mappedBy = "quizOperation", cascade = CascadeType.ALL)
+//    private List<ParticipantScore> participantScoreList;
 }

@@ -23,7 +23,7 @@
             <th>شناسه یکتای آزمون</th>
             </thead>
             <tbody>
-            <tr th:each="quizItem:${courseQuizzes}" th:bgcolor="${idsOfFinishedQuizzes.contains(quizItem.id)?'693333':(idsOfInProgressQuizzes.contains(quizItem.id)?'336940':'333a69')}">
+            <tr th:each="quizItem:${courseQuizzes}" th:bgcolor="${idsOfFinishedQuizzes.contains(quizItem.id)?'693333':(idsOfInProgressQuizzes.contains(quizItem.id)?'336940':'333a69')}" th:if="${quizItem.isActive}">
 
 
                 <td>

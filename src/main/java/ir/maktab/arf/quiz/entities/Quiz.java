@@ -35,4 +35,11 @@ public class Quiz {
     private String defaultScoresList;
 
     private Long creatorTeacherId;
+
+
+    private Boolean isActive;
+
+    //888888888888888888888888888
+//    @OneToMany(mappedBy = "quiz",cascade = CascadeType.ALL)
+//    private List<DefaultScore> defaultScoreList;
 }

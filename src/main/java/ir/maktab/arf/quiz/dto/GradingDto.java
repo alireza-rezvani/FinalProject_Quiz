@@ -1,0 +1,13 @@
+package ir.maktab.arf.quiz.dto;
+
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
+public class GradingDto {
+    private Double defaultScoreForQuestion;
+    private Double participantScoreForQuestion;
+}

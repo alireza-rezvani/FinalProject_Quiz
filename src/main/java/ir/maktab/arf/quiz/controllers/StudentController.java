@@ -3,6 +3,8 @@ package ir.maktab.arf.quiz.controllers;
 import ir.maktab.arf.quiz.dto.AnswerDto;
 import ir.maktab.arf.quiz.entities.*;
 import ir.maktab.arf.quiz.services.*;
+import ir.maktab.arf.quiz.utilities.QuizOperationTools;
+import ir.maktab.arf.quiz.utilities.ServiceTools;
 import ir.maktab.arf.quiz.utilities.SignedInAccountTools;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.EnableScheduling;
@@ -106,7 +108,8 @@ public class StudentController {
                 quizOperation.setFinishDate(new Date(startTime.getTime() + quizService.findById(quizId).getTime() * 60000));
                 quizOperation = quizOperationService.save(quizOperation);
 
-                final QuizOperation finalQuizOperation = new QuizOperation(
+                final QuizOperation finalQuizOperation
+                = new QuizOperation(
                         quizOperation.getId(),
                         quizOperation.getStudentId(),
                         quizOperation.getCourseId(),
@@ -114,14 +117,30 @@ public class StudentController {
                         true,
                         quizOperation.getStartTime(),
                         quizOperation.getFinishDate(),
-                        quizOperation.getResultScores(),
-                        quizOperation.getAnswerList());
+                        null,
+                        quizOperation.getAnswerList(),
+                        null,
+                        null);
 
-                Executors.newScheduledThreadPool(1).schedule(
-                        () -> quizOperationService.save(finalQuizOperation),
+//*************************************************************************************************8888
+//*************************************************************************************************8888
+//*************************************************************************************************8888
+//*************************************************************************************************8888
+//*************************************************************************************************8888
+
+                Executors.newScheduledThreadPool(2).schedule(
+                        () -> {
+                            quizOperationService.save(finalQuizOperation);
+                        },
                         quizService.findById(quizId).getTime(),
-                        TimeUnit.MINUTES);
+                        TimeUnit.MINUTES
+                );
             }
+//*************************************************************************************************8888
+//*************************************************************************************************8888
+//*************************************************************************************************8888
+//*************************************************************************************************8888
+//*************************************************************************************************8888
 
             if (quizOperation.getIsFinished() != null && quizOperation.getIsFinished() == true)
                 return "quiz-operation-finish-page";
@@ -159,6 +178,18 @@ public class StudentController {
 
     }
 
+//    private void kkk(Long quizId, Long studentId){
+//
+//        QuizOperation qo = quizOperationService.findByQuizIdAndStudentId(quizId, studentId);
+//
+//        final QuizOperation qqq = new QuizOperation(qo.getId(),qo.getStudentId(),qo.getCourseId(),qo.getQuizId(),true,qo.getStartTime(),qo.getFinishDate(),QuizOperationTools.autoPrepareStudentScores(qo),qo.getAnswerList());
+//        quizOperationService.save(qqq);
+////        System.out.println(qo);
+////        qo.setIsFinished(true);
+////        qo.setResultScores(QuizOperationTools.autoPrepareStudentScores(qo));
+////        quizOperationService.save(qo);
+////        System.out.println(qo);
+//    }
 
     @RequestMapping(value = "/{studentId}/course/{courseId}/quiz/{quizId}/enterQuizOperation/question/{questionNumber}", method = RequestMethod.POST)
     public String submitQuizOperation(Model model,
@@ -220,9 +251,15 @@ public class StudentController {
                 return "quiz-operation-page";
             }
             else {
-                quizOperation.setIsFinished(true);
-                quizOperation.setFinishDate(new Date());
-                quizOperationService.save(quizOperation);
+                QuizOperation qo = quizOperationService.findByQuizIdAndStudentId(quizId, studentId);
+                qo.setIsFinished(true);
+                qo.setFinishDate(new Date());
+//                qo.setResultScores(QuizOperationTools.autoPrepareStudentScores(qo));
+                quizOperationService.save(qo);
+
+//                quizOperation.setIsFinished(true);
+//                quizOperation.setFinishDate(new Date());
+//                quizOperationService.save(quizOperation);
                 return "quiz-operation-finish-page";
             }
         }
@@ -234,13 +271,24 @@ public class StudentController {
     @RequestMapping("/testi")
     public String timerr(Model model){
 
-        model.addAttribute("expireDate", new Date().getTime());
-        System.out.println("khkjhkh");
-        Executors.newScheduledThreadPool(1).schedule(() -> System.out.println("Hiii"), 15, TimeUnit.SECONDS);
-        System.out.println("jhgjgjh");
-        System.out.println("jgjhgjghjgkh" +
-                "");
+//        Executors.newScheduledThreadPool(1).schedule(() -> new klll().run(),20,TimeUnit.SECONDS);
+
+
+//        model.addAttribute("expireDate", new Date().getTime());
+//        System.out.println("khkjhkh");
+//        Executors.newScheduledThreadPool(1).schedule(() -> System.out.println("Hiii"), 15, TimeUnit.SECONDS);
+//        System.out.println("jhgjgjh");
+//        System.out.println("jgjhgjghjgkh" +
+//                "");
 
         return "testi";
     }
 }
+//
+//class klll implements Runnable{
+//
+//    @Override
+//    public void run() {
+//        System.out.println(ServiceTools.getQuizService().findById(2L));
+//    }
+//}

@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html xmlns:th="https://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html">
+<head>
+    <meta charset="UTF-8">
+    <title>تصحیح آزمون</title>
+    <link th:href="@{/css/bootstrap.min.css}"  rel="stylesheet" type="text/css" >
+
+</head>
+<body  class="row text-center  p-5 justify-content-center align-content-center bg-info" style="font-family: 'B Mitra'" >
+<div>
+
+
+<div th:if="${T(ir.maktab.arf.quiz.utilities.QuestionTools).getQuestionType(questionItem).name().equals('DetailedQuestion')}">
+    <form th:action="@{/quiz}" method="post">
+        <div class="border border-dark m-4 p-4 rounded font-weight-bolder text-center justify-content-center" style="direction: rtl">
+            <label >عنوان سوال: </label>
+            <label th:text="${questionItem.title}" ></label>
+            <br>
+            <label>صورت سوال: </label>
+            <label th:text="${questionItem.definition}"></label>
+            <br>
+
+            <label>پاسخ دانشجو: </label>
+            <label th:text="${answerItem.content}"></label>
+            <br>
+
+<!--            <input type="text" hidden th:field="*{answerDto.id}" >-->
+<!--            <input type="text" hidden th:field="*{answerDto.questionId}" >-->
+<!--            <input type="text" hidden th:field="*{answerDto.questionNumberInQuiz}" >-->
+<!--            <textarea class="form-control" th:rows="5" th:field="*{answerDto.content}" placeholder="پاسخ"></textarea>-->
+<!--            <input type="submit" th:text="${answerDto.questionNumberInQuiz < allQuestionsCount?'ثبت و سوال بعد':'پایان آزمون'}">-->
+        </div>
+    </form>
+
+<!--    <form th:action="@{/student/__${studentId}__/course/__${courseId}__/quiz/__${quizId}__/enterQuizOperation/question/__${questionNumber - 1}__}" method="post">-->
+<!--        <input type="submit" th:hidden="${questionNumber == 1}" value="سوال قبلی">-->
+<!--    </form>-->
+</div>
+
+<div th:if="${T(ir.maktab.arf.quiz.utilities.QuestionTools).getQuestionType(questionItem).name().equals('MultiChoiceQuestion')}">
+    <form th:action="@{/quiz}" method="post">
+        <div class="border border-dark rounded m-4 p-4 font-weight-bolder text-center justify-content-center" style="direction: rtl">
+            <label>عنوان سوال: </label>
+            <label th:text="${questionItem.title}"></label>
+            <br>
+            <label>صورت سوال: </label>
+            <label th:text="${questionItem.definition}"></label>
+            <br>
+<!--            <input type="text" hidden th:field="*{answerDto.id}" >-->
+<!--            <input type="text" hidden th:field="*{answerDto.questionId}" >-->
+<!--            <input type="text" hidden th:field="*{answerDto.questionNumberInQuiz}" >-->
+            <div class="justify-content-around" style="direction: rtl">
+                <input type="checkbox" class="form-check form-check-inline radioCheck" disabled th:each="choiceItem:${questionItem.choiceList}" th:text="${!choiceItem.isTrueChoice?choiceItem.title:choiceItem.title+'(صحیح)'}" th:checked="${choiceItem.title==answerItem.content}">
+            </div>
+<!--            <input type="submit" th:text="${answerDto.questionNumberInQuiz < allQuestionsCount?'ثبت و سوال بعد':'پایان آزمون'}">-->
+
+        </div>
+    </form>
+<!--    <form th:action="@{/student/__${studentId}__/course/__${courseId}__/quiz/__${quizId}__/enterQuizOperation/question/__${questionNumber - 1}__}" method="post">-->
+<!--        <input type="submit" th:hidden="${questionNumber == 1}" value="سوال قبلی">-->
+<!--    </form>-->
+</div>
+
+    <div class="row text-center justify-content-center">
+        <form class="m-2" th:action="@{/quiz/__${quizId}__/participant/__${studentId}__/question/__${questionNumberInQuiz}__/submitScore}" method="post">
+            <label>نمره پیش فرض</label>
+            <label th:text="${gradingDto.defaultScoreForQuestion}"></label>
+            <br>
+            <input hidden type="text" th:field="*{gradingDto.defaultScoreForQuestion}" >
+
+            <label>نمره کسب شده</label>
+            <label th:text="${gradingDto.participantScoreForQuestion}"></label>
+            <input th:disabled="${quizOperation.isCustomGraded==true}" th:hidden="${T(ir.maktab.arf.quiz.utilities.QuestionTools).getQuestionType(questionItem).name().equals('MultiChoiceQuestion')}" type="text" th:field="*{gradingDto.participantScoreForQuestion}">
+            <p th:if="${param.invalidScoreError}" class="text-danger">نمره وارد شده بزرگتر از نمره پیش فرض سوال است</p>
+
+            <input th:hidden="${quizOperation.isCustomGraded==true}" class="btn btn-dark" type="submit"
+            th:value="${questionNumberInQuiz==questionsCount?'ثبت نمره':'ثبت نمره و رفتن به سوال بعدی'}">
+        </form>
+
+        <div class="row text-center justify-content-center">
+            <form class="m-2"  th:action="@{/quiz/__${quizId}__/participant/__${studentId}__/answers/__${questionNumberInQuiz + 1}__}"><input th:disabled="${questionNumberInQuiz == questionsCount}" class="btn btn-dark" type="submit" value="سوال بعدی"></form>
+            <form class="m-2" th:action="@{/quiz/__${quizId}__/participant/__${studentId}__/answers/__${questionNumberInQuiz - 1}__}"><input th:disabled="${questionNumberInQuiz == 1}" class="btn btn-dark" type="submit" value="سوال قبلی"></form>
+        </div></div>
+
+    </div>
+</div>
+</body>
+</html>

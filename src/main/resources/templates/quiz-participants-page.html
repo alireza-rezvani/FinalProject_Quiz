@@ -10,23 +10,42 @@
 <div>
     <h1>شرکت کنندگان آزمون</h1>
 
+<label>تعداد افراد شرکت کننده</label>
+    <label th:text="${quizOperations.size()}"></label>
+
 
     <div class="m-3 rounded" th:hidden="${quizOperations.size()==0}">
         <table class="table table-dark" th:hidden="${quizOperations.size()==0}">
             <thead>
-            <th colspan="1">عملیات</th>
+            <th colspan="3">عملیات</th>
             <th>نمره کسب شده</th>
             <th>نام خانوادگی</th>
             <th>نام</th>
             <th>نام کابری دانشجو</th>
             </thead>
             <tbody>
-            <tr th:each="operationItem:${quizOperations}">
+            <tr th:each="operationItem:${quizOperations}" th:bgcolor="${operationItem.isCustomGraded==true?'28a745':'343a40'}">
 
                 <td>
                     <form th:action="@{/quiz/__${quizId}__/participant/__${operationItem.studentId}__/answers/1}">
-                        <input class="btn btn-light" type="submit" th:disabled="${operationItem.isFinished != true}"
-                        th:value="${operationItem.isFinished != true?'آزمون در حال اجرا':'مشاهده پاسخها و نمره دهی'}">
+                        <input class="btn btn-light" type="submit" th:disabled="${operationItem.isFinished != true || operationItem.isCustomGraded !=true}"
+                               th:value="${operationItem.isFinished != true? 'آزمون در حال اجرا' : 'مشاهده' }">
+                    </form>
+                </td>
+
+                <td>
+                    <form th:action="@{/quiz/__${quizId}__/participant/__${operationItem.studentId}__/answers/1}">
+                        <input class="btn btn-light" type="submit" th:disabled="${operationItem.isFinished != true || operationItem.isAutoGraded!=true || operationItem.isCustomGraded ==true}"
+                               value="تصحیح دستی">
+                    </form>
+                </td>
+
+
+                <td>
+                    <form th:action="@{/quiz/__${quizId}__/participant/__${operationItem.studentId}__/answers/autoGrading}">
+                        <input class="btn btn-light" type="submit"
+                               th:disabled="${operationItem.isFinished != true || operationItem.isAutoGraded == true}"
+                               value="تصحیح اتوماتیک">
                     </form>
                 </td>
 

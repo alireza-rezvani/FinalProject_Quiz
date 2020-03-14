@@ -1,15 +1,12 @@
 package ir.maktab.arf.quiz.controllers;
 
+import ir.maktab.arf.quiz.dto.GradingDto;
 import ir.maktab.arf.quiz.entities.Question;
-import ir.maktab.arf.quiz.utilities.Score;
+import ir.maktab.arf.quiz.utilities.*;
 import ir.maktab.arf.quiz.dto.ScoresOfQuizDto;
 import ir.maktab.arf.quiz.dto.SearchQuestionDto;
 import ir.maktab.arf.quiz.entities.*;
 import ir.maktab.arf.quiz.services.*;
-import ir.maktab.arf.quiz.utilities.ScoresListTools;
-import ir.maktab.arf.quiz.utilities.QuestionTools;
-import ir.maktab.arf.quiz.utilities.QuestionType;
-import ir.maktab.arf.quiz.utilities.SignedInAccountTools;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Controller;
@@ -72,6 +69,10 @@ public class QuizController {
                 }
 
             }
+
+            System.out.println("***************************************8");
+            quizService.findById(quizId).getQuestions().forEach(System.out::println);
+
 
             model.addAttribute("courseId", quizService.findById(quizId).getCourse().getId());
             model.addAttribute("questions", quizService.findById(quizId).getQuestions());
@@ -450,26 +451,94 @@ public class QuizController {
             List<QuizOperation> quizOperations = quizOperationService.findAllByQuizId(quizId);
             model.addAttribute("quizOperations", quizOperations);
 
+
             return "quiz-participants-page";
         }
         else
             return "redirect:/menu";
     }
 
-//    @RequestMapping("/{quizId}/participant/{studentId}/answers/{questionNumberInQuiz}")
-//    public String getParticipantAnswers(Model model, @PathVariable Long quizId, @PathVariable Long studentId, @PathVariable Integer questionNumberInQuiz){
-//
-//        Question questionItem = quizService.findById(quizId).getQuestions().get(questionNumberInQuiz - 1);
-//        if (questionItem instanceof DetailedQuestion)
-//            model.addAttribute("questionItem", (DetailedQuestion) questionItem);
-//        else if (questionItem instanceof MultiChoiceQuestion)
-//            model.addAttribute("questionItem", (MultiChoiceQuestion) questionItem);
-//        // other types of question...
-//
-//        QuizOperation quizOperation = quizOperationService.
-//        model.addAttribute("answerItem", )
-//
-//        return "quiz-answer-page";
-//    }
+    @RequestMapping("/{quizId}/participant/{studentId}/answers/{questionNumberInQuiz}")
+    public String getParticipantAnswers(Model model, @PathVariable Long quizId, @PathVariable Long studentId, @PathVariable Integer questionNumberInQuiz){
+
+        Question questionItem = quizService.findById(quizId).getQuestions().get(questionNumberInQuiz - 1);
+        if (questionItem instanceof DetailedQuestion)
+            model.addAttribute("questionItem", (DetailedQuestion) questionItem);
+        else if (questionItem instanceof MultiChoiceQuestion)
+            model.addAttribute("questionItem", (MultiChoiceQuestion) questionItem);
+        // other types of question...
+
+        Answer answerItem = null;
+        QuizOperation quizOperation = quizOperationService.findByQuizIdAndStudentId(quizId, studentId);
+
+        //********************************
+//        System.out.println("**************************");
+//        System.out.println(quizOperation.getAnswerList().size());//*********************8
+//        System.out.println("**************************");
+
+
+
+
+        if (quizOperation.getAnswerList().stream()
+                .filter(answer -> answer.getQuestionNumberInQuiz() == questionNumberInQuiz)
+                .count() > 0){
+            answerItem = quizOperation.getAnswerList().stream()
+                    .filter(answer -> answer.getQuestionNumberInQuiz() == questionNumberInQuiz)
+                    .findFirst().get();
+        }
+        model.addAttribute("answerItem", answerItem);
+
+        Double defaultScoreOfQuestion = ScoresListTools.stringToArrayList(quizService.findById(quizId).getDefaultScoresList()).get(questionNumberInQuiz - 1);
+        Double participantScoreForQuestion = ScoresListTools.stringToArrayList(quizOperationService.findByQuizIdAndStudentId(quizId,studentId).getResultScores()).get(questionNumberInQuiz - 1);
+        model.addAttribute("gradingDto", new GradingDto(defaultScoreOfQuestion, participantScoreForQuestion));
+
+        model.addAttribute("quizOperation", quizOperation);
+
+        model.addAttribute("questionsCount", quizService.findById(quizId).getQuestions().size());
+
+        return "quiz-answer-page";
+    }
+
+    @RequestMapping(value = "/{quizId}/participant/{studentId}/question/{questionNumberInQuiz}/submitScore" , method = RequestMethod.POST)
+    public String submitParticipantScore(@ModelAttribute GradingDto gradingDto,@PathVariable Long quizId, @PathVariable Long studentId, @PathVariable Integer questionNumberInQuiz){
+        Integer destinationQuestionNumberInQuiz;
+        if (gradingDto.getParticipantScoreForQuestion() <= gradingDto.getDefaultScoreForQuestion()){
+            QuizOperation relatedQuizOperation = quizOperationService.findByQuizIdAndStudentId(quizId,studentId);
+            List<Double> participantScoresList = ScoresListTools.stringToArrayList(relatedQuizOperation.getResultScores());
+            participantScoresList.set(questionNumberInQuiz - 1, gradingDto.getParticipantScoreForQuestion());
+            String participantScoresString = ScoresListTools.arrayListToString((ArrayList<Double>) participantScoresList);
+            relatedQuizOperation.setResultScores(participantScoresString);
+            quizOperationService.save(relatedQuizOperation);
+            destinationQuestionNumberInQuiz = questionNumberInQuiz + 1;
+
+            if (questionNumberInQuiz == quizService.findById(quizId).getQuestions().size()) {
+                QuizOperation quizOperation = quizOperationService.findByQuizIdAndStudentId(quizId,studentId);
+                quizOperation.setIsCustomGraded(true);
+                quizOperationService.save(quizOperation);
+                return "redirect:/quiz/" + quizId + "/participants";
+            }
+            return "redirect:/quiz/" + quizId + "/participant/" + studentId + "/answers/" + destinationQuestionNumberInQuiz;
+
+        }
+        else {
+            destinationQuestionNumberInQuiz = questionNumberInQuiz;
+            return "redirect:/quiz/" + quizId + "/participant/" + studentId + "/answers/" + destinationQuestionNumberInQuiz + "?invalidScoreError";
+
+        }
+
+
+
+    }
+
+    @RequestMapping("/{quizId}/participant/{studentId}/answers/autoGrading")
+    public String autoGrading(Model model, @PathVariable Long quizId, @PathVariable Long studentId){
+        QuizOperation quizOperation = quizOperationService.findByQuizIdAndStudentId(quizId, studentId);
+        quizOperation.setResultScores(QuizOperationTools.autoPrepareStudentScores(quizOperation));
+        quizOperation.setIsAutoGraded(true);
+
+
+        quizOperationService.save(quizOperation);
+        return "redirect:/quiz/" + quizId + "/participants";
+    }
 
 }

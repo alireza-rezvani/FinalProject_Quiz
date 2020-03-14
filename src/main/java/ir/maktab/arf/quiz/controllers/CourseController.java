@@ -1,10 +1,14 @@
 package ir.maktab.arf.quiz.controllers;
 
 import ir.maktab.arf.quiz.entities.Course;
+import ir.maktab.arf.quiz.entities.MultiChoiceQuestion;
 import ir.maktab.arf.quiz.entities.Quiz;
 import ir.maktab.arf.quiz.services.AccountService;
 import ir.maktab.arf.quiz.services.CourseService;
 import ir.maktab.arf.quiz.services.QuizService;
+import ir.maktab.arf.quiz.utilities.QuestionTools;
+import ir.maktab.arf.quiz.utilities.QuestionType;
+import ir.maktab.arf.quiz.utilities.ScoresListTools;
 import ir.maktab.arf.quiz.utilities.SignedInAccountTools;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.annotation.Secured;
@@ -76,7 +80,7 @@ public class CourseController {
 
 
 
-    @RequestMapping("/{courseId}/addQuiz")
+    @RequestMapping(value = "/{courseId}/addQuiz", method = RequestMethod.POST)
     public String addQuiz(Model model, @ModelAttribute Quiz quiz, @PathVariable Long courseId){
 
         if (signedInAccountTools.getAccount().equals(courseService.findById(courseId).getTeacher())) {
@@ -84,9 +88,18 @@ public class CourseController {
             Quiz enteredQuiz = quiz;
             if (!enteredQuiz.getTitle().isEmpty() && enteredQuiz.getTime() != null && enteredQuiz.getTime() != 0){
                 Course updatingCourse = courseService.findById(courseId);
-                enteredQuiz.setCourse(updatingCourse);
-                enteredQuiz.setCreatorTeacherId(signedInAccountTools.getAccount().getId());
-                updatingCourse.getQuizzes().add(enteredQuiz);
+                if (enteredQuiz.getId() == null) {
+                    enteredQuiz.setCourse(updatingCourse);
+                    enteredQuiz.setCreatorTeacherId(signedInAccountTools.getAccount().getId());
+                    updatingCourse.getQuizzes().add(enteredQuiz);
+                }
+                else {
+                    Quiz updatingQuiz = updatingCourse.getQuizzes().stream().filter(q -> q.getId() == enteredQuiz.getId()).findFirst().get();
+                    updatingQuiz.setTitle(enteredQuiz.getTitle());
+                    updatingQuiz.setDescription(enteredQuiz.getDescription());
+                    updatingQuiz.setTime(enteredQuiz.getTime());
+                    quizService.save(updatingQuiz);
+                }
                 courseService.save(updatingCourse);
             }
             List<Quiz> requestedCourseQuizzes = courseService.findById(courseId).getQuizzes();
@@ -135,22 +148,65 @@ public class CourseController {
         }
     }
 
-    @RequestMapping(value = "/{courseId}/editQuiz/{quizId}", method = RequestMethod.POST)
-    public String SubmiteditQuiz(Model model, @ModelAttribute Quiz quiz, @PathVariable Long courseId, @PathVariable Long quizId){
-        if (signedInAccountTools.getAccount().equals(courseService.findById(courseId).getTeacher())) {
-            if (!quiz.getTitle().isEmpty() && quiz.getTime() != null && quiz.getTime() != 0){
-                quizService.save(quiz);
-            }
-            List<Quiz> requestedCourseQuizzes = courseService.findById(courseId).getQuizzes();
-            model.addAttribute("courseQuizzes", requestedCourseQuizzes);
-            model.addAttribute("quiz", new Quiz());
-            model.addAttribute("currentTeacherAccount", signedInAccountTools.getAccount());
-            return "quizzes-of-course-page";
+    @RequestMapping("{courseId}/quiz/{quizId}/activation")
+    public String quizActivation(@PathVariable Long courseId, @PathVariable Long quizId){
+        Quiz requestedQuiz = quizService.findById(quizId);
+        if (requestedQuiz.getIsActive() != null && requestedQuiz.getIsActive() == true) {
+            requestedQuiz.setIsActive(false);
+            quizService.save(requestedQuiz);
+
+            return "redirect:/course/" + courseId + "/quizzes";
         }
         else {
-            return "redirect:/menu";
+            long numberOfMultiChoiceQuestionsOfQuiz = requestedQuiz.getQuestions().stream()
+                    .filter(question -> QuestionTools.getQuestionType(question).equals(QuestionType.MultiChoiceQuestion))
+                    .count();
+            long numberOfMultiChoiceQuestionsWithTrueChoice = requestedQuiz.getQuestions().stream()
+                    .filter(question -> QuestionTools.getQuestionType(question).equals(QuestionType.MultiChoiceQuestion))
+                    .filter(question -> QuestionTools.MultiChoiceQuestionContainsATrueChoice((MultiChoiceQuestion) question))
+                    .count();
+
+            boolean containsMultiChoiceQuestionWithoutTrueChoice = numberOfMultiChoiceQuestionsOfQuiz > numberOfMultiChoiceQuestionsWithTrueChoice;
+            boolean containsZeroDefaultScore = ScoresListTools.stringToArrayList(requestedQuiz.getDefaultScoresList()).contains(0.0);
+
+            if (containsMultiChoiceQuestionWithoutTrueChoice || containsZeroDefaultScore || requestedQuiz.getQuestions().size() == 0){
+                String redirectUrl =  "redirect:/course/" + courseId + "/quizzes?";
+                if (containsMultiChoiceQuestionWithoutTrueChoice)
+                    redirectUrl += "&trueChoiceNotExistError";
+                if (containsZeroDefaultScore)
+                    redirectUrl += "&zeroDefaultScoreError";
+                if (requestedQuiz.getQuestions().size() == 0)
+                    redirectUrl += "&blankQuizError";
+
+                return redirectUrl;
+            }
+            else {
+                requestedQuiz.setIsActive(true);
+                quizService.save(requestedQuiz);
+                return "redirect:/course/" + courseId + "/quizzes";
+
+            }
         }
+
+
     }
+
+//    @RequestMapping(value = "/{courseId}/editQuiz/{quizId}", method = RequestMethod.POST)
+//    public String SubmiteditQuiz(Model model, @ModelAttribute Quiz quiz, @PathVariable Long courseId, @PathVariable Long quizId){
+//        if (signedInAccountTools.getAccount().equals(courseService.findById(courseId).getTeacher())) {
+//            if (!quiz.getTitle().isEmpty() && quiz.getTime() != null && quiz.getTime() != 0){
+//                quizService.save(quiz);
+//            }
+//            List<Quiz> requestedCourseQuizzes = courseService.findById(courseId).getQuizzes();
+//            model.addAttribute("courseQuizzes", requestedCourseQuizzes);
+//            model.addAttribute("quiz", new Quiz());
+//            model.addAttribute("currentTeacherAccount", signedInAccountTools.getAccount());
+//            return "quizzes-of-course-page";
+//        }
+//        else {
+//            return "redirect:/menu";
+//        }
+//    }
 
 
 }

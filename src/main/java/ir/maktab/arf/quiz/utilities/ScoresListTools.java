@@ -9,8 +9,10 @@ public class ScoresListTools {
 
     public static ArrayList<Double> stringToArrayList(String stringDefaultScores){
         ArrayList<Double> result = new ArrayList<>();
-        for (String i : stringDefaultScores.split("-"))
-            result.add(Double.parseDouble(i));
+        if (stringDefaultScores != null) {
+            for (String i : stringDefaultScores.split("-"))
+                result.add(Double.parseDouble(i));
+        }
         return result;
     }
 
@@ -24,6 +26,9 @@ public class ScoresListTools {
     }
 
     public static Double sum(String scores){
+        if (scores == null || scores.split("-") == null || scores.split("-").length == 0)
+            return 0.0;
+        else
         return Stream.of(scores.split("-")).map(Double::parseDouble).mapToDouble(Double::doubleValue).sum();
     }
 }

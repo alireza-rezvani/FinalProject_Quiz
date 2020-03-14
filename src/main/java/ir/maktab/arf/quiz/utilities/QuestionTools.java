@@ -1,5 +1,6 @@
 package ir.maktab.arf.quiz.utilities;
 
+import ir.maktab.arf.quiz.entities.Answer;
 import ir.maktab.arf.quiz.entities.Question;
 import ir.maktab.arf.quiz.entities.Choice;
 import ir.maktab.arf.quiz.entities.MultiChoiceQuestion;
@@ -69,5 +70,15 @@ public class QuestionTools {
         }
         else
             return null;
+    }
+
+    public static boolean isAnswerOfMultiChoiceQuestion(MultiChoiceQuestion multiChoiceQuestion, String answer){
+        if (multiChoiceQuestion.getChoiceList().stream()
+                .filter(q -> q.getIsTrueChoice() != null && q.getIsTrueChoice() == true)
+                .findFirst().get().getTitle().equals(answer)
+        )
+            return true;
+        else
+            return false;
     }
 }

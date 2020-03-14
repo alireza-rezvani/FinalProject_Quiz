@@ -1,6 +1,7 @@
 package ir.maktab.arf.quiz.utilities;
 
 import ir.maktab.arf.quiz.services.AccountService;
+import ir.maktab.arf.quiz.services.QuestionService;
 import ir.maktab.arf.quiz.services.QuizService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -10,6 +11,7 @@ public class ServiceTools {
 
     private static QuizService quizService;
     private static AccountService accountService;
+    private static QuestionService questionService;
 
     @Autowired
     private void setQuizService(QuizService quizService){
@@ -21,6 +23,11 @@ public class ServiceTools {
         ServiceTools.accountService = accountService;
     }
 
+    @Autowired
+    private void setQuestionService(QuestionService questionService){
+        ServiceTools.questionService = questionService;
+    }
+
 
 
     public static QuizService getQuizService(){
@@ -28,5 +35,8 @@ public class ServiceTools {
     }
     public static AccountService getAccountService(){
         return ServiceTools.accountService;
+    }
+    public static QuestionService getQuestionService(){
+        return ServiceTools.questionService;
     }
 }

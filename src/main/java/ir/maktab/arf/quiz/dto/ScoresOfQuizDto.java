@@ -1,5 +1,6 @@
 package ir.maktab.arf.quiz.dto;
 
+import ir.maktab.arf.quiz.utilities.Score;
 import lombok.Data;
 
 import java.util.ArrayList;

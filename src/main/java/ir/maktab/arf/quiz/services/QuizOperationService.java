@@ -43,4 +43,13 @@ public class QuizOperationService {
         return quizOperationRepository.findAllByQuizId(quizId);
     }
 
+    public QuizOperation findByQuizIdAndStudentId(Long quizId, Long studentId){
+        return quizOperationRepository.findByQuizIdAndStudentId(quizId, studentId).get(0);
+    }
+
+
+    public void setFinished(Long quizId, Long stuId){
+        findByQuizIdAndStudentId(quizId, stuId).setIsFinished(true);
+    }
+
 }
