@@ -37,7 +37,4 @@ public class QuizOperation {
 
     private Boolean isAutoGraded;
     private Boolean isCustomGraded;
-    //88888888888888888888888
-//    @OneToMany(mappedBy = "quizOperation", cascade = CascadeType.ALL)
-//    private List<ParticipantScore> participantScoreList;
 }

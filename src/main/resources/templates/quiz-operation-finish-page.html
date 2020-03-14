@@ -8,7 +8,7 @@
 <body  class="row p-5 text-center p-5 justify-content-center align-content-center bg-info" style="font-family: 'B Mitra'">
 
 <div>
-    <label>آزمون شما به پایان رسید</label>
+    <label class="alert alert-danger p-2 font-weight-bolder">آزمون شما به پایان رسیده است</label>
 
     <div class="row text-center justify-content-center">
         <form class="m-2" th:action="@{/student/__${studentId}__/course/__${courseId}__/quizzes}"><input class="btn btn-dark" type="submit" value="بازگشت به لیست آزمونها"></form>

@@ -86,7 +86,7 @@ public class CourseController {
         if (signedInAccountTools.getAccount().equals(courseService.findById(courseId).getTeacher())) {
 
             Quiz enteredQuiz = quiz;
-            if (!enteredQuiz.getTitle().isEmpty() && enteredQuiz.getTime() != null && enteredQuiz.getTime() != 0){
+            if (!enteredQuiz.getTitle().isEmpty() && enteredQuiz.getTime() != null && enteredQuiz.getTime() > 0 && enteredQuiz.getTime() < 1440){
                 Course updatingCourse = courseService.findById(courseId);
                 if (enteredQuiz.getId() == null) {
                     enteredQuiz.setCourse(updatingCourse);
@@ -150,63 +150,47 @@ public class CourseController {
 
     @RequestMapping("{courseId}/quiz/{quizId}/activation")
     public String quizActivation(@PathVariable Long courseId, @PathVariable Long quizId){
-        Quiz requestedQuiz = quizService.findById(quizId);
-        if (requestedQuiz.getIsActive() != null && requestedQuiz.getIsActive() == true) {
-            requestedQuiz.setIsActive(false);
-            quizService.save(requestedQuiz);
+        if (signedInAccountTools.getAccount().equals(courseService.findById(courseId).getTeacher())) {
 
-            return "redirect:/course/" + courseId + "/quizzes";
-        }
-        else {
-            long numberOfMultiChoiceQuestionsOfQuiz = requestedQuiz.getQuestions().stream()
-                    .filter(question -> QuestionTools.getQuestionType(question).equals(QuestionType.MultiChoiceQuestion))
-                    .count();
-            long numberOfMultiChoiceQuestionsWithTrueChoice = requestedQuiz.getQuestions().stream()
-                    .filter(question -> QuestionTools.getQuestionType(question).equals(QuestionType.MultiChoiceQuestion))
-                    .filter(question -> QuestionTools.MultiChoiceQuestionContainsATrueChoice((MultiChoiceQuestion) question))
-                    .count();
-
-            boolean containsMultiChoiceQuestionWithoutTrueChoice = numberOfMultiChoiceQuestionsOfQuiz > numberOfMultiChoiceQuestionsWithTrueChoice;
-            boolean containsZeroDefaultScore = ScoresListTools.stringToArrayList(requestedQuiz.getDefaultScoresList()).contains(0.0);
-
-            if (containsMultiChoiceQuestionWithoutTrueChoice || containsZeroDefaultScore || requestedQuiz.getQuestions().size() == 0){
-                String redirectUrl =  "redirect:/course/" + courseId + "/quizzes?";
-                if (containsMultiChoiceQuestionWithoutTrueChoice)
-                    redirectUrl += "&trueChoiceNotExistError";
-                if (containsZeroDefaultScore)
-                    redirectUrl += "&zeroDefaultScoreError";
-                if (requestedQuiz.getQuestions().size() == 0)
-                    redirectUrl += "&blankQuizError";
-
-                return redirectUrl;
-            }
-            else {
-                requestedQuiz.setIsActive(true);
+            Quiz requestedQuiz = quizService.findById(quizId);
+            if (requestedQuiz.getIsActive() != null && requestedQuiz.getIsActive() == true) {
+                requestedQuiz.setIsActive(false);
                 quizService.save(requestedQuiz);
+
                 return "redirect:/course/" + courseId + "/quizzes";
+            } else {
+                long numberOfMultiChoiceQuestionsOfQuiz = requestedQuiz.getQuestions().stream()
+                        .filter(question -> QuestionTools.getQuestionType(question).equals(QuestionType.MultiChoiceQuestion))
+                        .count();
+                long numberOfMultiChoiceQuestionsWithTrueChoice = requestedQuiz.getQuestions().stream()
+                        .filter(question -> QuestionTools.getQuestionType(question).equals(QuestionType.MultiChoiceQuestion))
+                        .filter(question -> QuestionTools.MultiChoiceQuestionContainsATrueChoice((MultiChoiceQuestion) question))
+                        .count();
 
+                boolean containsMultiChoiceQuestionWithoutTrueChoice = numberOfMultiChoiceQuestionsOfQuiz > numberOfMultiChoiceQuestionsWithTrueChoice;
+                boolean containsZeroDefaultScore = ScoresListTools.stringToArrayList(requestedQuiz.getDefaultScoresList()).contains(0.0);
+
+                if (containsMultiChoiceQuestionWithoutTrueChoice || containsZeroDefaultScore || requestedQuiz.getQuestions().size() == 0) {
+                    String redirectUrl = "redirect:/course/" + courseId + "/quizzes?";
+                    if (containsMultiChoiceQuestionWithoutTrueChoice)
+                        redirectUrl += "&trueChoiceNotExistError";
+                    if (containsZeroDefaultScore)
+                        redirectUrl += "&zeroDefaultScoreError";
+                    if (requestedQuiz.getQuestions().size() == 0)
+                        redirectUrl += "&blankQuizError";
+
+                    return redirectUrl;
+                } else {
+                    requestedQuiz.setIsActive(true);
+                    quizService.save(requestedQuiz);
+                    return "redirect:/course/" + courseId + "/quizzes";
+
+                }
             }
+
         }
-
-
+        else
+            return "redirect:/menu";
     }
-
-//    @RequestMapping(value = "/{courseId}/editQuiz/{quizId}", method = RequestMethod.POST)
-//    public String SubmiteditQuiz(Model model, @ModelAttribute Quiz quiz, @PathVariable Long courseId, @PathVariable Long quizId){
-//        if (signedInAccountTools.getAccount().equals(courseService.findById(courseId).getTeacher())) {
-//            if (!quiz.getTitle().isEmpty() && quiz.getTime() != null && quiz.getTime() != 0){
-//                quizService.save(quiz);
-//            }
-//            List<Quiz> requestedCourseQuizzes = courseService.findById(courseId).getQuizzes();
-//            model.addAttribute("courseQuizzes", requestedCourseQuizzes);
-//            model.addAttribute("quiz", new Quiz());
-//            model.addAttribute("currentTeacherAccount", signedInAccountTools.getAccount());
-//            return "quizzes-of-course-page";
-//        }
-//        else {
-//            return "redirect:/menu";
-//        }
-//    }
-
 
 }

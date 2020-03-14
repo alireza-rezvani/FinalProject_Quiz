@@ -39,7 +39,4 @@ public class Quiz {
 
     private Boolean isActive;
 
-    //888888888888888888888888888
-//    @OneToMany(mappedBy = "quiz",cascade = CascadeType.ALL)
-//    private List<DefaultScore> defaultScoreList;
 }

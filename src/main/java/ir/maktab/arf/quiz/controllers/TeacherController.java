@@ -39,6 +39,4 @@ public class TeacherController {
 
         return "teacher-courses-page";
     }
-
-
 }

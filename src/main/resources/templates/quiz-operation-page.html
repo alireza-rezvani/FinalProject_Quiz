@@ -2,14 +2,19 @@
 <html xmlns:th="https://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html">
 <head>
     <meta charset="UTF-8">
-    <title>خوش آمدید</title>
+    <title>برگزاری آزمون</title>
     <link th:href="@{/css/bootstrap.min.css}"  rel="stylesheet" type="text/css" >
 
 </head>
 <body  class="row text-center  p-5 justify-content-center align-content-center bg-info" style="font-family: 'B Mitra'" >
+<div class="w-75">
 
-<label>زمان باقیمانده: </label>
+    <div class="w-100 row justify-content-center text-center font-weight-bolder rounded" style="direction: rtl">
+        <div class="alert-success p-2 w-25 rounded text-center justify-content-center align-content-center">
+<label th:text="' زمان باقیمانده: '"></label>
 <p id="demo"></p>
+        </div>
+    </div>
 
 <div th:if="${T(ir.maktab.arf.quiz.utilities.QuestionTools).getQuestionType(questionItem).name().equals('DetailedQuestion')}">
 <form th:action="@{/student/__${studentId}__/course/__${courseId}__/quiz/__${quizId}__/enterQuizOperation/question/__${questionNumber + 1}__}" method="post">
@@ -25,12 +30,12 @@
     <input type="text" hidden th:field="*{answerDto.questionId}" >
     <input type="text" hidden th:field="*{answerDto.questionNumberInQuiz}" >
     <textarea class="form-control" th:rows="5" th:field="*{answerDto.content}" placeholder="پاسخ"></textarea>
-    <input type="submit" th:text="${answerDto.questionNumberInQuiz < allQuestionsCount?'ثبت و سوال بعد':'پایان آزمون'}">
+    <input type="submit" class="btn btn-light m-2 mt-4" th:value="${answerDto.questionNumberInQuiz < allQuestionsCount?'ثبت پاسخ و رفتن سوال بعد':'پایان آزمون'}">
 </div>
 </form>
 
     <form th:action="@{/student/__${studentId}__/course/__${courseId}__/quiz/__${quizId}__/enterQuizOperation/question/__${questionNumber - 1}__}" method="post">
-        <input type="submit" th:hidden="${questionNumber == 1}" value="سوال قبلی">
+        <input type="submit" class="btn btn-light" th:hidden="${questionNumber == 1}" value="سوال قبلی">
     </form>
 </div>
 
@@ -46,19 +51,28 @@
     <input type="text" hidden th:field="*{answerDto.id}" >
     <input type="text" hidden th:field="*{answerDto.questionId}" >
     <input type="text" hidden th:field="*{answerDto.questionNumberInQuiz}" >
-    <div class="justify-content-around" style="direction: rtl">
+    <div class="justify-content-between" style="direction: rtl">
         <input type="checkbox" class="form-check form-check-inline radioCheck" onclick="check(this)" th:field="*{answerDto.content}" th:each="choiceItem:${questionItem.choiceList}" th:text="${choiceItem.title}" th:value="${choiceItem.title}" >
     </div>
-    <input type="submit" th:text="${answerDto.questionNumberInQuiz < allQuestionsCount?'ثبت و سوال بعد':'پایان آزمون'}">
+    <input type="submit" class="btn btn-light m-2 mt-4" th:value="${answerDto.questionNumberInQuiz < allQuestionsCount?'ثبت پاسخ و رفتن به سوال بعد':'پایان آزمون'}">
 
 </div>
 </form>
     <form th:action="@{/student/__${studentId}__/course/__${courseId}__/quiz/__${quizId}__/enterQuizOperation/question/__${questionNumber - 1}__}" method="post">
-        <input type="submit" th:hidden="${questionNumber == 1}" value="سوال قبلی">
+        <input type="submit" class="btn btn-light" th:hidden="${questionNumber == 1}" value="سوال قبلی">
     </form>
 </div>
 
 
+    <div class="row text-center justify-content-center mt-4">
+        <form class="m-2" th:action="@{/menu}"><input class="btn btn-dark" type="submit" value="بازگشت به منوی اصلی"></form>
+        <form class="m-2" th:action="@{/student/courses}"><input class="btn btn-dark" type="submit" value="بازگشت به لیست دوره های من"></form>
+        <form class="m-2" th:action="@{/student/__${studentId}__/course/__${courseId}__/quizzes}"><input class="btn btn-dark" type="submit" value="بازگشت به لیست آزمون های دوره"></form>
+        <form class="m-2" th:action="@{/signOut}"><input class="btn btn-dark" type="submit" value="خروج از حساب کاربری"></form>
+        <label style="width: 75px; direction: rtl"></label>
+    </div>
+
+</div>
 
 <script th:inline="javascript">
 
@@ -74,11 +88,11 @@
         var minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
         var seconds = Math.floor((distance % (1000 * 60)) / 1000);
 
-        document.getElementById("demo").innerHTML = hours + "h " + minutes + "m " + seconds + "s ";
+        document.getElementById("demo").innerHTML = hours + " ساعت و " + minutes + " دقیقه و " + seconds + " ثانیه";
 
         if (distance < 0) {
             clearInterval(x);
-            document.getElementById("demo").innerHTML = "EXPIRED";
+            document.getElementById("demo").innerHTML = "زمان آزمون به پایان رسیده است";
         }
     }, 1000);
 </script>

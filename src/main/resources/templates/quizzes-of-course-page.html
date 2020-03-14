@@ -16,7 +16,7 @@
         <div class="border border-light p-1 m-1 mb-3 row  w-auto justify-content-center  rounded" style="direction: rtl">
             <input class="text-center rounded m-2" type="text" th:field="*{quiz.title}" placeholder="عنوان آزمون"/>
             <input class="text-center rounded m-2" type="text" th:field="*{quiz.description}" placeholder="توضیحات آزمون"/>
-            <input class="text-center rounded m-2" type="number" th:field="*{quiz.time}" placeholder="زمان آزمون"/>
+            <input class="text-center rounded m-2" type="number" th:field="*{quiz.time}" placeholder="زمان آزمون به دقیقه"/>
             <input class="btn btn-dark m-2" type="submit" value="ثبت" th:name="ok"/>
         </div>
     </form>
@@ -29,13 +29,14 @@
     <p th:if="${param.trueChoiceNotExistError}" class="text-danger">خطا در فعالسازی آزمون! عدم وجود گزینه صحیح در سوال تستی</p>
     <p th:if="${param.zeroDefaultScoreError}" class="text-danger">خطا در فعالسازی آزمون! نمره پیش فرض صفر</p>
     <p th:if="${param.blankQuizError}" class="text-danger">خطا در فعالسازی آزمون! سوالی برای آزمون مورد نظر تعریف نشده است</p>
+<!--todo message for invalid quiz definition-->
 
 
     <div class="m-3 rounded" th:hidden="${courseQuizzes.size()==0}">
         <table class="table table-dark" th:hidden="${courseQuizzes.size()==0}">
             <thead>
             <th colspan="6">عملیات</th>
-            <th>زمان آزمون</th>
+            <th>زمان آزمون (دقیقه)</th>
             <th>توضیحات آزمون</th>
             <th>عنوان آزمون</th>
             <th>شناسه یکتای آزمون</th>
@@ -54,13 +55,13 @@
 
                 <td>
                     <form th:action="@{/quiz/__${quizItem.id}__/participants}">
-                        <input class="btn btn-danger" type="submit" value="شرکت کنندگان" >
+                        <input class="btn btn-light" type="submit" value="شرکت کنندگان-تصحیح" >
                     </form>
                 </td>
 
                 <td>
                     <form th:action="@{/course/__${courseId}__/quiz/__${quizItem.id}__/activation}">
-                        <input class="btn btn-danger" type="submit" th:value="${quizItem.isActive==true?'غیرفعال کردن':'فعال کردن'}" >
+                        <input class="btn btn-light" type="submit" th:value="${quizItem.isActive==true?'غیرفعال کردن':'فعال کردن'}" >
                     </form>
                 </td>
 
