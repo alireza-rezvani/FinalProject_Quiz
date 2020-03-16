@@ -67,9 +67,10 @@
         </div>
     </div>
 
-    <div class="row text-center justify-content-center m-5">
-        <form class="m-2" th:action="@{/quiz/__${quizId}__/participants}"><input class="btn btn-dark" type="submit" value="بازگشت به لیست شرکت کنندگان آزمون"></form>
-        <form class="m-2" th:action="@{/course/__${courseId}__/quizzes}"><input class="btn btn-dark" type="submit" value="بازگشت به لیست آزمون های دوره"></form>
+    <div class="row text-center justify-content-center m-5" th:with="stringRolesOfSingedInUser=${T(ir.maktab.arf.quiz.utilities.ServiceTools).accountService.getStringTitlesOfRolesOfSignedInAccount()}">
+        <form th:if="${stringRolesOfSingedInUser.contains('TEACHER')}" class="m-2" th:action="@{/quiz/__${quizId}__/participants}"><input class="btn btn-dark" type="submit" value="بازگشت به لیست شرکت کنندگان آزمون"></form>
+        <form th:if="${stringRolesOfSingedInUser.contains('TEACHER')}" class="m-2" th:action="@{/course/__${courseId}__/quizzes}"><input class="btn btn-dark" type="submit" value="بازگشت به لیست آزمون های دوره"></form>
+        <form th:if="${stringRolesOfSingedInUser.contains('STUDENT')}" class="m-2" th:action="@{/student/__${studentId}__/course/__${courseId}__/quizzes}"><input class="btn btn-dark" type="submit" value="بازگشت به لیست آزمون های دوره"></form>
         <form class="m-2" th:action="@{/menu}"><input class="btn btn-dark" type="submit" value="بازگشت به منوی اصلی"></form>
         <form class="m-2" th:action="@{/signOut}"><input class="btn btn-dark" type="submit" value="خروج از حساب کاربری"></form>
     </div>

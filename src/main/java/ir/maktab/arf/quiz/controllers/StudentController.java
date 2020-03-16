@@ -6,6 +6,7 @@ import ir.maktab.arf.quiz.services.AccountService;
 import ir.maktab.arf.quiz.services.CourseService;
 import ir.maktab.arf.quiz.services.QuizOperationService;
 import ir.maktab.arf.quiz.services.QuizService;
+import ir.maktab.arf.quiz.utilities.AutoFinishRunnable;
 import ir.maktab.arf.quiz.utilities.SignedInAccountTools;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.EnableScheduling;
@@ -109,27 +110,13 @@ public class StudentController {
                 quizOperation.setFinishDate(new Date(startTime.getTime() + quizService.findById(quizId).getTime() * 60000));
                 quizOperation = quizOperationService.save(quizOperation);
 
-                final QuizOperation finalQuizOperation
-                = new QuizOperation(
-                        quizOperation.getId(),
-                        quizOperation.getStudentId(),
-                        quizOperation.getCourseId(),
-                        quizOperation.getQuizId(),
-                        true,
-                        quizOperation.getStartTime(),
-                        quizOperation.getFinishDate(),
-                        null,
-                        quizOperation.getAnswerList(),
-                        null,
-                        null);
 
                 Executors.newScheduledThreadPool(1).schedule(
-                        () -> {
-                            quizOperationService.save(finalQuizOperation);
-                        },
+                        new AutoFinishRunnable(quizId,studentId)::run,
                         quizService.findById(quizId).getTime(),
                         TimeUnit.MINUTES
                 );
+
             }
 
 
@@ -237,5 +224,7 @@ public class StudentController {
         else
             return "redirect:/menu";
         }
+
+
 
 }

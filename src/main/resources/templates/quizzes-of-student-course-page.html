@@ -16,6 +16,7 @@
         <table class="table table-dark" th:hidden="${courseQuizzes.size()==0}">
             <thead>
             <th colspan="1">عملیات</th>
+            <th>نمره شما</th>
             <th>زمان آزمون</th>
             <th>توضیحات آزمون</th>
             <th>عنوان آزمون</th>
@@ -23,23 +24,32 @@
             <th>شناسه یکتای آزمون</th>
             </thead>
             <tbody>
-            <tr th:each="quizItem:${courseQuizzes}" th:bgcolor="${idsOfFinishedQuizzes.contains(quizItem.id)?'693333':(idsOfInProgressQuizzes.contains(quizItem.id)?'336940':'333a69')}" th:if="${quizItem.isActive}">
-
+            <tr th:each="quizItem:${courseQuizzes}" th:bgcolor="${operationItem == null ? '333a69' : (operationItem.isCustomGraded == true ? 'a4ad4c' : (operationItem.isFinished == true ? '693333' : '336940'))}" th:if="${quizItem.isActive == true}" th:with="operationItem=${T(ir.maktab.arf.quiz.utilities.ServiceTools).quizOperationService.findByQuizIdAndStudentId(quizItem.id,studentId)}">
 
 
                 <td>
-                    <form th:action="@{/student/__${currentStudent.id}__/course/__${courseId}__/quiz/__${quizItem.id}__/enterQuizOperation/question/1}">
+                    <form th:action="@{/quiz/__${quizItem.id}__/participant/__${studentId}__/answers/1}" th:if="${operationItem!=null && operationItem.isCustomGraded ==true}">
+                        <input class="btn btn-light" type="submit" value="جزییات تصحیح"/>
+                    </form>
+
+
+                    <form th:action="@{/student/__${currentStudent.id}__/course/__${courseId}__/quiz/__${quizItem.id}__/enterQuizOperation/question/1}" th:if="${operationItem!=null && operationItem.isCustomGraded !=true}">
                         <input class="btn btn-light" type="submit"
                                th:value="${idsOfFinishedQuizzes.contains(quizItem.id)?'پایان یافته':(idsOfInProgressQuizzes.contains(quizItem.id)?'ادامه آزمون':'شروع آزمون')}"
                                th:disabled="${idsOfFinishedQuizzes.contains(quizItem.id)}">
                     </form>
+
+                    <form th:action="@{/student/__${currentStudent.id}__/course/__${courseId}__/quiz/__${quizItem.id}__/enterQuizOperation/question/1}" th:if="${operationItem==null}">
+                        <input class="btn btn-light" type="submit" value="شروع آزمون"/>
+                    </form>
                 </td>
 
+                <td style="direction: rtl" th:text="${(operationItem == null || operationItem.isCustomGraded != true)?'-----':(T(ir.maktab.arf.quiz.utilities.ScoresListTools).sum(operationItem.resultScores) + ' از ' + T(ir.maktab.arf.quiz.utilities.ScoresListTools).sum(quizItem.defaultScoresList))}"></td>
 
                 <td th:text="${quizItem.time}"></td>
                 <td th:text="${quizItem.description}"></td>
                 <td th:text="${quizItem.title}"></td>
-                <td th:text="${idsOfFinishedQuizzes.contains(quizItem.id)?'پایان یافته':(idsOfInProgressQuizzes.contains(quizItem.id)?'درحال برگزاری':'برگزارنشده')}"></td>
+                <td th:text="${idsOfFinishedQuizzes.contains(quizItem.id)?(operationItem.isCustomGraded==true?'تصحیح شده':'پایان یافته'):(idsOfInProgressQuizzes.contains(quizItem.id)?'درحال برگزاری':'برگزارنشده')}"></td>
                 <td th:text="${quizItem.id}"></td>
 
             </tr>

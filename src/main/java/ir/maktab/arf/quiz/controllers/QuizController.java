@@ -22,7 +22,7 @@ import java.util.stream.Collectors;
 
 @Controller
 @RequestMapping("/quiz")
-@Secured("ROLE_TEACHER_GENERAL_PRIVILEGE")
+@Secured({"ROLE_TEACHER_GENERAL_PRIVILEGE", "ROLE_STUDENT_GENERAL_PRIVILEGE"})
 public class QuizController {
 
     // TODO: 3/4/2020 check null Booleans if needed
@@ -52,6 +52,7 @@ public class QuizController {
         this.accountService = accountService;
     }
 
+    @Secured("ROLE_TEACHER_GENERAL_PRIVILEGE")
     @RequestMapping("/{quizId}/questions")
     public String getQuizQuestions(Model model, @PathVariable Long quizId){
 
@@ -83,6 +84,7 @@ public class QuizController {
             return "redirect:/menu";
     }
 
+    @Secured("ROLE_TEACHER_GENERAL_PRIVILEGE")
     @RequestMapping("/{quizId}/addQuestion/fromBank")
     public String addQuestionFromBank(Model model, @PathVariable Long quizId){
         if (signedInAccountTools.getAccount().equals(quizService.findById(quizId).getCourse().getTeacher())) {
@@ -100,6 +102,7 @@ public class QuizController {
             return "redirect:/menu";
     }
 
+    @Secured("ROLE_TEACHER_GENERAL_PRIVILEGE")
     @RequestMapping(value = "/{quizId}/addQuestion/fromBank", method = RequestMethod.POST)
     public String addFilteredQuestionFromBank(Model model, @ModelAttribute SearchQuestionDto searchQuestionDto, @PathVariable Long quizId){
 
@@ -121,6 +124,7 @@ public class QuizController {
     }
 
     // TODO: 3/5/2020 ids validation in url
+    @Secured("ROLE_TEACHER_GENERAL_PRIVILEGE")
     @RequestMapping("/{quizId}/addQuestion/fromBank/{questionId}")
     public String addQuestionItemFromBankToQuiz(@PathVariable Long quizId, @PathVariable Long questionId){
         if (signedInAccountTools.getAccount().equals(quizService.findById(quizId).getCourse().getTeacher())) {
@@ -154,6 +158,7 @@ public class QuizController {
             return "redirect:/menu";
     }
 
+    @Secured("ROLE_TEACHER_GENERAL_PRIVILEGE")
     @RequestMapping("/{quizId}/addQuestion/DetailedQuestion")
     public String addDetailedQuestion(Model model, @PathVariable Long quizId){
         if (signedInAccountTools.getAccount().equals(quizService.findById(quizId).getCourse().getTeacher())) {
@@ -165,6 +170,7 @@ public class QuizController {
             return "redirect:/menu";
     }
 
+    @Secured("ROLE_TEACHER_GENERAL_PRIVILEGE")
     @RequestMapping(value = "/{quizId}/addQuestion/DetailedQuestion", method = RequestMethod.POST)
     public String submitAddDetailedQuestion(@ModelAttribute DetailedQuestion detailedQuestion, @PathVariable Long quizId){
         if (signedInAccountTools.getAccount().equals(quizService.findById(quizId).getCourse().getTeacher())) {
@@ -197,7 +203,7 @@ public class QuizController {
     }
 
 
-
+    @Secured("ROLE_TEACHER_GENERAL_PRIVILEGE")
     @RequestMapping("/{quizId}/addQuestion/MultiChoiceQuestion")
     public String addMultiChoiceQuestion(Model model, @PathVariable Long quizId){
         if (signedInAccountTools.getAccount().equals(quizService.findById(quizId).getCourse().getTeacher())) {
@@ -209,6 +215,7 @@ public class QuizController {
             return "redirect:/menu";
     }
 
+    @Secured("ROLE_TEACHER_GENERAL_PRIVILEGE")
     @RequestMapping(value = "/{quizId}/addQuestion/MultiChoiceQuestion", method = RequestMethod.POST)
     public String submitAddMultiChoiceQuestion(Model model, @ModelAttribute MultiChoiceQuestion multiChoiceQuestion, @PathVariable Long quizId){
         if (signedInAccountTools.getAccount().equals(quizService.findById(quizId).getCourse().getTeacher())) {
@@ -245,6 +252,7 @@ public class QuizController {
             return "redirect:/menu";
     }
 
+    @Secured("ROLE_TEACHER_GENERAL_PRIVILEGE")
     @RequestMapping("/{quizId}/question/{questionId}/addChoiceItem")
     public String addChoiceItemToQuestion(Model model, @PathVariable Long quizId, @PathVariable Long questionId){
         if (signedInAccountTools.getAccount().equals(quizService.findById(quizId).getCourse().getTeacher())) {
@@ -257,6 +265,7 @@ public class QuizController {
             return "redirect:/menu";
     }
 
+    @Secured("ROLE_TEACHER_GENERAL_PRIVILEGE")
     @RequestMapping(value = "/{quizId}/question/{questionId}/addChoiceItem", method = RequestMethod.POST)
     public String submitAddChoiceItemToQuestion(Model model, @ModelAttribute Choice choice, @PathVariable Long quizId, @PathVariable Long questionId){
         if (signedInAccountTools.getAccount().equals(quizService.findById(quizId).getCourse().getTeacher())) {
@@ -288,6 +297,7 @@ public class QuizController {
             return "redirect:/menu";
     }
 
+    @Secured("ROLE_TEACHER_GENERAL_PRIVILEGE")
     @RequestMapping("/{quizId}/question/{questionId}/setTrueChoice/{trueChoiceId}")
     public String addTrueChoice(Model model, @PathVariable Long quizId, @PathVariable Long questionId, @PathVariable Long trueChoiceId){
         if (signedInAccountTools.getAccount().equals(quizService.findById(quizId).getCourse().getTeacher())) {
@@ -311,6 +321,7 @@ public class QuizController {
             return "redirect:/menu";
     }
 
+    @Secured("ROLE_TEACHER_GENERAL_PRIVILEGE")
     @RequestMapping("/{quizId}/question/{questionId}/editChoiceItem/{choiceId}")
     public String editChoiceItem(Model model, @PathVariable Long quizId, @PathVariable Long questionId, @PathVariable Long choiceId){
         if (signedInAccountTools.getAccount().equals(quizService.findById(quizId).getCourse().getTeacher())) {
@@ -324,7 +335,7 @@ public class QuizController {
     }
 
 
-
+    @Secured("ROLE_TEACHER_GENERAL_PRIVILEGE")
     @RequestMapping("/{quizId}/question/{questionId}/deleteChoiceItem/{choiceId}")
     public String deleteChoiceItem(Model model, @PathVariable Long quizId, @PathVariable Long questionId, @PathVariable Long choiceId){
         if (signedInAccountTools.getAccount().equals(quizService.findById(quizId).getCourse().getTeacher())) {
@@ -342,6 +353,7 @@ public class QuizController {
     }
 
 
+    @Secured("ROLE_TEACHER_GENERAL_PRIVILEGE")
     @RequestMapping("/{quizId}/question/{questionId}/view")
     public String viewQuestion(Model model, @PathVariable Long quizId, @PathVariable Long questionId){
         if (signedInAccountTools.getAccount().equals(quizService.findById(quizId).getCourse().getTeacher())) {
@@ -359,6 +371,7 @@ public class QuizController {
     }
 
 
+    @Secured("ROLE_TEACHER_GENERAL_PRIVILEGE")
     @RequestMapping("/{quizId}/question/{questionId}/edit")
     public String editQuestion(Model model, @PathVariable Long quizId, @PathVariable Long questionId){
         if (signedInAccountTools.getAccount().equals(quizService.findById(quizId).getCourse().getTeacher())) {
@@ -378,7 +391,7 @@ public class QuizController {
             return "redirect:/menu";
     }
 
-
+    @Secured("ROLE_TEACHER_GENERAL_PRIVILEGE")
     @RequestMapping("/{quizId}/question/{questionId}/delete")
     public String deleteQuestion(@PathVariable Long quizId, @PathVariable Long questionId){
         if (signedInAccountTools.getAccount().equals(quizService.findById(quizId).getCourse().getTeacher())) {
@@ -400,6 +413,7 @@ public class QuizController {
             return "redirect:/menu";
     }
 
+    @Secured("ROLE_TEACHER_GENERAL_PRIVILEGE")
     @RequestMapping("/{quizId}/question/{questionId}/deleteFromBank")
     public String deleteQuestionFromBank(@PathVariable Long quizId, @PathVariable Long questionId){
         if (signedInAccountTools.getAccount().equals(quizService.findById(quizId).getCourse().getTeacher())) {
@@ -419,6 +433,7 @@ public class QuizController {
             return "redirect:/menu";
     }
 
+    @Secured("ROLE_TEACHER_GENERAL_PRIVILEGE")
     @RequestMapping("/{quizId}/saveQuizDefaultScores")
     public String saveQuizDefaultScores(@ModelAttribute ScoresOfQuizDto scoresOfQuizDto, @PathVariable Long quizId){
         if (signedInAccountTools.getAccount().equals(quizService.findById(quizId).getCourse().getTeacher())) {
@@ -439,7 +454,7 @@ public class QuizController {
             return "redirect:/menu";
     }
 
-
+    @Secured("ROLE_TEACHER_GENERAL_PRIVILEGE")
     @RequestMapping("/{quizId}/participants")
     public String getQuizParticipants(Model model, @PathVariable Long quizId){
         if (signedInAccountTools.getAccount().equals(quizService.findById(quizId).getCourse().getTeacher())) {
@@ -455,9 +470,13 @@ public class QuizController {
             return "redirect:/menu";
     }
 
+    @Secured({"ROLE_TEACHER_GENERAL_PRIVILEGE", "ROLE_STUDENT_GENERAL_PRIVILEGE"})
     @RequestMapping("/{quizId}/participant/{studentId}/answers/{questionNumberInQuiz}")
     public String getParticipantAnswers(Model model, @PathVariable Long quizId, @PathVariable Long studentId, @PathVariable Integer questionNumberInQuiz){
-        if (signedInAccountTools.getAccount().equals(quizService.findById(quizId).getCourse().getTeacher())) {
+        if (
+                signedInAccountTools.getAccount().equals(quizService.findById(quizId).getCourse().getTeacher())
+                || signedInAccountTools.getAccount().getId() == studentId
+        ) {
 
             Question questionItem = quizService.findById(quizId).getQuestions().get(questionNumberInQuiz - 1);
             if (questionItem instanceof DetailedQuestion)
@@ -496,6 +515,7 @@ public class QuizController {
 
     }
 
+    @Secured("ROLE_TEACHER_GENERAL_PRIVILEGE")
     @RequestMapping(value = "/{quizId}/participant/{studentId}/question/{questionNumberInQuiz}/submitScore" , method = RequestMethod.POST)
     public String submitParticipantScore(@ModelAttribute GradingDto gradingDto,@PathVariable Long quizId, @PathVariable Long studentId, @PathVariable Integer questionNumberInQuiz){
         if (signedInAccountTools.getAccount().equals(quizService.findById(quizId).getCourse().getTeacher())) {
@@ -529,6 +549,7 @@ public class QuizController {
 
     }
 
+    @Secured("ROLE_TEACHER_GENERAL_PRIVILEGE")
     @RequestMapping("/{quizId}/participant/{studentId}/answers/autoGrading")
     public String autoGrading(Model model, @PathVariable Long quizId, @PathVariable Long studentId){
         if (signedInAccountTools.getAccount().equals(quizService.findById(quizId).getCourse().getTeacher())) {

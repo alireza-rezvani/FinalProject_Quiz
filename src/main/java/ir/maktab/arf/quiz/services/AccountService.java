@@ -5,9 +5,12 @@ import ir.maktab.arf.quiz.repositories.AccountRepository;
 import ir.maktab.arf.quiz.repositories.StatusRepository;
 import ir.maktab.arf.quiz.utilities.StatusTitle;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class AccountService {
@@ -54,5 +57,21 @@ public class AccountService {
         Account requestedAccount = findById(accountId);
         requestedAccount.setStatus(statusRepository.findByTitle(StatusTitle.INACTIVE));
         save(requestedAccount);
+    }
+
+
+    public Account getSignedInAccount(){
+        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        String username = "";
+        if (principal instanceof UserDetails)
+            username = ((UserDetails)principal).getUsername();
+        else
+            username = principal.toString();
+
+        return findByUsername(username);
+    }
+
+    public List<String> getStringTitlesOfRolesOfSignedInAccount(){
+        return getSignedInAccount().getRoles().stream().map(role -> role.getTitle().name()).collect(Collectors.toList());
     }
 }

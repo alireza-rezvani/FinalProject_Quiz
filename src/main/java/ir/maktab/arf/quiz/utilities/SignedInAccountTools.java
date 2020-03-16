@@ -7,16 +7,21 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 @Component
 public class SignedInAccountTools {
 
-    AccountService accountService;
+    private AccountService accountService;
 
     @Autowired
     public SignedInAccountTools(AccountService accountService) {
         this.accountService = accountService;
     }
 
+
+    //following two methods copied to account service. find usages of these and refactor project
     public Account getAccount(){
         Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         String username = "";
@@ -26,5 +31,9 @@ public class SignedInAccountTools {
             username = principal.toString();
 
         return accountService.findByUsername(username);
+    }
+
+    public List<String> getStringTitlesOfRoles(){
+        return getAccount().getRoles().stream().map(role -> role.getTitle().name()).collect(Collectors.toList());
     }
 }

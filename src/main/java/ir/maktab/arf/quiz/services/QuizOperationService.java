@@ -44,7 +44,10 @@ public class QuizOperationService {
     }
 
     public QuizOperation findByQuizIdAndStudentId(Long quizId, Long studentId){
-        return quizOperationRepository.findByQuizIdAndStudentId(quizId, studentId).get(0);
+        if (quizOperationRepository.findByQuizIdAndStudentId(quizId, studentId) != null && quizOperationRepository.findByQuizIdAndStudentId(quizId, studentId).size() > 0)
+            return quizOperationRepository.findByQuizIdAndStudentId(quizId, studentId).get(0);
+        else
+            return null;
     }
 
 
