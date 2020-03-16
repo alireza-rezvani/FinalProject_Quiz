@@ -21,9 +21,11 @@ public class Course {
 
     private String title;
 
+    @Column(nullable = false)
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private Date startDate;
 
+    @Column(nullable = false)
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private Date finishDate;
 

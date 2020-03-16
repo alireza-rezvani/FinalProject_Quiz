@@ -26,6 +26,7 @@
             <tr th:each="quizItem:${courseQuizzes}" th:bgcolor="${idsOfFinishedQuizzes.contains(quizItem.id)?'693333':(idsOfInProgressQuizzes.contains(quizItem.id)?'336940':'333a69')}" th:if="${quizItem.isActive}">
 
 
+
                 <td>
                     <form th:action="@{/student/__${currentStudent.id}__/course/__${courseId}__/quiz/__${quizItem.id}__/enterQuizOperation/question/1}">
                         <input class="btn btn-light" type="submit"

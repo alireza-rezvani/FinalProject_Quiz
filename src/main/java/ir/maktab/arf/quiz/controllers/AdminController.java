@@ -1,5 +1,6 @@
 package ir.maktab.arf.quiz.controllers;
 
+import ir.maktab.arf.quiz.dto.CourseDto;
 import ir.maktab.arf.quiz.dto.EditAccountDto;
 import ir.maktab.arf.quiz.dto.SearchAccountDto;
 import ir.maktab.arf.quiz.entities.Account;
@@ -8,6 +9,9 @@ import ir.maktab.arf.quiz.entities.PersonalInfo;
 import ir.maktab.arf.quiz.services.*;
 import ir.maktab.arf.quiz.utilities.RoleTitle;
 import ir.maktab.arf.quiz.utilities.StatusTitle;
+import org.joda.time.DateTime;
+import org.kaveh.commons.farsi.date.JalaliDateImpl;
+import org.kaveh.commons.farsi.utils.JalaliCalendarUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -15,6 +19,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -115,7 +120,7 @@ public class AdminController {
             redirectUrl += "usernameError";
             isInputInvalid = true;
         }
-        // TODO: 2/27/2020 add validation for other inputs and edit redirectUrl if needed
+        // TODO: 2/27/2020 add validation for other inputs and edit redirectUrl if needed(like what i did in sign up)
 
         if (isInputInvalid) {
             return redirectUrl;
@@ -150,22 +155,106 @@ public class AdminController {
 
     @RequestMapping(value = "/addCourse")
     public String addCourse(Model model){
-        model.addAttribute("allCourses", courseService.findAll());
-        model.addAttribute("course", new Course());
+
+        List<CourseDto> allCoursesDtos = new ArrayList<>();
+        List<Course> allCourses = courseService.findAll();
+        if (allCourses != null && allCourses.size() > 0){
+            for (Course courseItem : allCourses){
+                allCoursesDtos.add(
+                        new CourseDto(
+                                courseItem.getId(),
+                                courseItem.getTitle(),
+                                JalaliCalendarUtils.convertGregorianToJalali(new DateTime(courseItem.getStartDate())).toString(),
+                                JalaliCalendarUtils.convertGregorianToJalali(new DateTime(courseItem.getFinishDate())).toString()
+                        )
+                );
+            }
+        }
+
+        model.addAttribute("allCoursesDtoList", allCoursesDtos);
+//        model.addAttribute("course", new Course());
+        model.addAttribute("courseDto", new CourseDto());
         return "add-course-page";
     }
 
     @RequestMapping(value = "/addCourse", method = RequestMethod.POST)
-    public String submitCourseAddition(Model model, @ModelAttribute Course course){
+    public String submitCourseAddition(Model model,
+//                                       @ModelAttribute Course course,
+                                       @ModelAttribute CourseDto addingCourseDto){
 
-        // TODO: 3/7/2020 display message if didnt save 
-        if (course.getStartDate() != null && course.getFinishDate() != null && !course.getTitle().isEmpty()
-                && course.getStartDate().compareTo(course.getFinishDate()) < 0)
-            courseService.save(course);
+//        Date dateNow = new Date();
+//        dateNow.setHours(0);
+//        dateNow.setMinutes(0);
+//        dateNow.setSeconds(0);
+        System.out.println("88888888888888888888888888888888888888888");
+        System.out.println(addingCourseDto.getId());
 
-        model.addAttribute("allCourses", courseService.findAll());
-        model.addAttribute("course", new Course());
-        return "add-course-page";
+        Course inputCourse = new Course();
+        inputCourse.setId(addingCourseDto.getId());
+        inputCourse.setTitle(addingCourseDto.getTitle());
+        if (addingCourseDto.getStartDate() != null && !addingCourseDto.getStartDate().isEmpty() && addingCourseDto.getStartDate().split("/").length == 3) {
+            //add more condition above to be sure about input validation (for example all parts being numeric)
+            int persianYear = Integer.parseInt(addingCourseDto.getStartDate().split("/")[0]);
+            int persianMonth = Integer.parseInt(addingCourseDto.getStartDate().split("/")[1]);
+            int persianDay = Integer.parseInt(addingCourseDto.getStartDate().split("/")[2]);
+
+            inputCourse.setStartDate(JalaliCalendarUtils.convertJalaliToGregorian(new JalaliDateImpl(persianYear,persianMonth,persianDay)).toDate());
+        }
+        if (addingCourseDto.getFinishDate() != null && !addingCourseDto.getFinishDate().isEmpty() && addingCourseDto.getFinishDate().split("/").length == 3) {
+            //add more condition above to be sure about input validation (for example all parts being numeric)
+            int persianYear = Integer.parseInt(addingCourseDto.getFinishDate().split("/")[0]);
+            int persianMonth = Integer.parseInt(addingCourseDto.getFinishDate().split("/")[1]);
+            int persianDay = Integer.parseInt(addingCourseDto.getFinishDate().split("/")[2]);
+
+            inputCourse.setFinishDate(JalaliCalendarUtils.convertJalaliToGregorian(new JalaliDateImpl(persianYear,persianMonth,persianDay)).toDate());
+        }
+
+
+        System.out.println("inputCourse.getStartDate() = " + inputCourse.getStartDate());
+        System.out.println("inputCourse.getFinishDate() = " + inputCourse.getFinishDate());
+        System.out.println("inputCourse.getTitle() = " + inputCourse.getTitle());
+//        System.out.println("inputCourse.getStartDate().compareTo(new Date()) = " + inputCourse.getStartDate().compareTo(new Date()));
+        System.out.println("inputCourse.getStartDate().compareTo(inputCourse.getFinishDate()) = " + inputCourse.getStartDate().compareTo(inputCourse.getFinishDate()));
+        // TODO: 3/7/2020 display message if didnt save
+//
+//        Date dateNowWithZeroTime = new Date();
+//        dateNowWithZeroTime.setHours(0);
+//        dateNowWithZeroTime.setMinutes(0);
+//        dateNowWithZeroTime.setSeconds(0);
+//        System.out.println("inputCourse.getStartDate().compareTo(dateNowWithZeroTime) = " + inputCourse.getStartDate().compareTo(dateNowWithZeroTime));
+//        System.out.println("dateNowWithZeroTime = " + dateNowWithZeroTime);
+        Date dateToday = new Date();
+        dateToday.setHours(0);
+        dateToday.setMinutes(0);
+        dateToday.setSeconds(0);
+        if (inputCourse.getStartDate() != null && inputCourse.getFinishDate() != null
+                && inputCourse.getTitle() != null && !inputCourse.getTitle().isEmpty()
+                && inputCourse.getStartDate().getTime()/1000/60/60/24 >= dateToday.getTime()/1000/60/60/24
+                && inputCourse.getStartDate().compareTo(inputCourse.getFinishDate()) < 0) {
+            System.out.println("jhgjgjggjgjhhhhhhhhhhhhhhhhhhhhhhhh");
+            //may have teacher or student or quiz
+            if (inputCourse.getId() != null){
+                Course requestedCourseBeforeUpdate = courseService.findById(inputCourse.getId());
+                inputCourse.setTeacher(requestedCourseBeforeUpdate.getTeacher());
+                inputCourse.setStudents(requestedCourseBeforeUpdate.getStudents());
+                inputCourse.setQuizzes(requestedCourseBeforeUpdate.getQuizzes());
+            }
+            courseService.save(inputCourse);
+        }
+
+//        model.addAttribute("allCourses", courseService.findAll());
+//        model.addAttribute("course", new Course());
+//        return "add-course-page";
+        String redirectUrl = "redirect:/admin/addCourse?";
+        if (inputCourse.getTitle().isEmpty())
+            redirectUrl += "&invalidTitleError";
+        if (inputCourse.getStartDate().getTime()/1000/60/60/24 < dateToday.getTime()/1000/60/60/24)
+            redirectUrl += "&invalidStartDateError";
+        if (inputCourse.getStartDate().compareTo(inputCourse.getFinishDate()) > 0)
+            redirectUrl += "&startDateGreaterThanFinishDateError";
+        if (inputCourse.getStartDate().compareTo(inputCourse.getFinishDate()) == 0)
+            redirectUrl += "&startAndFinishAtSameDateError";
+        return redirectUrl;
     }
 
 
@@ -173,17 +262,49 @@ public class AdminController {
     public String deleteCourse(Model model, @PathVariable Long id){
         //quizzes will be deleted
         // we also can delete questions of this course here
+        // we can delete related quizOperations here
         courseService.removeById(id);
-        model.addAttribute("allCourses", courseService.findAll());
-        model.addAttribute("course", new Course());
-        return "add-course-page";
+//        model.addAttribute("allCoursesDtoList", courseService.findAll());
+//        model.addAttribute("course", new Course());
+//        return "add-course-page";
+        return "redirect:/admin/addCourse";
     }
 
 
     @RequestMapping(value = "/editCourse/{id}")
     public String editCourse(Model model, @PathVariable Long id){
-        model.addAttribute("allCourses", courseService.findAll());
-        model.addAttribute("course", courseService.findById(id));
+
+
+        List<CourseDto> allCoursesDtos = new ArrayList<>();
+        List<Course> allCourses = courseService.findAll();
+        if (allCourses != null && allCourses.size() > 0){
+            for (Course courseItem : allCourses){
+                allCoursesDtos.add(
+                        new CourseDto(
+                                courseItem.getId(),
+                                courseItem.getTitle(),
+                                JalaliCalendarUtils.convertGregorianToJalali(new DateTime(courseItem.getStartDate())).toString(),
+                                JalaliCalendarUtils.convertGregorianToJalali(new DateTime(courseItem.getFinishDate())).toString()
+                        )
+                );
+            }
+        }
+
+        model.addAttribute("allCoursesDtoList", allCoursesDtos);
+//        model.addAttribute("allCourses", courseService.findAll());
+
+
+        Course requestedCourse = courseService.findById(id);
+        CourseDto sendingCourseDto = new CourseDto(
+                requestedCourse.getId(),
+                requestedCourse.getTitle(),
+//                JalaliCalendarUtils.convertGregorianToJalali(new DateTime(requestedCourse.getStartDate())).toString(),
+//                JalaliCalendarUtils.convertGregorianToJalali(new DateTime(requestedCourse.getFinishDate())).toString()
+                requestedCourse.getStartDate().toString(),
+                requestedCourse.getFinishDate().toString()
+        );
+        model.addAttribute("courseDto", sendingCourseDto);
+//        model.addAttribute("course", courseService.findById(id));
         return "add-course-page";
     }
 

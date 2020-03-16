@@ -23,7 +23,9 @@ public class Question {
     @Column(nullable = false)
     private String title;
 
-    Long relatedCourseId;
+    @Column(nullable = false)
+    private Long relatedCourseId;
 
-    Long creatorTeacherId;
+    @Column(nullable = false)
+    private Long creatorTeacherId;
 }

@@ -18,16 +18,21 @@ public class QuizOperation {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(nullable = false)
     private Long studentId;
 
+    @Column(nullable = false)
     private Long courseId;
 
+    @Column(nullable = false)
     private Long quizId;
 
     private Boolean isFinished;
 
+    @Column(nullable = false)
     private Date startTime;
 
+    @Column(nullable = false)
     private Date finishDate;
 
     private String resultScores;
@@ -36,5 +41,6 @@ public class QuizOperation {
     private List<Answer> answerList;
 
     private Boolean isAutoGraded;
+
     private Boolean isCustomGraded;
 }

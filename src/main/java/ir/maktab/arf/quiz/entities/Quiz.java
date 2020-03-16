@@ -34,6 +34,7 @@ public class Quiz {
     //  3/7/2020 try another solution for default scores if needed (however this works fine)
     private String defaultScoresList;
 
+    @Column(nullable = false)
     private Long creatorTeacherId;
 
 

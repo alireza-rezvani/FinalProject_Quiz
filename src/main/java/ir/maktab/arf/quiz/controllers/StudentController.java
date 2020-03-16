@@ -47,6 +47,12 @@ public class StudentController {
         this.quizService = quizService;
     }
 
+    @RequestMapping(value = "")
+    public String getStudentPage(){
+        return "redirect:/menu";
+    }
+
+
     @RequestMapping("/courses")
     public String getCourses(Model model){
 
@@ -117,7 +123,7 @@ public class StudentController {
                         null,
                         null);
 
-                Executors.newScheduledThreadPool(2).schedule(
+                Executors.newScheduledThreadPool(1).schedule(
                         () -> {
                             quizOperationService.save(finalQuizOperation);
                         },
