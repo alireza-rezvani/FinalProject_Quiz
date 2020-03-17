@@ -5,6 +5,12 @@ import ir.maktab.arf.quiz.repositories.ChoiceRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+
+/**
+ * choice service
+ * @author Alireza
+ */
+
 @Service
 public class ChoiceService {
 

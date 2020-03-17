@@ -9,6 +9,12 @@ import javax.persistence.*;
 import java.util.Date;
 import java.util.List;
 
+
+/**
+ * defining course entity
+ * @author Alireza
+ */
+
 @Data
 @AllArgsConstructor
 @NoArgsConstructor

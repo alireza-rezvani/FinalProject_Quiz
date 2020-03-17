@@ -10,6 +10,12 @@ import org.springframework.stereotype.Component;
 import java.util.List;
 import java.util.stream.Collectors;
 
+
+/**
+ * this class is used to recognize signed in account and processing it
+ * @author Alireza
+ */
+
 @Component
 public class SignedInAccountTools {
 

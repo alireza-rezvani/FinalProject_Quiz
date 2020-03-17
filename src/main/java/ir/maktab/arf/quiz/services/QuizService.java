@@ -5,6 +5,12 @@ import ir.maktab.arf.quiz.repositories.QuizRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+
+/**
+ * quiz service
+ * @author Alireza
+ */
+
 @Service
 public class QuizService {
 

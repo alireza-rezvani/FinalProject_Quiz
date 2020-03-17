@@ -2,29 +2,51 @@
 <html xmlns:th="https://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html">
 <head>
     <meta charset="UTF-8">
+    <meta name="author" content="Alireza">
     <title>لیست حساب های کاربری</title>
     <link th:href="@{/css/bootstrap.min.css}"  rel="stylesheet" type="text/css" >
-
 </head>
+
 <body  class="text-center  p-5 justify-content-center align-content-center bg-info" style="font-family: 'B Mitra'">
 
 <form th:action="@{/admin/accountsList}" method="post">
 
     <div class="p-1 m-1 mb-3 row  w-auto justify-content-center  rounded" style="direction: rtl">
 
-        <input class="text-center rounded m-2" type="text" th:field="*{searchAccountDto.username}" placeholder="نام کاربری"/>
-        <input class="text-center rounded m-2" type="text" th:field="*{searchAccountDto.nationalCode}" placeholder="کد ملی"/>
-        <input class="text-center rounded m-2" type="text" th:field="*{searchAccountDto.firstName}" placeholder="نام"/>
-        <input class="text-center rounded m-2" type="text" th:field="*{searchAccountDto.lastName}" placeholder="نام خانوادگی"/>
+        <input class="text-center rounded m-2"
+               type="text"
+               th:field="*{searchAccountDto.username}"
+               placeholder="نام کاربری"/>
+
+        <input class="text-center rounded m-2"
+               type="text"
+               th:field="*{searchAccountDto.nationalCode}"
+               placeholder="کد ملی"/>
+
+        <input class="text-center rounded m-2"
+               type="text" th:field="*{searchAccountDto.firstName}"
+               placeholder="نام"/>
+
+        <input class="text-center rounded m-2"
+               type="text" th:field="*{searchAccountDto.lastName}"
+               placeholder="نام خانوادگی"/>
 
         <select class="custom-select w-auto m-2" th:field="*{searchAccountDto.roleTitleName}">
             <option value="All" th:text="نقش"></option>
-            <option th:each="role:${allRoles}" th:value="${role.title.name()}" th:text="${role.title.getPersian()}"></option>
+            <option th:each="role:${allRoles}"
+                    th:value="${role.title.name()}"
+                    th:text="${role.title.getPersian()}">
+            </option>
         </select>
+
         <select class="custom-select w-auto m-2" th:field="*{searchAccountDto.statusTitleName}">
             <option value="All" th:text="وضعیت"></option>
-            <option th:each="status:${allStatuses}" th:value="${status.title.name()}" th:text="${status.title.getPersian()}"></option>
+            <option th:each="status:${allStatuses}"
+                    th:value="${status.title.name()}"
+                    th:text="${status.title.getPersian()}">
+            </option>
         </select>
+
         <input class="btn btn-dark m-2" type="submit" value="جستجو"/>
 
     </div>
@@ -46,7 +68,10 @@
 
         <td>
             <form action="#" th:action="@{/admin/accountActivation/__${accountItem.getId()}__}">
-                <input class="btn btn-light" type="submit" th:disabled="${accountItem.id==1}" th:value="${accountItem.status.title.name()=='ACTIVE'?'غیرفعال کردن':'فعال کردن'}">
+                <input class="btn btn-light"
+                       type="submit"
+                       th:disabled="${accountItem.id==1}"
+                       th:value="${accountItem.status.title.name()=='ACTIVE'?'غیرفعال کردن':'فعال کردن'}">
             </form>
         </td>
 
@@ -66,8 +91,15 @@
 </table>
 
 <div class="row text-center justify-content-center">
-    <form class="m-2" th:action="@{/menu}"><input class="btn btn-dark" type="submit" value="بازگشت به منوی اصلی"></form>
-    <form class="m-2" th:action="@{/signOut}"><input class="btn btn-dark" type="submit" value="خروج از حساب کاربری"></form>
+
+    <form class="m-2" th:action="@{/menu}">
+        <input class="btn btn-dark" type="submit" value="بازگشت به منوی اصلی">
+    </form>
+
+    <form class="m-2" th:action="@{/signOut}">
+        <input class="btn btn-dark" type="submit" value="خروج از حساب کاربری">
+    </form>
+
 </div>
 
 </body>

@@ -2,6 +2,7 @@
 <html xmlns:th="https://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html">
 <head>
     <meta charset="UTF-8">
+    <meta name="author" content="Alireza">
     <title>خوش آمدید</title>
     <link th:href="@{/css/bootstrap.min.css}"  rel="stylesheet" type="text/css" >
 
@@ -15,26 +16,40 @@
 
             <div class="text-danger" th:if="${statusTitleName != 'ACTIVE'}">حساب کاربری شما فعال نیست</div>
             <div  th:if="${statusTitleName == 'ACTIVE'}">
+
                 <div>
                     <label th:text="${privilegesNamesPersian}"></label>
                     <label> :دسترسی های شما</label>
                 </div>
+
                 <div class="row text-center justify-content-center">
-                    <form th:if="${authoritiesNames.contains('ROLE_ADMIN_GENERAL_PRIVILEGE')}" class="m-2" th:action="@{/admin/accountsList}">
+
+                    <form th:if="${authoritiesNames.contains('ROLE_ADMIN_GENERAL_PRIVILEGE')}" class="m-2"
+                          th:action="@{/admin/accountsList}">
                         <input class="btn btn-dark " type="submit" value="کاربران">
                     </form>
-                    <form th:if="${authoritiesNames.contains('ROLE_ADMIN_GENERAL_PRIVILEGE')}" class="m-2" th:action="@{/admin/addCourse}">
+
+                    <form th:if="${authoritiesNames.contains('ROLE_ADMIN_GENERAL_PRIVILEGE')}" class="m-2"
+                          th:action="@{/admin/addCourse}">
                         <input class="btn btn-dark" type="submit" value="دوره ها">
                     </form>
-                    <form th:if="${authoritiesNames.contains('ROLE_TEACHER_GENERAL_PRIVILEGE')}" class="m-2" th:action="@{/teacher/courses}">
+
+                    <form th:if="${authoritiesNames.contains('ROLE_TEACHER_GENERAL_PRIVILEGE')}"
+                          class="m-2" th:action="@{/teacher/courses}">
                         <input class="btn btn-dark" type="submit" value="دوره های تدریسی شما">
                     </form>
-                    <form th:if="${authoritiesNames.contains('ROLE_STUDENT_GENERAL_PRIVILEGE')}" class="m-2" th:action="@{/student/courses}">
+
+                    <form th:if="${authoritiesNames.contains('ROLE_STUDENT_GENERAL_PRIVILEGE')}" class="m-2"
+                          th:action="@{/student/courses}">
                         <input class="btn btn-dark" type="submit" value="دوره های شما">
                     </form>
+
                 </div>
             </div>
-            <form class="m-2" th:action="@{/signOut}"><input class="btn btn-dark" type="submit" value="خروج از حساب کاربری"></form>
+
+            <form class="m-2" th:action="@{/signOut}">
+                <input class="btn btn-dark" type="submit" value="خروج از حساب کاربری">
+            </form>
 
         </div>
     </div>

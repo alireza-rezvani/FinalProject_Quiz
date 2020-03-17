@@ -11,6 +11,12 @@ import javax.persistence.Entity;
 import javax.persistence.OneToMany;
 import java.util.List;
 
+
+/**
+ * defining multi choice question entity
+ * @author Alireza
+ */
+
 @EqualsAndHashCode(callSuper = true)
 @Data
 @AllArgsConstructor

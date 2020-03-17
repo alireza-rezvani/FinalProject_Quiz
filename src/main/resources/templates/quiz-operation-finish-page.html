@@ -2,6 +2,7 @@
 <html xmlns:th="https://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
+    <meta name="author" content="Alireza">
     <link th:href="@{/css/bootstrap.min.css}"  rel="stylesheet" type="text/css" >
     <title>پایان آزمون</title>
 </head>
@@ -11,10 +12,19 @@
     <label class="alert alert-danger p-2 font-weight-bolder">آزمون شما به پایان رسیده است</label>
 
     <div class="row text-center justify-content-center">
-        <form class="m-2" th:action="@{/student/__${studentId}__/course/__${courseId}__/quizzes}"><input class="btn btn-dark" type="submit" value="بازگشت به لیست آزمونها"></form>
 
-        <form class="m-2" th:action="@{/menu}"><input class="btn btn-dark" type="submit" value="بازگشت به منوی اصلی"></form>
-        <form class="m-2" th:action="@{/signOut}"><input class="btn btn-dark" type="submit" value="خروج از حساب کاربری"></form>
+        <form class="m-2" th:action="@{/student/__${studentId}__/course/__${courseId}__/quizzes}">
+            <input class="btn btn-dark" type="submit" value="بازگشت به لیست آزمونها">
+        </form>
+
+        <form class="m-2" th:action="@{/menu}">
+            <input class="btn btn-dark" type="submit" value="بازگشت به منوی اصلی">
+        </form>
+
+        <form class="m-2" th:action="@{/signOut}">
+            <input class="btn btn-dark" type="submit" value="خروج از حساب کاربری">
+        </form>
+
     </div>
 </div>
 </body>

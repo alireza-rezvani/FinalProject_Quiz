@@ -7,6 +7,12 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+
+/**
+ * question service
+ * @author Alireza
+ */
+
 @Service
 public class QuestionService {
 

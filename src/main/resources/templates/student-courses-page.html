@@ -3,13 +3,14 @@
 <head>
     <title>دوره های شما</title>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <meta name="author" content="Alireza">
     <link th:href="@{/css/bootstrap.min.css}"  rel="stylesheet" type="text/css" >
 </head>
 <body  class="text-center row p-5 justify-content-center align-content-center bg-info" style="font-family: 'B Mitra'">
 
 <div>
-    <h1>دوره های شما</h1>
 
+    <h1>دوره های شما</h1>
 
     <div class="m-3 rounded" th:hidden="${studentCourses.size()==0}">
         <table class="table table-dark" th:hidden="${studentCourses.size()==0}">
@@ -41,8 +42,15 @@
     </div>
 
     <div class="row text-center justify-content-center">
-        <form class="m-2" th:action="@{/menu}"><input class="btn btn-dark" type="submit" value="بازگشت به منوی اصلی"></form>
-        <form class="m-2" th:action="@{/signOut}"><input class="btn btn-dark" type="submit" value="خروج از حساب کاربری"></form>
+
+        <form class="m-2" th:action="@{/menu}">
+            <input class="btn btn-dark" type="submit" value="بازگشت به منوی اصلی">
+        </form>
+
+        <form class="m-2" th:action="@{/signOut}">
+            <input class="btn btn-dark" type="submit" value="خروج از حساب کاربری">
+        </form>
+
     </div>
 
 </div>

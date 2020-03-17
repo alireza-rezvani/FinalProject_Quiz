@@ -11,6 +11,11 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+/**
+ * custom UserDetails
+ * @author Alireza
+ */
+
 @NoArgsConstructor
 public class MyUserDetail implements UserDetails {
 

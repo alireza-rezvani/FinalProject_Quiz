@@ -7,6 +7,11 @@ import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
+/**
+ * answer repository
+ * @author Alireza
+ */
+
 @Repository
 public interface AnswerRepository extends JpaRepository<Answer, Long> {
 

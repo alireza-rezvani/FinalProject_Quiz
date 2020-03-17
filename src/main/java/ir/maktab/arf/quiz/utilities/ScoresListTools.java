@@ -5,6 +5,12 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Stream;
 
+
+/**
+ * this class contains some useful methods to process default scores list or participant's score list
+ * @author Alireza
+ */
+
 public class ScoresListTools {
 
     public static ArrayList<Double> stringToArrayList(String stringDefaultScores){

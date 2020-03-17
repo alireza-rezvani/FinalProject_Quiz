@@ -4,6 +4,12 @@ import ir.maktab.arf.quiz.repositories.PrivilegeRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+
+/**
+ * privilege service
+ * @author Alireza
+ */
+
 @Service
 public class PrivilegeService {
 

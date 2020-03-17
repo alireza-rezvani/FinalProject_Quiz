@@ -1,12 +1,16 @@
 package ir.maktab.arf.quiz.entities;
 
-import ir.maktab.arf.quiz.entities.Quiz;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
-import java.util.List;
+
+
+/**
+ * defining question entity
+ * @author Alireza
+ */
 
 @Data
 @AllArgsConstructor

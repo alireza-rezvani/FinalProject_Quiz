@@ -16,6 +16,12 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+
+/**
+ * this class saves initial records in database if they are not exist
+ * @author Alireza
+ */
+
 @Component
 public class InitialDataLoader implements ApplicationListener<ContextRefreshedEvent> {
 
@@ -27,6 +33,16 @@ public class InitialDataLoader implements ApplicationListener<ContextRefreshedEv
     private PrivilegeRepository privilegeRepository;
     private StatusRepository statusRepository;
     private PasswordEncoder passwordEncoder;
+
+    /**
+     * preparing class requirements using @Autowired
+     * @param accountRepository is autowired by constructor
+     * @param personalInfoRepository is autowired by constructor
+     * @param roleRepository is autowired by constructor
+     * @param privilegeRepository is autowired by constructor
+     * @param statusRepository is autowired by constructor
+     * @param passwordEncoder is autowired by constructor
+     */
 
     @Autowired
     public InitialDataLoader(AccountRepository accountRepository,
@@ -42,6 +58,12 @@ public class InitialDataLoader implements ApplicationListener<ContextRefreshedEv
         this.statusRepository = statusRepository;
         this.passwordEncoder = passwordEncoder;
     }
+
+
+    /**
+     * saves initial records if not exist
+     * @param event context refreshed event
+     */
 
     @Override
     @Transactional

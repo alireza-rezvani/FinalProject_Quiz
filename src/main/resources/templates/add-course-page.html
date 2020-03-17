@@ -3,6 +3,7 @@
 <head>
     <title>تعریف دوره</title>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <meta name="author" content="Alireza">
     <link th:href="@{/css/bootstrap.min.css}"  rel="stylesheet" type="text/css" >
     <link rel="stylesheet" th:href="@{/css/persian-datepicker.css}"/>
     <script th:src="@{/js/jquery.js}"></script>
@@ -14,22 +15,38 @@
 <div>
     <h1>تعریف دوره</h1>
 
-    <p th:if="${param.invalidTitleError}" class="text-danger font-weight-bold" style="direction: rtl">عنوان وارد شده نامعتبر است!</p>
-    <p th:if="${param.invalidStartDateError}" class="text-danger font-weight-bold" style="direction: rtl">تاریخ شروع نامعتبر است!</p>
-    <p th:if="${param.startDateGreaterThanFinishDateError}" class="text-danger font-weight-bold" style="direction: rtl">تاریخ شروع بزرگتر از تاریخ پایان است!</p>
-    <p th:if="${param.startAndFinishAtSameDateError}" class="text-danger font-weight-bold" style="direction: rtl">تاریخ های شروع و پایان نمی توانند در یک روز باشند!</p>
+    <p th:if="${param.invalidTitleError}" class="text-danger font-weight-bold" style="direction: rtl">
+        عنوان وارد شده نامعتبر است!
+    </p>
 
+    <p th:if="${param.invalidStartDateError}" class="text-danger font-weight-bold" style="direction: rtl">
+        تاریخ شروع نامعتبر است!
+    </p>
 
+    <p th:if="${param.startDateGreaterThanFinishDateError}" class="text-danger font-weight-bold" style="direction: rtl">
+        تاریخ شروع بزرگتر از تاریخ پایان است!
+    </p>
+
+    <p th:if="${param.startAndFinishAtSameDateError}" class="text-danger font-weight-bold" style="direction: rtl">
+        تاریخ های شروع و پایان نمی توانند در یک روز باشند!
+    </p>
 
     <form class="m-3" action="#" th:action="@{/admin/addCourse}" method="post">
         <p hidden="hidden"><input type="text" th:field="*{courseDto.id}"/></p>
         <div class="border border-light p-1 m-1 mb-3 row  w-auto justify-content-center  rounded" style="direction: rtl">
+
             <input class="text-center rounded m-2" type="text" th:field="*{courseDto.title}" placeholder="عنوان دوره"/>
+
             <label class="mt-3">  تاریخ شروع: </label>
-            <input class="myDatePicker text-center rounded m-2" type="text" th:field="*{courseDto.startDate}" placeholder="تاریخ شروع"/>
+            <input class="myDatePicker text-center rounded m-2" type="text"
+                   th:field="*{courseDto.startDate}" placeholder="تاریخ شروع"/>
+
             <label class="mt-3">  تاریخ اتمام: </label>
-            <input class="myDatePicker text-center rounded m-2" type="text" th:field="*{courseDto.finishDate}" placeholder="تاریخ اتمام"/>
+            <input class="myDatePicker text-center rounded m-2" type="text"
+                   th:field="*{courseDto.finishDate}" placeholder="تاریخ اتمام"/>
+
             <input class="btn btn-dark m-2" type="submit" value="ثبت" th:name="ok"/>
+
         </div>
     </form>
 
@@ -65,8 +82,6 @@
                     </form>
                 </td>
 
-<!--                <td th:text="${courseDtoItem.finishDate.toString().substring(0,10)}"></td>-->
-<!--                <td th:text="${courseDtoItem.startDate.toString().substring(0,10)}"></td>-->
                 <td th:text="${courseDtoItem.finishDate}"></td>
                 <td th:text="${courseDtoItem.startDate}"></td>
 
@@ -80,8 +95,15 @@
     </div>
 
     <div class="row text-center justify-content-center">
-        <form class="m-2" th:action="@{/menu}"><input class="btn btn-dark" type="submit" value="بازگشت به منوی اصلی"></form>
-        <form class="m-2" th:action="@{/signOut}"><input class="btn btn-dark" type="submit" value="خروج از حساب کاربری"></form>
+
+        <form class="m-2" th:action="@{/menu}">
+            <input class="btn btn-dark" type="submit" value="بازگشت به منوی اصلی">
+        </form>
+
+        <form class="m-2" th:action="@{/signOut}">
+            <input class="btn btn-dark" type="submit" value="خروج از حساب کاربری">
+        </form>
+
     </div>
 
 </div>

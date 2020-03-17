@@ -4,6 +4,12 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+
+/**
+ * transfers default score and participant score for question item
+ * @author Alireza
+ */
+
 @Data
 @AllArgsConstructor
 @NoArgsConstructor

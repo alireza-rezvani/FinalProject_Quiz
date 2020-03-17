@@ -6,6 +6,12 @@ import ir.maktab.arf.quiz.services.QuizService;
 import java.util.ArrayList;
 import java.util.List;
 
+
+/**
+ * contains some useful methods to process quiz operations
+ * @author Alireza
+ */
+
 public class QuizOperationTools {
 
     public static String autoPrepareStudentScores(QuizOperation finishedQuizOperation){
@@ -25,8 +31,11 @@ public class QuizOperationTools {
             for (Answer answerItem : userAnswers) {
                 Question correspondingQuestion = ServiceTools.getQuestionService().findById(answerItem.getQuestionId());
                 if (correspondingQuestion instanceof MultiChoiceQuestion) {
-                    if (QuestionTools.isAnswerOfMultiChoiceQuestion((MultiChoiceQuestion) correspondingQuestion, answerItem.getContent()))
-                        studentScoresList.set(answerItem.getQuestionNumberInQuiz() - 1, defaultScoresOfQuiz.get(answerItem.getQuestionNumberInQuiz() - 1));
+                    if (QuestionTools.isAnswerOfMultiChoiceQuestion((MultiChoiceQuestion) correspondingQuestion,
+                            answerItem.getContent()))
+                        studentScoresList.set(
+                                answerItem.getQuestionNumberInQuiz() - 1,
+                                defaultScoresOfQuiz.get(answerItem.getQuestionNumberInQuiz() - 1));
                 }
             }
         }

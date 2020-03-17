@@ -1,5 +1,11 @@
 package ir.maktab.arf.quiz.utilities;
 
+
+/**
+ * this enum contains titles of the statuses and their persian translation
+ * @author Alireza
+ */
+
 public enum StatusTitle {
     ACTIVE("فعال"),
     INACTIVE("غیرفعال"),

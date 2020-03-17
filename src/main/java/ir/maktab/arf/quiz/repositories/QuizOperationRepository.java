@@ -6,6 +6,11 @@ import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
+/**
+ * quiz operation repository
+ * @author Alireza
+ */
+
 @Repository
 public interface QuizOperationRepository extends JpaRepository<QuizOperation, Long> {
      public List<QuizOperation> findAllByStudentIdAndCourseId(Long studentId, Long courseId);

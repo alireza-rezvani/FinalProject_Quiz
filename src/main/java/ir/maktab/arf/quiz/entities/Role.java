@@ -8,6 +8,12 @@ import lombok.NoArgsConstructor;
 import javax.persistence.*;
 import java.util.List;
 
+
+/**
+ * defining role entity
+ * @author Alireza
+ */
+
 @Data
 @AllArgsConstructor
 @NoArgsConstructor

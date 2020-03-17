@@ -7,6 +7,12 @@ import ir.maktab.arf.quiz.services.QuizService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+
+/**
+ * this class is used to return needed service objects
+ * @author Alireza
+ */
+
 @Component
 public class ServiceTools {
 

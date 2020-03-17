@@ -2,6 +2,7 @@
 <html xmlns:th="https://www.thymeleaf.org">
 <head>
     <title>اعضای دوره</title>
+    <meta name="author" content="Alireza">
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <link th:href="@{/css/bootstrap.min.css}"  rel="stylesheet" type="text/css" >
 </head>
@@ -12,15 +13,22 @@
 
     <form class="m-3" action="#" th:action="@{/admin/addMemberToCourse/__${course.id}__}">
         <div class="row text-center justify-content-center " style="direction: rtl">
-        <select class="custom-select w-auto m-2" th:name="roleTitleName" >
-            <option th:each="role:${allRoles}" th:value="${role.title.name()}" th:text="${role.title.getPersian()}" th:if="${role.title.name()!='ADMIN'}"></option>
-        </select>
-        <input class="btn btn-dark m-2" type="submit" value="افزودن عضو" />
+            <select class="custom-select w-auto m-2" th:name="roleTitleName" >
+                <option th:each="role:${allRoles}"
+                        th:value="${role.title.name()}"
+                        th:text="${role.title.getPersian()}"
+                        th:if="${role.title.name()!='ADMIN'}">
+                </option>
+            </select>
+            <input class="btn btn-dark m-2" type="submit" value="افزودن عضو" />
         </div>
     </form>
 
     <div class="m-3" th:hidden="${(course.students==null || course.students.size()==0) && course.teacher==null}">
-        <table class="table table-dark" th:hidden="${(course.students==null || course.students.size()==0) && course.teacher==null}">
+
+        <table class="table table-dark"
+               th:hidden="${(course.students==null || course.students.size()==0) && course.teacher==null}">
+
             <thead>
             <th colspan="2">عملیات</th>
             <th>نام خانوادگی</th>
@@ -62,10 +70,22 @@
     </div>
 
     <div class="row text-center justify-content-center">
-        <form class="m-2" th:action="@{/menu}"><input class="btn btn-dark" type="submit" value="بازگشت به منوی اصلی"></form>
-        <form class="m-2" th:action="@{/admin/addCourse}"><input class="btn btn-dark" type="submit" value="بازگشت به لیست دوره ها"></form>
-        <form class="m-2" th:action="@{/signOut}"><input class="btn btn-dark" type="submit" value="خروج از حساب کاربری"></form>
-    </div></div>
+
+        <form class="m-2" th:action="@{/menu}">
+            <input class="btn btn-dark" type="submit" value="بازگشت به منوی اصلی">
+        </form>
+
+        <form class="m-2" th:action="@{/admin/addCourse}">
+            <input class="btn btn-dark" type="submit" value="بازگشت به لیست دوره ها">
+        </form>
+
+        <form class="m-2" th:action="@{/signOut}">
+            <input class="btn btn-dark" type="submit" value="خروج از حساب کاربری">
+        </form>
+
+    </div>
+
+</div>
 
 <script>
     function delConfirm(id) {
@@ -75,5 +95,6 @@
             document.getElementById(id).hidden = false;
     }
 </script>
+
 </body>
 </html>

@@ -3,6 +3,7 @@
 <head>
     <title>مشاهده سوال</title>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <meta name="author" content="Alireza">
     <link th:href="@{/css/bootstrap.min.css}"  rel="stylesheet" type="text/css" >
 </head>
 <body class="text-center row p-5 justify-content-center align-content-center bg-info" style="font-family: 'B Mitra'">
@@ -10,35 +11,63 @@
 <div class="w-75">
     <h1>مشاهده سوال</h1>
 
-    <div class="border border-dark m-4 p-4 rounded font-weight-bolder text-center justify-content-center" style="direction: rtl" th:if="${T(ir.maktab.arf.quiz.utilities.QuestionTools).getQuestionType(question).name().equals('DetailedQuestion')}">
+    <div class="border border-dark m-4 p-4 rounded font-weight-bolder text-center justify-content-center"
+         style="direction: rtl"
+         th:if="${T(ir.maktab.arf.quiz.utilities.QuestionTools).getQuestionType(question).name().equals('DetailedQuestion')}">
+
         <label >عنوان سوال: </label>
         <label th:text="${question.title}"></label>
         <br>
+
         <label>صورت سوال: </label>
         <label th:text="${question.definition}"></label>
         <br>
+
         <textarea class="form-control" th:rows="5" placeholder="پاسخ"></textarea>
+
     </div>
 
-    <div class="border border-dark rounded m-4 p-4 font-weight-bolder text-center justify-content-center" style="direction: rtl" th:if="${T(ir.maktab.arf.quiz.utilities.QuestionTools).getQuestionType(question).name().equals('MultiChoiceQuestion')}">
+    <div class="border border-dark rounded m-4 p-4 font-weight-bolder text-center justify-content-center"
+         style="direction: rtl"
+         th:if="${T(ir.maktab.arf.quiz.utilities.QuestionTools).getQuestionType(question).name().equals('MultiChoiceQuestion')}">
+
         <label>عنوان سوال: </label>
         <label th:text="${question.title}"></label>
         <br>
         <label>صورت سوال: </label>
         <label th:text="${question.definition}"></label>
         <br>
+
         <div class="justify-content-around" style="direction: rtl">
-<!--        it works    -->
-<!--            we can use separated pages for each type of question-->
-        <input type="checkbox" class="form-check form-check-inline" th:each="choiceItem:${question.choiceList}" th:text="${choiceItem.title}" th:checked="${choiceItem.isTrueChoice==true}">
+<!--            it works    -->
+<!--            but we can use separated pages for each type of question-->
+            <input type="checkbox"
+                   class="form-check form-check-inline"
+                   th:each="choiceItem:${question.choiceList}"
+                   th:text="${choiceItem.title}"
+                   th:checked="${choiceItem.isTrueChoice==true}">
         </div>
+
     </div>
 
     <div class="row text-center justify-content-center m-5">
-        <form class="m-2" th:action="@{/quiz/__${quizId}__/questions}"><input class="btn btn-dark" type="submit" value="بازگشت به لیست سوالات آزمون"></form>
-        <form class="m-2" th:action="@{/quiz/__${quizId}__/addQuestion/fromBank}"><input class="btn btn-dark" type="submit" value="بازگشت به بانک سوالات دوره"></form>
-        <form class="m-2" th:action="@{/menu}"><input class="btn btn-dark" type="submit" value="بازگشت به منوی اصلی"></form>
-        <form class="m-2" th:action="@{/signOut}"><input class="btn btn-dark" type="submit" value="خروج از حساب کاربری"></form>
+
+        <form class="m-2" th:action="@{/quiz/__${quizId}__/questions}">
+            <input class="btn btn-dark" type="submit" value="بازگشت به لیست سوالات آزمون">
+        </form>
+
+        <form class="m-2" th:action="@{/quiz/__${quizId}__/addQuestion/fromBank}">
+            <input class="btn btn-dark" type="submit" value="بازگشت به بانک سوالات دوره">
+        </form>
+
+        <form class="m-2" th:action="@{/menu}">
+            <input class="btn btn-dark" type="submit" value="بازگشت به منوی اصلی">
+        </form>
+
+        <form class="m-2" th:action="@{/signOut}">
+            <input class="btn btn-dark" type="submit" value="خروج از حساب کاربری">
+        </form>
+        
     </div>
 </div>
 </body>

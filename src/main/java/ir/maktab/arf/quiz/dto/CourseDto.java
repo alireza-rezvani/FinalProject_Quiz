@@ -4,6 +4,12 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+
+/**
+ * transfers course initial attributes
+ * @author Alireza
+ */
+
 @Data
 @AllArgsConstructor
 @NoArgsConstructor

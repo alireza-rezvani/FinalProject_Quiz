@@ -2,6 +2,12 @@ package ir.maktab.arf.quiz.utilities;
 
 import ir.maktab.arf.quiz.entities.QuizOperation;
 
+
+/**
+ * this class is used to handle auto finish quiz operation
+ * @author Alireza
+ */
+
 public class AutoFinishRunnable implements Runnable {
 
     private Long quizId;
@@ -14,7 +20,9 @@ public class AutoFinishRunnable implements Runnable {
 
     @Override
     public void run() {
-        QuizOperation requestedQuizOperation = ServiceTools.getQuizOperationService().findByQuizIdAndStudentId(quizId,studentId);
+        QuizOperation requestedQuizOperation
+                = ServiceTools.getQuizOperationService().findByQuizIdAndStudentId(quizId,studentId);
+
         if (requestedQuizOperation.getIsFinished() == null || requestedQuizOperation.getIsFinished() == false) {
             requestedQuizOperation.setIsFinished(true);
             ServiceTools.getQuizOperationService().save(requestedQuizOperation);

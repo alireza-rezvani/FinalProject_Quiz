@@ -3,6 +3,7 @@
 <head>
     <title>سوال تشریحی</title>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <meta name="author" content="Alireza">
     <link th:href="@{/css/bootstrap.min.css}"  rel="stylesheet" type="text/css" >
 </head>
 <body  class="text-center row p-5 justify-content-center align-content-center bg-info" style="font-family: 'B Mitra'">
@@ -22,10 +23,23 @@
 
 
     <div class="row text-center justify-content-center m-5">
-        <form class="m-2" th:action="@{/quiz/__${quizId}__/questions}"><input class="btn btn-dark" type="submit" value="بازگشت به لیست سوالات آزمون"></form>
-        <form class="m-2" th:action="@{/quiz/__${quizId}__/addQuestion/fromBank}"><input class="btn btn-dark" type="submit" value="بازگشت به بانک سوالات دوره"></form>
-        <form class="m-2" th:action="@{/menu}"><input class="btn btn-dark" type="submit" value="بازگشت به منوی اصلی"></form>
-        <form class="m-2" th:action="@{/signOut}"><input class="btn btn-dark" type="submit" value="خروج از حساب کاربری"></form>
+
+        <form class="m-2" th:action="@{/quiz/__${quizId}__/questions}">
+            <input class="btn btn-dark" type="submit" value="بازگشت به لیست سوالات آزمون">
+        </form>
+
+        <form class="m-2" th:action="@{/quiz/__${quizId}__/addQuestion/fromBank}">
+            <input class="btn btn-dark" type="submit" value="بازگشت به بانک سوالات دوره">
+        </form>
+
+        <form class="m-2" th:action="@{/menu}">
+            <input class="btn btn-dark" type="submit" value="بازگشت به منوی اصلی">
+        </form>
+
+        <form class="m-2" th:action="@{/signOut}">
+            <input class="btn btn-dark" type="submit" value="خروج از حساب کاربری">
+        </form>
+
     </div>
 </div>
 </body>

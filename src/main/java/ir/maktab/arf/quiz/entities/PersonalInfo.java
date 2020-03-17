@@ -6,6 +6,12 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 
+
+/**
+ * defining personal info entity
+ * @author Alireza
+ */
+
 @Data
 @AllArgsConstructor
 @NoArgsConstructor

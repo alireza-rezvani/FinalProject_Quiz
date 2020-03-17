@@ -3,6 +3,7 @@
 <head>
     <title>آزمونهای این دوره</title>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <meta name="author" content="Alireza">
     <link th:href="@{/css/bootstrap.min.css}"  rel="stylesheet" type="text/css" >
 </head>
 <body  class="text-center row p-5 justify-content-center align-content-center bg-info" style="font-family: 'B Mitra'">
@@ -22,8 +23,15 @@
     </form>
 
     <div class="row text-center justify-content-center">
-        <form class="m-2" th:action="@{/course/__${courseId}__/quizzes}"><input class="btn btn-dark" type="submit" value="همه آزمونها"></form>
-        <form class="m-2" th:action="@{/course/__${courseId}__/myQuizzes}"><input class="btn btn-dark" type="submit" value="آزمونهای من"></form>
+
+        <form class="m-2" th:action="@{/course/__${courseId}__/quizzes}">
+            <input class="btn btn-dark" type="submit" value="همه آزمونها">
+        </form>
+
+        <form class="m-2" th:action="@{/course/__${courseId}__/myQuizzes}">
+            <input class="btn btn-dark" type="submit" value="آزمونهای من">
+        </form>
+
     </div>
 
     <p th:if="${param.trueChoiceNotExistError}" class="text-danger">خطا در فعالسازی آزمون! عدم وجود گزینه صحیح در سوال تستی</p>
@@ -50,7 +58,12 @@
                     </form>
                 </td>
 
-                <td><button th:disabled="${quizItem.creatorTeacherId != currentTeacherAccount.id}" class="btn btn-light"  th:onclick="|delConfirm(${quizItem.id})|">حذف</button></td>
+                <td>
+                    <button th:disabled="${quizItem.creatorTeacherId != currentTeacherAccount.id}"
+                            class="btn btn-light"  th:onclick="|delConfirm(${quizItem.id})|">
+                        حذف
+                    </button>
+                </td>
 
 
                 <td>
@@ -61,13 +74,15 @@
 
                 <td>
                     <form th:action="@{/course/__${courseId}__/quiz/__${quizItem.id}__/activation}">
-                        <input class="btn btn-light" type="submit" th:value="${quizItem.isActive==true?'غیرفعال کردن':'فعال کردن'}" >
+                        <input class="btn btn-light" type="submit"
+                               th:value="${quizItem.isActive==true?'غیرفعال کردن':'فعال کردن'}" >
                     </form>
                 </td>
 
                 <td>
                     <form th:action="@{/course/__${courseId}__/editQuiz/__${quizItem.id}__}">
-                        <input th:disabled="${quizItem.creatorTeacherId != currentTeacherAccount.id}" class="btn btn-light" type="submit" th:value="ویرایش">
+                        <input th:disabled="${quizItem.creatorTeacherId != currentTeacherAccount.id}"
+                               class="btn btn-light" type="submit" th:value="ویرایش">
                     </form>
                 </td>
 
@@ -90,9 +105,19 @@
     </div>
 
     <div class="row text-center justify-content-center">
-        <form class="m-2" th:action="@{/teacher/courses}"><input class="btn btn-dark" type="submit" value="بازگشت به لیست دوره ها"></form>
-        <form class="m-2" th:action="@{/menu}"><input class="btn btn-dark" type="submit" value="بازگشت به منوی اصلی"></form>
-        <form class="m-2" th:action="@{/signOut}"><input class="btn btn-dark" type="submit" value="خروج از حساب کاربری"></form>
+
+        <form class="m-2" th:action="@{/teacher/courses}">
+            <input class="btn btn-dark" type="submit" value="بازگشت به لیست دوره ها">
+        </form>
+
+        <form class="m-2" th:action="@{/menu}">
+            <input class="btn btn-dark" type="submit" value="بازگشت به منوی اصلی">
+        </form>
+
+        <form class="m-2" th:action="@{/signOut}">
+            <input class="btn btn-dark" type="submit" value="خروج از حساب کاربری">
+        </form>
+
     </div>
 
 </div>

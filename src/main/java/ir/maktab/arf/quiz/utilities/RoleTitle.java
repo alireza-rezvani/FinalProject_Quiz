@@ -1,5 +1,11 @@
 package ir.maktab.arf.quiz.utilities;
 
+
+/**
+ * this enum contains titles of the roles and their persian translation
+ * @author Alireza
+ */
+
 public enum RoleTitle {
     ADMIN("مدیر"),
     TEACHER("استاد"),

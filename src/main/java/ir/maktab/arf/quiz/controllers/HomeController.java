@@ -27,6 +27,10 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
+/**
+ * home controller handles general tasks in application (like sign up, menu and ...)
+ * @author Alireza
+ */
 @Controller
 @RequestMapping
 public class HomeController {
@@ -36,6 +40,16 @@ public class HomeController {
     private RoleService roleService;
     private StatusService statusService;
     private PasswordEncoder passwordEncoder;
+
+
+    /**
+     * preparing requirements for this controller using @Autowired
+     * @param accountService is autowired by constructor
+     * @param personalInfoService is autowired by constructor
+     * @param roleService is autowired by constructor
+     * @param statusService is autowired by constructor
+     * @param passwordEncoder is autowired by constructor
+     */
 
     @Autowired
     public HomeController(AccountService accountService,
@@ -50,7 +64,17 @@ public class HomeController {
         this.passwordEncoder = passwordEncoder;
     }
 
-    @Secured(value = {"ROLE_ADMIN_GENERAL_PRIVILEGE", "ROLE_TEACHER_GENERAL_PRIVILEGE", "ROLE_STUDENT_GENERAL_PRIVILEGE"})
+
+    /**
+     * handles displaying menu based on signed in user authority
+     * @param model contains requirements
+     * @return menu-page.html
+     */
+
+    @Secured(value = {
+            "ROLE_ADMIN_GENERAL_PRIVILEGE",
+            "ROLE_TEACHER_GENERAL_PRIVILEGE",
+            "ROLE_STUDENT_GENERAL_PRIVILEGE"})
     @RequestMapping(value = "/menu")
     public String getMenuPage(Model model){
         List<String> authoritiesNames = SecurityContextHolder.getContext().getAuthentication().getAuthorities().stream()
@@ -73,6 +97,13 @@ public class HomeController {
         return "menu-page";
     }
 
+
+    /**
+     * handles sign up
+     * @param model contains requirements of sign up page
+     * @return sign-up-page.html
+     */
+
     @RequestMapping(value = "/signUp", method = RequestMethod.GET)
     public String signUp(Model model){
         model.addAttribute("signUpInfoDto", new SignUpInfoDto());
@@ -80,6 +111,12 @@ public class HomeController {
         return "sign-up-page";
     }
 
+
+    /**
+     * validates user's inputs and then saves new user in database
+     * @param signUpInfoDto contains user inputs
+     * @return sign-in-page.html if inputs be valid
+     */
 
     @RequestMapping(value = "/signUp", method = RequestMethod.POST)
     public String submitSignUp(@ModelAttribute SignUpInfoDto signUpInfoDto){
@@ -159,7 +196,8 @@ public class HomeController {
             account.setUsername(signUpInfoDto.getUsername());
             account.setPassword(passwordEncoder.encode(signUpInfoDto.getPassword()));
             account.setPersonalInfo(savedPersonalInfo);
-            account.setRoles(new ArrayList<>(Arrays.asList(roleService.findByTitle(RoleTitle.valueOf(signUpInfoDto.getRoleTitleName())))));
+            account.setRoles(new ArrayList<>(Arrays.asList(roleService.findByTitle
+                    (RoleTitle.valueOf(signUpInfoDto.getRoleTitleName())))));
             account.setStatus(statusService.findByTitle(StatusTitle.WAITING_FOR_VERIFY));
             accountService.save(account);
 
@@ -169,10 +207,22 @@ public class HomeController {
     }
 
 
+    /**
+     * takes user to sign in page
+     * @return sign-in-page.html
+     */
+
     @RequestMapping(value = "/signIn", method = RequestMethod.GET)
     public String signIn(){
         return "sign-in-page";
     }
+
+
+    /**
+     * takes user to first page
+     * sign out task is handled by spring security
+     * @return index.html
+     */
 
     @RequestMapping(value = "/signOut")
     public String signOut(){

@@ -7,6 +7,12 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 
+
+/**
+ * defining detailed question entity
+ * @author Alireza
+ */
+
 @EqualsAndHashCode(callSuper = true)
 @Data
 @AllArgsConstructor

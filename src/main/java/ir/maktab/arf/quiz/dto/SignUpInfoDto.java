@@ -2,6 +2,12 @@ package ir.maktab.arf.quiz.dto;
 
 import lombok.Data;
 
+
+/**
+ * transfers user's required attributes for sign up
+ * @author Alireza
+ */
+
 @Data
 public class SignUpInfoDto {
     private String nationalCode;

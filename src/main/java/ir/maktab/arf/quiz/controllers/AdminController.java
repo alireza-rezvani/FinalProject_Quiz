@@ -23,6 +23,12 @@ import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
+
+/**
+ * Admin controller class handles admin tasks
+ * @author Alireza
+ */
+
 @Controller
 @RequestMapping(value = "/admin")
 public class AdminController {
@@ -32,6 +38,16 @@ public class AdminController {
     private PersonalInfoService personalInfoService;
     private StatusService statusService;
     private CourseService courseService;
+
+
+    /**
+     * preparing requirements for this controller using @Autowired
+     * @param accountService is autowired by constructor
+     * @param roleService is autowired by constructor
+     * @param personalInfoService is autowired by constructor
+     * @param statusService is autowired by constructor
+     * @param courseService is autowired by constructor
+     */
 
     @Autowired
     public AdminController(AccountService accountService,
@@ -47,10 +63,22 @@ public class AdminController {
     }
 
 
+    /**
+     * admin main page
+     * @return redirect to menu page
+     */
+
     @RequestMapping(value = "")
     public String getAdminPage(){
         return "redirect:/menu";
     }
+
+
+    /**
+     * this method prepares required items to display list of all accounts to admin user
+     * @param model preparing requirements
+     * @return accounts-list-page.html
+     */
 
     @RequestMapping(value = "/accountsList")
     public String getAccountsList(Model model){
@@ -61,20 +89,31 @@ public class AdminController {
         return "accounts-list-page";
     }
 
+
+    /**
+     * prepares only filtered result from all accounts
+     * user can search by username, national code, first name, last name, role, status or a mix of these items
+     * @param model contains prepared items
+     * @param searchAccountDto data transfer object for searching between accounts
+     * @return accounts-list-page.html
+     */
+
     @RequestMapping(value = "/accountsList", method = RequestMethod.POST)
     public String getFilteredAccountsList(Model model, @ModelAttribute SearchAccountDto searchAccountDto){
         List<Account> filteredAccounts = accountService.findAll();
 
         filteredAccounts = filteredAccounts.stream()
                 .filter(account -> account.getUsername().contains(searchAccountDto.getUsername()))
-                .filter(account -> account.getPersonalInfo().getNationalCode().contains(searchAccountDto.getNationalCode()))
+                .filter(account -> account.getPersonalInfo().getNationalCode()
+                        .contains(searchAccountDto.getNationalCode()))
                 .filter(account -> account.getPersonalInfo().getFirstName().contains(searchAccountDto.getFirstName()))
                 .filter(account -> account.getPersonalInfo().getLastName().contains(searchAccountDto.getLastName()))
                 .collect(Collectors.toList());
 
         if (!searchAccountDto.getRoleTitleName().equals("All"))
             filteredAccounts = filteredAccounts.stream()
-                .filter(account -> account.getRoles().contains(roleService.findByTitle(RoleTitle.valueOf(searchAccountDto.getRoleTitleName()))))
+                .filter(account -> account.getRoles().contains(roleService.findByTitle(RoleTitle
+                        .valueOf(searchAccountDto.getRoleTitleName()))))
                     .collect(Collectors.toList());
 
         if (!searchAccountDto.getStatusTitleName().equals("All"))
@@ -89,6 +128,12 @@ public class AdminController {
         return "accounts-list-page";
     }
 
+    /**
+     * handles editing account by admin
+     * @param model contains prepared items
+     * @param id path variable that contains requested account's id
+     * @return edit-account-page.html
+     */
     @RequestMapping(value = "/editAccount/{id}")
     public String editAccount(Model model, @PathVariable(value = "id") final Long id){
         Account requestedAccount = accountService.findById(id);
@@ -109,8 +154,19 @@ public class AdminController {
         return "edit-account-page";
     }
 
+
+    /**
+     * receives edit results using post method
+     * validates entered information
+     * updates account if validation passed
+     * @param editAccountDto contains admin inputs
+     * @param id requested account's id for edit
+     * @return redirects to list of accounts
+     */
+
     @RequestMapping(value = "/editAccount/{id}", method = RequestMethod.POST)
-    public String submitEditAccount(@ModelAttribute EditAccountDto editAccountDto, @PathVariable(value = "id") final Long id) {
+    public String submitEditAccount(@ModelAttribute EditAccountDto editAccountDto,
+                                    @PathVariable(value = "id") final Long id) {
 
         boolean isInputInvalid = false;
         String redirectUrl = "redirect:/admin/editAccount/"+id+"/?";
@@ -135,14 +191,24 @@ public class AdminController {
 
             Account requestedAccount = accountService.findById(id);
             requestedAccount.setUsername(editAccountDto.getUsername());
-            requestedAccount.setRoles(new ArrayList<>(Arrays.asList(roleService.findByTitle(RoleTitle.valueOf(editAccountDto.getRoleTitleName())))));
-            requestedAccount.setStatus(statusService.findByTitle(StatusTitle.valueOf(editAccountDto.getStatusTitleName())));
+            requestedAccount.setRoles(new ArrayList<>(
+                    Arrays.asList(roleService.findByTitle(RoleTitle.valueOf(editAccountDto.getRoleTitleName())))));
+            requestedAccount.setStatus(
+                    statusService.findByTitle(StatusTitle.valueOf(editAccountDto.getStatusTitleName())));
             accountService.save(requestedAccount);
 
             return "redirect:/admin/accountsList";
         }
     }
 
+
+    /**
+     * this method is used only for account activation or inactivation by admin
+     * using this admin does not need to enter edit page
+     * and admin can activate or inactivate any account using the button prepared for each row of accounts list
+     * @param accountId requested account id
+     * @return redirects to accounts list
+     */
 
     @RequestMapping("/accountActivation/{accountId}")
     public String activateAccount(@PathVariable Long accountId){
@@ -152,6 +218,15 @@ public class AdminController {
             accountService.inActivateAccount(accountId);
         return "redirect:/admin/accountsList";
     }
+
+
+    /**
+     * prepares items for admin inputs to add course
+     * we are using a persian date picker (designed by reza babakhani) for date input
+     * we also use farsi-commons dependency to convert gregorian and jalali dates to each other
+     * @param model contains list of all courses to show to admin and a course DTO to hold inputs
+     * @return add-course-page.html
+     */
 
     @RequestMapping(value = "/addCourse")
     public String addCourse(Model model){
@@ -164,65 +239,57 @@ public class AdminController {
                         new CourseDto(
                                 courseItem.getId(),
                                 courseItem.getTitle(),
-                                JalaliCalendarUtils.convertGregorianToJalali(new DateTime(courseItem.getStartDate())).toString(),
-                                JalaliCalendarUtils.convertGregorianToJalali(new DateTime(courseItem.getFinishDate())).toString()
+                                JalaliCalendarUtils.convertGregorianToJalali(
+                                        new DateTime(courseItem.getStartDate())).toString(),
+                                JalaliCalendarUtils.convertGregorianToJalali(
+                                        new DateTime(courseItem.getFinishDate())).toString()
                         )
                 );
             }
         }
 
         model.addAttribute("allCoursesDtoList", allCoursesDtos);
-//        model.addAttribute("course", new Course());
         model.addAttribute("courseDto", new CourseDto());
         return "add-course-page";
     }
 
-    @RequestMapping(value = "/addCourse", method = RequestMethod.POST)
-    public String submitCourseAddition(Model model,
-//                                       @ModelAttribute Course course,
-                                       @ModelAttribute CourseDto addingCourseDto){
 
-//        Date dateNow = new Date();
-//        dateNow.setHours(0);
-//        dateNow.setMinutes(0);
-//        dateNow.setSeconds(0);
-        System.out.println("88888888888888888888888888888888888888888");
-        System.out.println(addingCourseDto.getId());
+    /**
+     * saves course after validation of all inputs
+     * @param model contains required items for add course page. its useless after using redirect
+     * @param addingCourseDto contains admin inputs
+     * @return redirects to add course page (with error params if needed)
+     */
+
+    @RequestMapping(value = "/addCourse", method = RequestMethod.POST)
+    public String submitCourseAddition(Model model, @ModelAttribute CourseDto addingCourseDto){
 
         Course inputCourse = new Course();
         inputCourse.setId(addingCourseDto.getId());
         inputCourse.setTitle(addingCourseDto.getTitle());
-        if (addingCourseDto.getStartDate() != null && !addingCourseDto.getStartDate().isEmpty() && addingCourseDto.getStartDate().split("/").length == 3) {
+
+        if (addingCourseDto.getStartDate() != null && !addingCourseDto.getStartDate().isEmpty()
+                && addingCourseDto.getStartDate().split("/").length == 3) {
             //add more condition above to be sure about input validation (for example all parts being numeric)
             int persianYear = Integer.parseInt(addingCourseDto.getStartDate().split("/")[0]);
             int persianMonth = Integer.parseInt(addingCourseDto.getStartDate().split("/")[1]);
             int persianDay = Integer.parseInt(addingCourseDto.getStartDate().split("/")[2]);
 
-            inputCourse.setStartDate(JalaliCalendarUtils.convertJalaliToGregorian(new JalaliDateImpl(persianYear,persianMonth,persianDay)).toDate());
+            inputCourse.setStartDate(JalaliCalendarUtils
+                    .convertJalaliToGregorian(new JalaliDateImpl(persianYear,persianMonth,persianDay)).toDate());
         }
-        if (addingCourseDto.getFinishDate() != null && !addingCourseDto.getFinishDate().isEmpty() && addingCourseDto.getFinishDate().split("/").length == 3) {
+
+        if (addingCourseDto.getFinishDate() != null && !addingCourseDto.getFinishDate().isEmpty()
+                && addingCourseDto.getFinishDate().split("/").length == 3) {
             //add more condition above to be sure about input validation (for example all parts being numeric)
             int persianYear = Integer.parseInt(addingCourseDto.getFinishDate().split("/")[0]);
             int persianMonth = Integer.parseInt(addingCourseDto.getFinishDate().split("/")[1]);
             int persianDay = Integer.parseInt(addingCourseDto.getFinishDate().split("/")[2]);
 
-            inputCourse.setFinishDate(JalaliCalendarUtils.convertJalaliToGregorian(new JalaliDateImpl(persianYear,persianMonth,persianDay)).toDate());
+            inputCourse.setFinishDate(JalaliCalendarUtils
+                    .convertJalaliToGregorian(new JalaliDateImpl(persianYear,persianMonth,persianDay)).toDate());
         }
 
-
-        System.out.println("inputCourse.getStartDate() = " + inputCourse.getStartDate());
-        System.out.println("inputCourse.getFinishDate() = " + inputCourse.getFinishDate());
-        System.out.println("inputCourse.getTitle() = " + inputCourse.getTitle());
-//        System.out.println("inputCourse.getStartDate().compareTo(new Date()) = " + inputCourse.getStartDate().compareTo(new Date()));
-        System.out.println("inputCourse.getStartDate().compareTo(inputCourse.getFinishDate()) = " + inputCourse.getStartDate().compareTo(inputCourse.getFinishDate()));
-        // TODO: 3/7/2020 display message if didnt save
-//
-//        Date dateNowWithZeroTime = new Date();
-//        dateNowWithZeroTime.setHours(0);
-//        dateNowWithZeroTime.setMinutes(0);
-//        dateNowWithZeroTime.setSeconds(0);
-//        System.out.println("inputCourse.getStartDate().compareTo(dateNowWithZeroTime) = " + inputCourse.getStartDate().compareTo(dateNowWithZeroTime));
-//        System.out.println("dateNowWithZeroTime = " + dateNowWithZeroTime);
         Date dateToday = new Date();
         dateToday.setHours(0);
         dateToday.setMinutes(0);
@@ -231,8 +298,8 @@ public class AdminController {
                 && inputCourse.getTitle() != null && !inputCourse.getTitle().isEmpty()
                 && inputCourse.getStartDate().getTime()/1000/60/60/24 >= dateToday.getTime()/1000/60/60/24
                 && inputCourse.getStartDate().compareTo(inputCourse.getFinishDate()) < 0) {
-            System.out.println("jhgjgjggjgjhhhhhhhhhhhhhhhhhhhhhhhh");
-            //may have teacher or student or quiz
+
+            //because the course may be related to teacher or student or quiz
             if (inputCourse.getId() != null){
                 Course requestedCourseBeforeUpdate = courseService.findById(inputCourse.getId());
                 inputCourse.setTeacher(requestedCourseBeforeUpdate.getTeacher());
@@ -242,9 +309,6 @@ public class AdminController {
             courseService.save(inputCourse);
         }
 
-//        model.addAttribute("allCourses", courseService.findAll());
-//        model.addAttribute("course", new Course());
-//        return "add-course-page";
         String redirectUrl = "redirect:/admin/addCourse?";
         if (inputCourse.getTitle().isEmpty())
             redirectUrl += "&invalidTitleError";
@@ -258,22 +322,34 @@ public class AdminController {
     }
 
 
+    /**
+     * deletes selected course
+     * related quizzes will be deleted too
+     * we can delete related quizOperations and also related questios based on business logic
+     * @param model model is useless now because we are using redirect
+     * @param id requested course's id
+     * @return redirects to add course page
+     */
+
     @RequestMapping(value = "/deleteCourse/{id}")
     public String deleteCourse(Model model, @PathVariable Long id){
         //quizzes will be deleted
         // we also can delete questions of this course here
         // we can delete related quizOperations here
         courseService.removeById(id);
-//        model.addAttribute("allCoursesDtoList", courseService.findAll());
-//        model.addAttribute("course", new Course());
-//        return "add-course-page";
         return "redirect:/admin/addCourse";
     }
 
 
+    /**
+     * prepares required items to edit course
+     * @param model takes items to add course page to be updated
+     * @param id id of requested course
+     * @return add-course-page.html
+     */
+
     @RequestMapping(value = "/editCourse/{id}")
     public String editCourse(Model model, @PathVariable Long id){
-
 
         List<CourseDto> allCoursesDtos = new ArrayList<>();
         List<Course> allCourses = courseService.findAll();
@@ -283,31 +359,35 @@ public class AdminController {
                         new CourseDto(
                                 courseItem.getId(),
                                 courseItem.getTitle(),
-                                JalaliCalendarUtils.convertGregorianToJalali(new DateTime(courseItem.getStartDate())).toString(),
-                                JalaliCalendarUtils.convertGregorianToJalali(new DateTime(courseItem.getFinishDate())).toString()
+                                JalaliCalendarUtils.convertGregorianToJalali(
+                                        new DateTime(courseItem.getStartDate())).toString(),
+                                JalaliCalendarUtils.convertGregorianToJalali(
+                                        new DateTime(courseItem.getFinishDate())).toString()
                         )
                 );
             }
         }
 
         model.addAttribute("allCoursesDtoList", allCoursesDtos);
-//        model.addAttribute("allCourses", courseService.findAll());
-
 
         Course requestedCourse = courseService.findById(id);
         CourseDto sendingCourseDto = new CourseDto(
                 requestedCourse.getId(),
                 requestedCourse.getTitle(),
-//                JalaliCalendarUtils.convertGregorianToJalali(new DateTime(requestedCourse.getStartDate())).toString(),
-//                JalaliCalendarUtils.convertGregorianToJalali(new DateTime(requestedCourse.getFinishDate())).toString()
                 requestedCourse.getStartDate().toString(),
                 requestedCourse.getFinishDate().toString()
         );
         model.addAttribute("courseDto", sendingCourseDto);
-//        model.addAttribute("course", courseService.findById(id));
         return "add-course-page";
     }
 
+
+    /**
+     * to display members of course (teacher, student or ...) and access to add or delete members
+     * @param model contains requirements
+     * @param courseId id of requested course
+     * @return course-members-page
+     */
 
     @RequestMapping(value = "/courseMembers/{courseId}")
     public String getCourseMembers(Model model, @PathVariable Long courseId){
@@ -316,11 +396,24 @@ public class AdminController {
         return "course-members-page";
     }
 
+
+    /**
+     * to handle adding members to a course
+     * @param model requirements
+     * @param courseId requested course's id
+     * @param roleTitleName string title of role
+     * @return choose-account-to-add-to-course-page.html
+     */
+
     @RequestMapping(value = "/addMemberToCourse/{courseId}")
-    public String addMemberToCourse(Model model, @PathVariable Long courseId, @RequestParam(name = "roleTitleName") String roleTitleName){
+    public String addMemberToCourse(Model model,
+                                    @PathVariable Long courseId,
+                                    @RequestParam(name = "roleTitleName") String roleTitleName){
+
         Course requestedCourse = courseService.findById(courseId);
         List<Account> accountsWithRequestedRole = accountService.findAll().stream()
-                .filter(account -> account.getRoles().contains(roleService.findByTitle(RoleTitle.valueOf(roleTitleName))))
+                .filter(account -> account.getRoles()
+                        .contains(roleService.findByTitle(RoleTitle.valueOf(roleTitleName))))
                 .collect(Collectors.toList());
 
         List<Account> accountsToLoad = new ArrayList<>();
@@ -343,11 +436,21 @@ public class AdminController {
         }
 
         model.addAttribute("roleTitleName", roleTitleName);
-        model.addAttribute("roleTitleNamePersianHeader", "لیست " + RoleTitle.valueOf(roleTitleName).getPersian() + "ها");
+        model.addAttribute("roleTitleNamePersianHeader", "لیست "
+                + RoleTitle.valueOf(roleTitleName).getPersian() + "ها");
         model.addAttribute("course", requestedCourse);
         model.addAttribute("accountsToAdd", accountsToLoad);
         return "choose-account-to-add-to-course-page";
     }
+
+
+    /**
+     * to submit adding member to the course
+     * @param courseId id of requested course
+     * @param accountId id of adding account
+     * @param roleTitleName string title of role
+     * @return redirects to adding members page
+     */
     
     @RequestMapping(value = "/addMemberToCourse/{courseId}", method = RequestMethod.POST)
     public String submitAddMemberToCourse(@PathVariable Long courseId,
@@ -365,6 +468,15 @@ public class AdminController {
         courseService.save(requestedCourse);
         return "redirect:/admin/addMemberToCourse/" + courseId + "?roleTitleName=" + roleTitleName;
     }
+
+
+    /**
+     * handles deleting members of a course
+     * @param courseId requested course's id
+     * @param memberId id of member to delete from course
+     * @param roleTitleName string title of role
+     * @return redirects to course members page
+     */
 
     @RequestMapping(value = "/deleteCourseMember/{courseId}")
     public String deleteCourseMember(@PathVariable Long courseId,

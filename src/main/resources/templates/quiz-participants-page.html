@@ -3,6 +3,7 @@
 <head>
     <title>شرکت کنندگان آزمون</title>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <meta name="author" content="Alireza">
     <link th:href="@{/css/bootstrap.min.css}"  rel="stylesheet" type="text/css" >
 </head>
 <body  class="text-center row p-5 justify-content-center align-content-center bg-info" style="font-family: 'B Mitra'">
@@ -11,7 +12,10 @@
     <h1>شرکت کنندگان آزمون</h1>
 
 
-    <label style="direction: rtl" class="alert-success p-1 rounded font-weight-bolder" th:text="${('تعداد شرکت کنندگان: ') + quizOperations.size()}"></label>
+    <label style="direction: rtl" class="alert-success p-1 rounded font-weight-bolder"
+           th:text="${('تعداد شرکت کنندگان: ') + quizOperations.size()}">
+
+    </label>
 
     <div>
         <label style="background-color: #28a745" th:text="'تصحیح شده'" class="p-1 rounded border border-light"></label>
@@ -30,18 +34,23 @@
             <th>نام کابری دانشجو</th>
             </thead>
             <tbody>
-            <tr th:each="operationItem:${quizOperations}" th:bgcolor="${operationItem.isCustomGraded==true?'28a745':'343a40'}">
+            <tr th:each="operationItem:${quizOperations}"
+                th:bgcolor="${operationItem.isCustomGraded==true?'28a745':'343a40'}">
 
                 <td>
                     <form th:action="@{/quiz/__${quizId}__/participant/__${operationItem.studentId}__/answers/1}">
-                        <input class="btn btn-light" type="submit" th:disabled="${operationItem.isFinished != true || operationItem.isCustomGraded !=true}"
+                        <input class="btn btn-light"
+                               type="submit"
+                               th:disabled="${operationItem.isFinished != true || operationItem.isCustomGraded !=true}"
                                th:value="${operationItem.isFinished != true? 'آزمون در حال اجرا' : 'مشاهده' }">
                     </form>
                 </td>
 
                 <td>
                     <form th:action="@{/quiz/__${quizId}__/participant/__${operationItem.studentId}__/answers/1}">
-                        <input class="btn btn-light" type="submit" th:disabled="${operationItem.isFinished != true || operationItem.isAutoGraded!=true || operationItem.isCustomGraded ==true}"
+                        <input class="btn btn-light"
+                               type="submit"
+                               th:disabled="${operationItem.isFinished != true || operationItem.isAutoGraded!=true || operationItem.isCustomGraded ==true}"
                                value="تصحیح دستی">
                     </form>
                 </td>
@@ -49,7 +58,8 @@
 
                 <td>
                     <form th:action="@{/quiz/__${quizId}__/participant/__${operationItem.studentId}__/answers/autoGrading}">
-                        <input class="btn btn-light" type="submit"
+                        <input class="btn btn-light"
+                               type="submit"
                                th:disabled="${operationItem.isFinished != true || operationItem.isAutoGraded == true}"
                                value="تصحیح اتوماتیک">
                     </form>
@@ -70,9 +80,19 @@
     </div>
 
     <div class="row text-center justify-content-center">
-        <form class="m-2" th:action="@{/course/__${courseId}__/quizzes}"><input class="btn btn-dark" type="submit" value="بازگشت به لیست آزمون های دوره"></form>
-        <form class="m-2" th:action="@{/menu}"><input class="btn btn-dark" type="submit" value="بازگشت به منوی اصلی"></form>
-        <form class="m-2" th:action="@{/signOut}"><input class="btn btn-dark" type="submit" value="خروج از حساب کاربری"></form>
+
+        <form class="m-2" th:action="@{/course/__${courseId}__/quizzes}">
+            <input class="btn btn-dark" type="submit" value="بازگشت به لیست آزمون های دوره">
+        </form>
+
+        <form class="m-2" th:action="@{/menu}">
+            <input class="btn btn-dark" type="submit" value="بازگشت به منوی اصلی">
+        </form>
+
+        <form class="m-2" th:action="@{/signOut}">
+            <input class="btn btn-dark" type="submit" value="خروج از حساب کاربری">
+        </form>
+
     </div>
 
 </div>

@@ -2,6 +2,12 @@ package ir.maktab.arf.quiz.dto;
 
 import lombok.Data;
 
+
+/**
+ * transfers account attributes
+ * @author Alireza
+ */
+
 @Data
 public class EditAccountDto {
     private Long id;

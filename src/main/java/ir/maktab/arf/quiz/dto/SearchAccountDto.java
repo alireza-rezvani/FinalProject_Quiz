@@ -2,6 +2,12 @@ package ir.maktab.arf.quiz.dto;
 
 import lombok.Data;
 
+
+/**
+ * transfers some attributes of account for searching by admin
+ * @author Alireza
+ */
+
 @Data
 public class SearchAccountDto {
     private String username;

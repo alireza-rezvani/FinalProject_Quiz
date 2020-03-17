@@ -3,6 +3,7 @@
 <head>
     <title>بانک سوالات دوره</title>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <meta name="author" content="Alireza">
     <link th:href="@{/css/bootstrap.min.css}"  rel="stylesheet" type="text/css" >
 </head>
 <body  class="text-center row p-5 justify-content-center align-content-center bg-info" style="font-family: 'B Mitra'">
@@ -11,16 +12,17 @@
 
     <h1 >بانک سوالات دوره</h1>
 
-
     <form th:action="@{/quiz/__${quizId}__/addQuestion/fromBank}" method="post">
 
         <div class="p-1 m-1 mb-3 row  w-auto justify-content-center  rounded" style="direction: rtl">
 
-            <input class="text-center rounded m-2" type="text" th:field="*{searchQuestionDto.title}" placeholder="عنوان سوال"/>
+            <input class="text-center rounded m-2" type="text"
+                   th:field="*{searchQuestionDto.title}" placeholder="عنوان سوال"/>
 
             <input class="btn btn-dark m-2" type="submit" value="جستجو"/>
 
         </div>
+
     </form>
 
     <div class="m-3 rounded" th:hidden="${bankQuestions.size()==0}">
@@ -32,7 +34,8 @@
             </thead>
             <tbody>
 
-            <tr th:each="questionItem:${bankQuestions}" th:bgcolor="${quizQuestions.contains(questionItem)?'28a745':'343a40'}">
+            <tr th:each="questionItem:${bankQuestions}"
+                th:bgcolor="${quizQuestions.contains(questionItem)?'28a745':'343a40'}">
 
                 <td>
                     <form th:action="@{/quiz/__${quizId}__/question/__${questionItem.id}__/deleteFromBank}">
@@ -41,7 +44,9 @@
                 </td>
 
 <!--                no need for now-->
-<!--                th:disabled="${T(ir.maktab.arf.quiz.utilities.SignedInAccountTools).getAccount().id != questionItem.creatorTeacherId}"-->
+<!--                th:disabled="${T(ir.maktab.arf.quiz.utilities.SignedInAccountTools).getAccount().id !=-->
+<!--                questionItem.creatorTeacherId}"-->
+
                 <td><button class="btn btn-light"  th:onclick="|delConfirm(${questionItem.id})|" >حذف</button></td>
 
                 <td>
@@ -58,12 +63,18 @@
 
                 <td>
                     <form th:action="@{/quiz/__${quizId}__/addQuestion/fromBank/__${questionItem.id}__}">
-                        <input class="btn btn-light" type="submit" th:value="${quizQuestions.contains(questionItem)?'حذف از آزمون':'افزودن به آزمون'}" >
+                        <input class="btn btn-light" type="submit"
+                               th:value="${quizQuestions.contains(questionItem)?'حذف از آزمون':'افزودن به آزمون'}" >
                     </form>
                 </td>
 
                 <td th:text="${questionItem.title}"></td>
-                <td th:text="${T(ir.maktab.arf.quiz.utilities.QuestionTools).getQuestionType(questionItem).getPersian()}"></td>
+
+                <td
+                        th:text="${T(ir.maktab.arf.quiz.utilities.QuestionTools)
+                .getQuestionType(questionItem).getPersian()}">
+
+                </td>
 
             </tr>
             </tbody>
@@ -72,9 +83,19 @@
     </div>
 
     <div class="row text-center justify-content-center">
-        <form class="m-2" th:action="@{/quiz/__${quizId}__/questions}"><input class="btn btn-dark" type="submit" value="بازگشت به سوالات آزمون"></form>
-        <form class="m-2" th:action="@{/menu}"><input class="btn btn-dark" type="submit" value="بازگشت به منوی اصلی"></form>
-        <form class="m-2" th:action="@{/signOut}"><input class="btn btn-dark" type="submit" value="خروج از حساب کاربری"></form>
+
+        <form class="m-2" th:action="@{/quiz/__${quizId}__/questions}">
+            <input class="btn btn-dark" type="submit" value="بازگشت به سوالات آزمون">
+        </form>
+
+        <form class="m-2" th:action="@{/menu}">
+            <input class="btn btn-dark" type="submit" value="بازگشت به منوی اصلی">
+        </form>
+
+        <form class="m-2" th:action="@{/signOut}">
+            <input class="btn btn-dark" type="submit" value="خروج از حساب کاربری">
+        </form>
+
     </div>
 
 </div>
@@ -87,7 +108,6 @@
             document.getElementById(id).hidden = false;
     }
 </script>
-
 
 </body>
 </html>

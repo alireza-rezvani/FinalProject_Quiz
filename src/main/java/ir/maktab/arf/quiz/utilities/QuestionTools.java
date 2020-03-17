@@ -1,9 +1,8 @@
 package ir.maktab.arf.quiz.utilities;
 
-import ir.maktab.arf.quiz.entities.Answer;
-import ir.maktab.arf.quiz.entities.Question;
 import ir.maktab.arf.quiz.entities.Choice;
 import ir.maktab.arf.quiz.entities.MultiChoiceQuestion;
+import ir.maktab.arf.quiz.entities.Question;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.context.annotation.ClassPathScanningCandidateComponentProvider;
 import org.springframework.core.type.filter.AssignableTypeFilter;
@@ -11,6 +10,12 @@ import org.springframework.core.type.filter.AssignableTypeFilter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
+
+
+/**
+ * contains some useful methods to process questions
+ * @author Alireza
+ */
 
 public class QuestionTools {
 
@@ -46,7 +51,8 @@ public class QuestionTools {
 
         List<String> result = new ArrayList<>();
 
-        ClassPathScanningCandidateComponentProvider provider = new ClassPathScanningCandidateComponentProvider(true);
+        ClassPathScanningCandidateComponentProvider provider
+                = new ClassPathScanningCandidateComponentProvider(true);
         provider.addIncludeFilter(new AssignableTypeFilter(Question.class));
         Set<BeanDefinition> components = provider.findCandidateComponents("ir/maktab/arf/quiz/entities");
         for (BeanDefinition component : components){

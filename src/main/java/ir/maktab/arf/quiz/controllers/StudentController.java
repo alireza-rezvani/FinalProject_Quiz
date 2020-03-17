@@ -23,6 +23,12 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
+
+/**
+ * student controller handles student tasks
+ * @author Alireza
+ */
+
 @EnableScheduling
 @Controller
 @RequestMapping("/student")
@@ -34,6 +40,16 @@ public class StudentController {
     private SignedInAccountTools signedInAccountTools;
     private QuizOperationService quizOperationService;
     private QuizService quizService;
+
+
+    /**
+     * prepares controller requirements using @Autowired
+     * @param courseService is autowired by constructor
+     * @param signedInAccountTools is autowired by constructor
+     * @param accountService is autowired by constructor
+     * @param quizOperationService is autowired by constructor
+     * @param quizService is autowired by constructor
+     */
 
     @Autowired
     public StudentController(CourseService courseService,
@@ -48,11 +64,23 @@ public class StudentController {
         this.quizService = quizService;
     }
 
+
+    /**
+     * student's main page
+     * @return redirects to menu
+     */
+
     @RequestMapping(value = "")
     public String getStudentPage(){
         return "redirect:/menu";
     }
 
+
+    /**
+     * prepares course of the student
+     * @param model contains requirements
+     * @return student-courses-page.html;
+     */
 
     @RequestMapping("/courses")
     public String getCourses(Model model){
@@ -63,6 +91,14 @@ public class StudentController {
     }
 
 
+    /**
+     * prepares quizzes of each course for the student
+     * @param model contains requirements
+     * @param studentId id of requested student
+     * @param courseId id of requested course
+     * @return quizzes-of-student-course-page.html
+     */
+
     @RequestMapping("/{studentId}/course/{courseId}/quizzes")
     public String getCourseItemQuizzes(Model model, @PathVariable Long studentId, @PathVariable Long courseId){
         if (signedInAccountTools.getAccount().equals(accountService.findById(studentId))){
@@ -71,12 +107,14 @@ public class StudentController {
             model.addAttribute("currentStudent", signedInAccountTools.getAccount());
             model.addAttribute("idsOfFinishedQuizzes",
                     quizOperationService.findAllByStudentIdAndCourseId(studentId, courseId).stream()
-                            .filter(quizOperation -> quizOperation.getIsFinished() != null && quizOperation.getIsFinished() == true)
+                            .filter(quizOperation -> quizOperation.getIsFinished() != null
+                                    && quizOperation.getIsFinished() == true)
                             .map(QuizOperation::getQuizId)
                             .collect(Collectors.toList()));
             model.addAttribute("idsOfInProgressQuizzes",
                     quizOperationService.findAllByStudentIdAndCourseId(studentId, courseId).stream()
-                            .filter(quizOperation -> quizOperation.getIsFinished() == null || quizOperation.getIsFinished() == false)
+                            .filter(quizOperation -> quizOperation.getIsFinished() == null
+                                    || quizOperation.getIsFinished() == false)
                             .map(QuizOperation::getQuizId)
                             .collect(Collectors.toList()));
             return "quizzes-of-student-course-page";
@@ -85,6 +123,18 @@ public class StudentController {
             return "redirect:/menu";
 
     }
+
+
+    /**
+     * create a new quiz operation if does not exist
+     * the student can starts answering questions
+     * @param model contains requirement
+     * @param studentId id of requested student
+     * @param courseId id of requested course
+     * @param quizId id of requested quiz
+     * @param questionNumber number of question in current quiz
+     * @return quiz-operation-page.html
+     */
 
     @RequestMapping("/{studentId}/course/{courseId}/quiz/{quizId}/enterQuizOperation/question/{questionNumber}")
     public String startQuizOperation(Model model,
@@ -107,7 +157,8 @@ public class StudentController {
                 quizOperation.setQuizId(quizId);
                 Date startTime = new Date();
                 quizOperation.setStartTime(startTime);
-                quizOperation.setFinishDate(new Date(startTime.getTime() + quizService.findById(quizId).getTime() * 60000));
+                quizOperation.setFinishDate(new Date(startTime.getTime()
+                        + quizService.findById(quizId).getTime() * 60000));
                 quizOperation = quizOperationService.save(quizOperation);
 
 
@@ -138,7 +189,11 @@ public class StudentController {
                     .count() > 0){
                 Answer ans = quizOperationService.findById(quizOperation.getId()).getAnswerList().stream()
                         .filter(answer -> answer.getQuestionNumberInQuiz() == questionNumber).findFirst().get();
-                answerDto = new AnswerDto(ans.getId(),ans.getContent(), ans.getQuestionId(), ans.getQuestionNumberInQuiz());
+                answerDto = new AnswerDto(
+                        ans.getId(),
+                        ans.getContent(),
+                        ans.getQuestionId(),
+                        ans.getQuestionNumberInQuiz());
             }
             else {
                 answerDto = new AnswerDto();
@@ -156,7 +211,20 @@ public class StudentController {
 
     }
 
-    @RequestMapping(value = "/{studentId}/course/{courseId}/quiz/{quizId}/enterQuizOperation/question/{questionNumber}", method = RequestMethod.POST)
+
+    /**
+     * submit answers of the student
+     * @param model contains requirements
+     * @param bindingAnswerDto entered answer's information
+     * @param studentId id of requested student
+     * @param courseId id of requested course
+     * @param quizId id of requested quiz
+     * @param questionNumber number of question in current quiz
+     * @return quiz-operation-page.html (or other page based on conditions)
+     */
+
+    @RequestMapping(value = "/{studentId}/course/{courseId}/quiz/{quizId}/enterQuizOperation/question/{questionNumber}",
+            method = RequestMethod.POST)
     public String submitQuizOperation(Model model,
                                      @ModelAttribute AnswerDto bindingAnswerDto,
                                      @PathVariable Long studentId,
@@ -165,7 +233,8 @@ public class StudentController {
                                      @PathVariable Integer questionNumber){
         if (signedInAccountTools.getAccount().equals(accountService.findById(studentId))) {
 
-            QuizOperation quizOperation = quizOperationService.findByStudentIdAndCourseIdAndQuizId(studentId, courseId, quizId);
+            QuizOperation quizOperation = quizOperationService
+                    .findByStudentIdAndCourseIdAndQuizId(studentId, courseId, quizId);
 
             if (quizOperation.getIsFinished() != null && quizOperation.getIsFinished() == true)
                 return "quiz-operation-finish-page";
@@ -185,7 +254,8 @@ public class StudentController {
             
             
             if (questionNumber <= quizService.findById(quizId).getQuestions().size()) {
-                Question questionItem = quizService.findById(quizId).getQuestions().get(questionNumber - 1);//this is index of next question
+                //index of next question
+                Question questionItem = quizService.findById(quizId).getQuestions().get(questionNumber - 1);
                 if (questionItem instanceof DetailedQuestion)
                     model.addAttribute("questionItem", (DetailedQuestion) questionItem);
                 else if (questionItem instanceof MultiChoiceQuestion)
@@ -198,7 +268,11 @@ public class StudentController {
                         .count() > 0){
                     Answer ans = quizOperationService.findById(quizOperation.getId()).getAnswerList().stream()
                             .filter(answer -> answer.getQuestionNumberInQuiz() == questionNumber).findFirst().get();
-                    answerDto = new AnswerDto(ans.getId(),ans.getContent(), ans.getQuestionId(), ans.getQuestionNumberInQuiz());
+                    answerDto = new AnswerDto(
+                            ans.getId(),
+                            ans.getContent(),
+                            ans.getQuestionId(),
+                            ans.getQuestionNumberInQuiz());
                 }
                 else {
                     answerDto = new AnswerDto();
@@ -223,7 +297,7 @@ public class StudentController {
         }
         else
             return "redirect:/menu";
-        }
+    }
 
 
 

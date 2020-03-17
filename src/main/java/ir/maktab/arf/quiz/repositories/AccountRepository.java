@@ -8,6 +8,12 @@ import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
+
+/**
+ * account repository
+ * @author Alireza
+ */
+
 @Repository
 public interface AccountRepository extends JpaRepository<Account, Long> {
     public Account findByUsername(String username);

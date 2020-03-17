@@ -2,60 +2,79 @@
 <html xmlns:th="https://www.thymeleaf.org">
 <head>
     <title>ویرایش حساب کاربری</title>
+    <meta name="author" content="Alireza">
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <link th:href="@{/css/bootstrap.min.css}" rel="stylesheet" type="text/css" >
 </head>
 <body class="text-center row p-5 justify-content-center align-content-center bg-info" style="font-family: 'B Mitra'">
 <div>
+
     <h1>ویرایش حساب کاربری</h1><br>
+
     <form  action="#" th:action="@{/admin/editAccount/__${editAccountDto.getId()}__}" method="post">
 
-        <p >
-            <input class="text-center rounded" type="text" th:field="*{editAccountDto.nationalCode}" placeholder="کد ملی" th:value="${editAccountDto.nationalCode}"/>
+        <p>
+            <input class="text-center rounded" type="text"
+                   th:field="*{editAccountDto.nationalCode}" placeholder="کد ملی"
+                   th:value="${editAccountDto.nationalCode}"/>
             <label style="width: 75px; direction: rtl; text-align: right">کد ملی</label>
         </p>
+
         <p th:if="${param.nationalCodeError}" class="text-danger">کد ملی وارد شده نامعتبر است یا قبلا ثبت شده است</p>
 
-        <p >
+        <p>
             <input class="text-center rounded" type="text" th:field="*{editAccountDto.firstName}" placeholder="نام"/>
             <label style="width: 75px; direction: rtl; text-align: right">نام</label>
         </p>
+
         <p th:if="${param.firstNameError}" class="text-danger">نام خود را وارد کنید</p>
 
-        <p >
+        <p>
             <input class="text-center rounded" type="text" th:field="*{editAccountDto.lastName}" placeholder="نام خانوادگی"/>
             <label style="width: 75px; direction: rtl; text-align: right">نام خانوادگی</label>
         </p>
+
         <p th:if="${param.lastNameError}" class="text-danger">نام خانوادگی خود را وارد کنید</p>
 
-        <p >
-            <input class="text-center rounded" type="text" th:field="*{editAccountDto.mobileNumber}" placeholder="تلفن همراه"/>
+        <p>
+            <input class="text-center rounded" type="text"
+                   th:field="*{editAccountDto.mobileNumber}" placeholder="تلفن همراه"/>
             <label style="width: 75px; direction: rtl; text-align: right">تلفن همراه</label>
         </p>
+
         <p th:if="${param.mobileError}" class="text-danger">شماره تلفن وارد شده نامعتبر است</p>
 
-        <p >
+        <p>
             <input class="text-center rounded" type="text" th:field="*{editAccountDto.email}" placeholder="پست الکترونیک"/>
             <label style="width: 75px; direction: rtl; text-align: right">پست الکترونیک</label>
         </p>
+
         <p th:if="${param.emailError}" class="text-danger">پست الکترونیک وارد شده نامعتبر است یا قبلا ثبت شده است</p>
 
         <p >
             <input class="text-center rounded" type="text" th:field="*{editAccountDto.username}" placeholder="نام کاربری"/>
             <label style="width: 75px; direction: rtl; text-align: right">نام کاربری</label>
         </p>
+
         <p th:if="${param.usernameError}" class="text-danger">نام کاربری وارد شده نامعتبر است یا قبلا انتخاب شده است</p>
 
         <p>
             <select class="custom-select w-auto m-2" th:field="*{editAccountDto.roleTitleName}">
-                <option th:each="role:${allRoles}" th:value="${role.title.name()}" th:text="${role.title.getPersian()}" th:if="${role.title.name()} != 'ADMIN'"></option>
+                <option th:each="role:${allRoles}"
+                        th:value="${role.title.name()}"
+                        th:text="${role.title.getPersian()}"
+                        th:if="${role.title.name()} != 'ADMIN'">
+                </option>
             </select>
             <label style="width: 75px; direction: rtl"></label>
         </p>
 
         <p>
             <select class="custom-select w-auto m-2" th:field="*{editAccountDto.statusTitleName}">
-                <option th:each="status:${allStatuses}" th:value="${status.title.name()}" th:text="${status.title.getPersian()}"></option>
+                <option th:each="status:${allStatuses}"
+                        th:value="${status.title.name()}"
+                        th:text="${status.title.getPersian()}">
+                </option>
             </select>
             <label style="width: 75px; direction: rtl"></label>
         </p>
@@ -68,9 +87,19 @@
 
 
     <div class="row text-center justify-content-center">
-        <form class="m-2" th:action="@{/menu}"><input class="btn btn-dark" type="submit" value="بازگشت به منوی اصلی"></form>
-        <form class="m-2" th:action="@{/admin/accountsList}"><input class="btn btn-dark" type="submit" value="بازگشت به لیست کاربران"></form>
-        <form class="m-2" th:action="@{/signOut}"><input class="btn btn-dark" type="submit" value="خروج از حساب کاربری"></form>
+
+        <form class="m-2" th:action="@{/menu}">
+            <input class="btn btn-dark" type="submit" value="بازگشت به منوی اصلی">
+        </form>
+
+        <form class="m-2" th:action="@{/admin/accountsList}">
+            <input class="btn btn-dark" type="submit" value="بازگشت به لیست کاربران">
+        </form>
+
+        <form class="m-2" th:action="@{/signOut}">
+            <input class="btn btn-dark" type="submit" value="خروج از حساب کاربری">
+        </form>
+
         <label style="width: 75px; direction: rtl"></label>
     </div>
 

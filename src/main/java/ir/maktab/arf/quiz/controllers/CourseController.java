@@ -22,6 +22,11 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import java.util.List;
 import java.util.stream.Collectors;
 
+/**
+ * Course controller class for handling tasks about course.
+ * @author Alireza
+ */
+
 @Controller
 @Secured("ROLE_TEACHER_GENERAL_PRIVILEGE")
 @RequestMapping("/course")
@@ -32,6 +37,14 @@ public class CourseController {
     private QuizService quizService;
     private SignedInAccountTools signedInAccountTools;
 
+
+    /**
+     * preparing requirements for this controller using @Autowired.
+     * @param courseService is autowired by constructor
+     * @param accountService is autowired by constructor
+     * @param quizService is autowired by constructor
+     * @param signedInAccountTools is autowired by constructor
+     */
     @Autowired
     public CourseController(CourseService courseService,
                             AccountService accountService,
@@ -43,6 +56,13 @@ public class CourseController {
         this.signedInAccountTools = signedInAccountTools;
     }
 
+
+    /**
+     * this method prepares required item to display all quizzes of a course.
+     * @param model contains requirements.
+     * @param courseId requested course's id.
+     * @return quizzes-of-course-page.html
+     */
     @RequestMapping("/{courseId}/quizzes")
     public String getCourseQuizzes(Model model, @PathVariable Long courseId){
 
@@ -59,6 +79,14 @@ public class CourseController {
 
     }
 
+
+    /**
+     * this method prepares only quizzes that are designed by signed in teacher(filters quizzes by creator).
+     * because teacher of course may be changed by admin or in future we may have more than a teacher for a course.
+     * @param model contains requirements.
+     * @param courseId requested course's id.
+     * @return quizzes-of-course-page.html
+     */
 
     @RequestMapping("/{courseId}/myQuizzes")
     public String getCourseMyQuizzes(Model model, @PathVariable Long courseId){
@@ -79,6 +107,13 @@ public class CourseController {
     }
 
 
+    /**
+     * this method prepares required items to save a quiz by teacher and also saves the quiz
+     * @param model contains requirements
+     * @param quiz input quiz
+     * @param courseId requested course's id
+     * @return quizzes-of-course-page.html
+     */
 
     @RequestMapping(value = "/{courseId}/addQuiz", method = RequestMethod.POST)
     public String addQuiz(Model model, @ModelAttribute Quiz quiz, @PathVariable Long courseId){
@@ -86,7 +121,8 @@ public class CourseController {
         if (signedInAccountTools.getAccount().equals(courseService.findById(courseId).getTeacher())) {
 
             Quiz enteredQuiz = quiz;
-            if (!enteredQuiz.getTitle().isEmpty() && enteredQuiz.getTime() != null && enteredQuiz.getTime() > 0 && enteredQuiz.getTime() < 1440){
+            if (!enteredQuiz.getTitle().isEmpty() && enteredQuiz.getTime() != null
+                    && enteredQuiz.getTime() > 0 && enteredQuiz.getTime() < 1440){
                 Course updatingCourse = courseService.findById(courseId);
                 if (enteredQuiz.getId() == null) {
                     enteredQuiz.setCourse(updatingCourse);
@@ -94,7 +130,8 @@ public class CourseController {
                     updatingCourse.getQuizzes().add(enteredQuiz);
                 }
                 else {
-                    Quiz updatingQuiz = updatingCourse.getQuizzes().stream().filter(q -> q.getId() == enteredQuiz.getId()).findFirst().get();
+                    Quiz updatingQuiz = updatingCourse.getQuizzes().stream()
+                            .filter(q -> q.getId() == enteredQuiz.getId()).findFirst().get();
                     updatingQuiz.setTitle(enteredQuiz.getTitle());
                     updatingQuiz.setDescription(enteredQuiz.getDescription());
                     updatingQuiz.setTime(enteredQuiz.getTime());
@@ -114,6 +151,14 @@ public class CourseController {
 
     }
 
+
+    /**
+     * this method handles deleting a requested quiz
+     * @param model contains requirements to display quizzes page updated
+     * @param courseId id of requested course
+     * @param quizId id of quiz item which is going to be deleted
+     * @return quizzes-of-course-page.html
+     */
     @RequestMapping("/{courseId}/deleteQuiz/{quizId}")
     public String deleteQuiz(Model model, @PathVariable Long courseId, @PathVariable Long quizId){
         if (signedInAccountTools.getAccount().equals(courseService.findById(courseId).getTeacher())) {
@@ -133,6 +178,15 @@ public class CourseController {
         }
     }
 
+
+    /**
+     * handles editing a requested quiz (using update)
+     * @param model contains requirements of quizzes page
+     * @param courseId requested course's id
+     * @param quizId id of quiz item which is going to be edited
+     * @return quizzes-of-course-page.html
+     */
+
     @RequestMapping("/{courseId}/editQuiz/{quizId}")
     public String editQuiz(Model model, @PathVariable Long courseId, @PathVariable Long quizId){
         if (signedInAccountTools.getAccount().equals(courseService.findById(courseId).getTeacher())) {
@@ -148,6 +202,16 @@ public class CourseController {
         }
     }
 
+
+    /**
+     * this method handles quiz activation (and inactivation) by the teacher user
+     * only activated quizzes will be accessible for the students of the course
+     * quizzes are validated based on some items before activation
+     * @param courseId id of requested course
+     * @param quizId id of the quiz which is going to be activated(or inactivated)
+     * @return redirects to quizzes of course page
+     */
+
     @RequestMapping("{courseId}/quiz/{quizId}/activation")
     public String quizActivation(@PathVariable Long courseId, @PathVariable Long quizId){
         if (signedInAccountTools.getAccount().equals(courseService.findById(courseId).getTeacher())) {
@@ -160,17 +224,25 @@ public class CourseController {
                 return "redirect:/course/" + courseId + "/quizzes";
             } else {
                 long numberOfMultiChoiceQuestionsOfQuiz = requestedQuiz.getQuestions().stream()
-                        .filter(question -> QuestionTools.getQuestionType(question).equals(QuestionType.MultiChoiceQuestion))
+                        .filter(question -> QuestionTools.getQuestionType(question)
+                                .equals(QuestionType.MultiChoiceQuestion))
                         .count();
                 long numberOfMultiChoiceQuestionsWithTrueChoice = requestedQuiz.getQuestions().stream()
-                        .filter(question -> QuestionTools.getQuestionType(question).equals(QuestionType.MultiChoiceQuestion))
-                        .filter(question -> QuestionTools.MultiChoiceQuestionContainsATrueChoice((MultiChoiceQuestion) question))
+                        .filter(question -> QuestionTools.getQuestionType(question)
+                                .equals(QuestionType.MultiChoiceQuestion))
+                        .filter(question -> QuestionTools
+                                .MultiChoiceQuestionContainsATrueChoice((MultiChoiceQuestion) question))
                         .count();
 
-                boolean containsMultiChoiceQuestionWithoutTrueChoice = numberOfMultiChoiceQuestionsOfQuiz > numberOfMultiChoiceQuestionsWithTrueChoice;
-                boolean containsZeroDefaultScore = ScoresListTools.stringToArrayList(requestedQuiz.getDefaultScoresList()).contains(0.0);
+                boolean containsMultiChoiceQuestionWithoutTrueChoice
+                        = numberOfMultiChoiceQuestionsOfQuiz > numberOfMultiChoiceQuestionsWithTrueChoice;
+                boolean containsZeroDefaultScore
+                        = ScoresListTools.stringToArrayList(requestedQuiz.getDefaultScoresList()).contains(0.0);
 
-                if (containsMultiChoiceQuestionWithoutTrueChoice || containsZeroDefaultScore || requestedQuiz.getQuestions().size() == 0) {
+                if (containsMultiChoiceQuestionWithoutTrueChoice
+                        || containsZeroDefaultScore
+                        || requestedQuiz.getQuestions().size() == 0) {
+
                     String redirectUrl = "redirect:/course/" + courseId + "/quizzes?";
                     if (containsMultiChoiceQuestionWithoutTrueChoice)
                         redirectUrl += "&trueChoiceNotExistError";

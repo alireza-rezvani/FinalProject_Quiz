@@ -2,6 +2,7 @@
 <html xmlns:th="https://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
+    <meta name="author" content="Alireza">
     <link th:href="@{/css/bootstrap.min.css}"  rel="stylesheet" type="text/css" >
     <title>سامانه آزمون آنلاین</title>
 </head>
@@ -11,8 +12,15 @@
     <div class="rounded bg-info p-2 w-auto">
         <div class="h3 rounded p-2 w-auto">سامانه آزمون آنلاین</div><br>
         <div class="row text-center justify-content-center">
-        <form class="m-2" th:action="@{/signIn}"><input class="btn btn-dark" type="submit" value="ورود"></form>
-        <form class="m-2" th:action="@{/signUp}"><input class="btn btn-dark" type="submit" value="ثبت نام"></form>
+
+            <form class="m-2" th:action="@{/signIn}">
+                <input class="btn btn-dark" type="submit" value="ورود">
+            </form>
+
+            <form class="m-2" th:action="@{/signUp}">
+                <input class="btn btn-dark" type="submit" value="ثبت نام">
+            </form>
+
         </div>
     </div>
 </div>

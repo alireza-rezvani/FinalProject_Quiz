@@ -7,6 +7,11 @@ import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
+/**
+ * course repository
+ * @author Alireza
+ */
+
 @Repository
 public interface CourseRepository extends JpaRepository<Course, Long> {
     public List<Course> findByTeacherUsername(String teacherUsername);

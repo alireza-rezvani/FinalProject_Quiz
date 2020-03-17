@@ -2,6 +2,12 @@ package ir.maktab.arf.quiz.dto;
 
 import lombok.*;
 
+
+/**
+ * transfers student answers
+ * @author Alireza
+ */
+
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
