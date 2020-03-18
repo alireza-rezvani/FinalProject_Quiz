@@ -30,9 +30,16 @@
                     </form>
                 </td>
 
-                <td th:text="${courseItem.finishDate.toString().substring(0,10)}"></td>
-                <td th:text="${courseItem.startDate.toString().substring(0,10)}"></td>
+                <td th:text="${T(ir.maktab.arf.quiz.utilities.PersianDateTools)
+                .gregorianDateToPersianString(courseItem.finishDate)}">
+                </td>
+
+                <td th:text="${T(ir.maktab.arf.quiz.utilities.PersianDateTools)
+                .gregorianDateToPersianString(courseItem.startDate)}">
+                </td>
+
                 <td th:text="${courseItem.title}"></td>
+
                 <td th:text="${courseItem.id}"></td>
 
             </tr>

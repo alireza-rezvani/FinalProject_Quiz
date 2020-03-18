@@ -9,21 +9,23 @@
 <body class="text-center row p-5 justify-content-center align-content-center bg-info" style="font-family: 'B Mitra'">
 
 
-    <div class="bg-white rounded p-1 w-50 text-center" >
+    <div class="bg-white rounded p-1 w-25 text-center" >
         <div class="rounded bg-info p-2 w-auto">
+
+            <div class="border border-light rounded">
             <h1>ورود</h1>
             <form  action="#" th:action="@{/signIn}" method="post">
 
-                <p ><input class="text-center rounded" type="text" name="username" placeholder="نام کاربری"/></p>
-                <p ><input class="text-center rounded" type="password" name="password" placeholder="رمز عبور"/></p>
+                <p ><input class="text-center rounded w-50" type="text" name="username" placeholder="نام کاربری"/></p>
+                <p ><input class="text-center rounded w-50" type="password" name="password" placeholder="رمز عبور"/></p>
 
                 <p th:if="${param.error}" class="text-danger">اطلاعات کاربری نامعتبر است (در غیر اینصورت حساب کاربری شما در حال بررسی است)</p>
 
                 <p>
-                    <input class="btn btn-dark w-auto" type="submit" value="تایید"/>
+                    <input class="btn btn-dark w-50" type="submit" value="تایید"/>
                 </p>
             </form>
-
+            </div>
             <div class="row text-center justify-content-center">
 
                 <form class="m-2" th:action="@{/signUp}">

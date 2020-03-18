@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html xmlns:th="https://www.thymeleaf.org">
+<head>
+    <title>دوره های شما</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <meta name="author" content="Alireza">
+    <link th:href="@{/css/bootstrap.min.css}"  rel="stylesheet" type="text/css" >
+</head>
+<body  class="text-center row p-5 justify-content-center align-content-center bg-info" style="font-family: 'B Mitra'">
+
+<div>
+
+    <h1>دوره های شما</h1>
+
+    <form th:action="@{/student/courses}" method="post">
+
+        <div class="p-1 m-1 mb-3 row  w-auto justify-content-center align-content-center rounded" style="direction: rtl">
+
+            <div class="bg-dark pr-2 ml-1 rounded border border-light">
+                <label class="font-weight-bold mt-3 text-light" th:text="'حداکثر تعداد رکورد در صفحه: '"></label>
+                <input class="text-center rounded m-2"
+                       style="width: 40px"
+                       type="text"
+                       th:field="*{paginationDto.pageSize}"/>
+            </div>
+
+            <div class="bg-dark pr-2 ml-1 rounded border border-light">
+                <label class="font-weight-bold mt-3 text-light" th:text="'  مرتب سازی براساس: '"></label>
+                <select class="custom-select w-auto m-2" th:field="*{paginationDto.sortBasedOn}" >
+                    <option value="id" th:text="'شناسه یکتای دوره'"></option>
+                    <option value="title" th:text="'عنوان دوره'"></option>
+                    <option value="startDate" th:text="'تاریخ شروع دوره'"></option>
+                </select>
+            </div>
+
+            <div >
+            <input class="btn btn-dark w-100 h-100 border border-light" type="submit" value="اعمال تغییرات"/>
+            </div>
+
+        </div>
+    </form>
+
+
+    <div class="m-3 rounded" th:hidden="${studentCourses.size==0}">
+        <table class="table table-dark" th:hidden="${studentCourses.size==0}">
+            <thead>
+            <th colspan="1">عملیات</th>
+            <th>تاریخ اتمام</th>
+            <th>تاریخ شروع</th>
+            <th>عنوان دوره</th>
+            <th>شناسه یکتای دوره</th>
+            </thead>
+            <tbody>
+            <tr th:each="courseItem:${studentCourses}">
+
+                <td>
+                    <form th:action="@{/student/__${currentStudent.id}__/course/__${courseItem.id}__/quizzes}">
+                        <input class="btn btn-light" type="submit" th:value="آزمونها" >
+                    </form>
+                </td>
+
+                <td th:text="${T(ir.maktab.arf.quiz.utilities.PersianDateTools)
+                .gregorianDateToPersianString(courseItem.finishDate)}">
+                </td>
+
+                <td th:text="${T(ir.maktab.arf.quiz.utilities.PersianDateTools)
+                .gregorianDateToPersianString(courseItem.startDate)}">
+                </td>
+
+                <td th:text="${courseItem.title}"></td>
+
+                <td th:text="${courseItem.id}"></td>
+
+            </tr>
+            </tbody>
+        </table>
+
+
+
+        <nav aria-label="Pagination"
+             th:if="${studentCourses.totalPages gt 0}"
+             th:with="pSize=${paginationDto.pageSize}, sBy=${paginationDto.sortBasedOn}" >
+
+            <ul class="pagination justify-content-center font-weight-bold">
+
+                <li class="page-item" th:disabled="${studentCourses.number eq 0}" >
+
+                    <a th:class="${studentCourses.number eq 0 ? 'page-link btn disabled' : 'page-link'}"
+                       th:href="@{/student/courses?page={id}&pageSize=__${pSize}__&sortBasedOn=__${sBy}__
+                                  (id=${studentCourses.number lt 2 ? 1 : studentCourses.number })}"
+                       aria-label="قبلی"
+                       title="صفحه قبلی"
+                       data-toggle="tooltip">
+
+                        <span aria-hidden="true">&laquo;</span>
+
+                    </a>
+
+                </li>
+
+                <li class="page-item"
+                    th:classappend="${i eq studentCourses.number + 1} ? 'active'"
+                    th:each="i : ${#numbers.sequence( 1, studentCourses.totalPages, 1)}">
+
+                    <a class="page-link"
+                       th:href="@{/student/courses?page={id}&pageSize=__${pSize}__&sortBasedOn=__${sBy}__(id=${i})}"
+                       th:text="${i}"
+                       th:title="${'Page '+ i}"
+                       data-toggle="tooltip">
+                    </a>
+
+                </li>
+
+                <li class="page-item" th:disabled="${studentCourses.number + 1 eq studentCourses.totalPages}">
+
+                    <a th:class="${studentCourses.number + 2 gt
+                       studentCourses.totalPages? 'page-link btn disabled' : 'page-link'}"
+                       th:href="@{/student/courses?page={id}&pageSize=__${pSize}__&sortBasedOn=__${sBy}__
+                       (id=${studentCourses.number + 2 gt studentCourses.totalPages?
+                        studentCourses.totalPages :studentCourses.number + 2})}"
+                       aria-label="بعدی"
+                       title="صفحه بعدی"
+                       data-toggle="tooltip">
+
+                        <span aria-hidden="true">&raquo;</span>
+
+                    </a>
+                </li>
+
+            </ul>
+        </nav>
+
+    </div>
+
+    <div class="row text-center justify-content-center">
+
+        <form class="m-2" th:action="@{/menu}">
+            <input class="btn btn-dark" type="submit" value="بازگشت به منوی اصلی">
+        </form>
+
+        <form class="m-2" th:action="@{/signOut}">
+            <input class="btn btn-dark" type="submit" value="خروج از حساب کاربری">
+        </form>
+
+    </div>
+
+</div>
+
+</body>
+</html>
+
+

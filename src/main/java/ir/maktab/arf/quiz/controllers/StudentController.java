@@ -1,22 +1,22 @@
 package ir.maktab.arf.quiz.controllers;
 
 import ir.maktab.arf.quiz.dto.AnswerDto;
+import ir.maktab.arf.quiz.dto.PaginationDto;
 import ir.maktab.arf.quiz.entities.*;
 import ir.maktab.arf.quiz.services.AccountService;
 import ir.maktab.arf.quiz.services.CourseService;
 import ir.maktab.arf.quiz.services.QuizOperationService;
 import ir.maktab.arf.quiz.services.QuizService;
 import ir.maktab.arf.quiz.utilities.AutoFinishRunnable;
+import ir.maktab.arf.quiz.utilities.IsNumeric;
 import ir.maktab.arf.quiz.utilities.SignedInAccountTools;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.Date;
 import java.util.concurrent.Executors;
@@ -78,17 +78,56 @@ public class StudentController {
 
     /**
      * prepares course of the student
+     * next method does the same task using pagination
      * @param model contains requirements
      * @return student-courses-page.html;
      */
 
-    @RequestMapping("/courses")
+    @RequestMapping("/coursesWithoutPagination")
     public String getCourses(Model model){
 
         model.addAttribute("studentCourses", courseService.findByStudentAccount(signedInAccountTools.getAccount()));
         model.addAttribute("currentStudent", signedInAccountTools.getAccount());
         return "student-courses-page";
     }
+
+
+    /**
+     * prepares student's courses page using pagination
+     * @param model contains page's requirements
+     * @param pageNumber page number which is used in pagination
+     * @param paginationDto contains pagination requirements
+     * @return student-courses-page-paginated-version.html
+     */
+
+    @RequestMapping("/courses")
+    public String getCoursesByPagination(
+            Model model,
+            @RequestParam(name = "page",defaultValue = "1") Integer pageNumber,
+            @ModelAttribute PaginationDto paginationDto){
+
+        if (paginationDto.getPageSize() == null
+                || !IsNumeric.run(paginationDto.getPageSize())
+                || Integer.parseInt(paginationDto.getPageSize()) == 0)
+            paginationDto.setPageSize("5");
+
+        if (paginationDto.getSortBasedOn() == null
+                || (!paginationDto.getSortBasedOn().equals("id")
+                && !paginationDto.getSortBasedOn().equals("title")
+                && !paginationDto.getSortBasedOn().equals("startDate")))
+            paginationDto.setSortBasedOn("id");
+
+        model.addAttribute("studentCourses",
+                courseService.findPage(signedInAccountTools.getAccount() ,pageNumber,
+                        Integer.parseInt(paginationDto.getPageSize()), paginationDto.getSortBasedOn()));
+
+        model.addAttribute("currentStudent", signedInAccountTools.getAccount());
+
+        model.addAttribute("paginationDto", paginationDto);
+
+        return "student-courses-page-paginated-version";
+    }
+
 
 
     /**
